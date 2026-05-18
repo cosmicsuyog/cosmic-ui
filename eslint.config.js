@@ -6,7 +6,7 @@ import reactRefresh from "eslint-plugin-react-refresh";
 import importPlugin from "eslint-plugin-import";
 import jsxA11y from "eslint-plugin-jsx-a11y";
 import promise from "eslint-plugin-promise";
-import node from "eslint-plugin-node";
+import n from "eslint-plugin-n";
 
 export default [
   // ─── Ignored paths ───────────────────────────────────────
@@ -39,7 +39,7 @@ export default [
     plugins: {
       import: importPlugin,
       promise,
-      node,
+      n,
     },
 
     rules: {
@@ -50,6 +50,7 @@ export default [
         "warn",
         { allow: ["warn", "error", "info"] },
       ],
+
       "no-unused-vars": [
         "warn",
         {
@@ -58,12 +59,14 @@ export default [
           caughtErrorsIgnorePattern: "^_",
         },
       ],
+
       "no-var": "error",
       "prefer-const": ["error", { destructuring: "all" }],
-      "eqeqeq": ["error", "always", { null: "ignore" }],
-      "curly": ["error", "all"],
+      eqeqeq: ["error", "always", { null: "ignore" }],
+      curly: ["error", "all"],
       "no-shadow": "error",
       "no-duplicate-imports": "error",
+
       "no-param-reassign": [
         "error",
         {
@@ -71,6 +74,7 @@ export default [
           ignorePropertyModificationsFor: ["acc", "state", "draft", "req"],
         },
       ],
+
       "object-shorthand": "error",
       "prefer-template": "error",
       "prefer-arrow-callback": "error",
@@ -81,20 +85,29 @@ export default [
       "consistent-return": "error",
       "default-case": "error",
       "no-else-return": "error",
+
       "no-use-before-define": [
         "error",
         { functions: false, classes: true, variables: true },
       ],
+
       "max-depth": ["warn", 4],
+
       "max-lines": [
         "warn",
-        { max: 300, skipBlankLines: true, skipComments: true },
+        {
+          max: 300,
+          skipBlankLines: true,
+          skipComments: true,
+        },
       ],
-      "complexity": ["warn", 10],
+
+      complexity: ["warn", 10],
 
       // Node.js & Promises
-      ...node.configs.recommended.rules,
+      ...n.configs["flat/recommended"].rules,
       ...promise.configs.recommended.rules,
+
       "promise/always-return": "off",
 
       // Imports
@@ -103,12 +116,18 @@ export default [
       "import/no-cycle": ["warn", { maxDepth: 3 }],
       "import/first": "error",
       "import/newline-after-import": "error",
+
       "import/no-extraneous-dependencies": [
         "error",
         {
-          devDependencies: ["**/*.test.js", "**/tests/**/*.js", "vite.config.*"],
+          devDependencies: [
+            "**/*.test.js",
+            "**/tests/**/*.js",
+            "vite.config.*",
+          ],
         },
       ],
+
       "import/order": [
         "warn",
         {
@@ -121,8 +140,13 @@ export default [
             "index",
             "object",
           ],
+
           "newlines-between": "always",
-          alphabetize: { order: "asc", caseInsensitive: true },
+
+          alphabetize: {
+            order: "asc",
+            caseInsensitive: true,
+          },
         },
       ],
     },
@@ -130,15 +154,17 @@ export default [
 
   // ─── FRONTEND: React/JSX ─────────────────────────────────
   {
-    files: ["src/**/*.{js,jsx}", "client/**/*.{js,jsx}"],
+    files: ["client/**/*.{js,jsx}", "library/**/*.{js,jsx}"],
 
     languageOptions: {
       ecmaVersion: 2024,
       sourceType: "module",
+
       globals: {
         ...globals.browser,
         ...globals.es2021,
       },
+
       parserOptions: {
         ecmaFeatures: {
           jsx: true,
@@ -150,6 +176,7 @@ export default [
       react: {
         version: "detect",
       },
+
       "import/resolver": {
         node: {
           extensions: [".js", ".jsx"],
@@ -171,6 +198,7 @@ export default [
       ...js.configs.recommended.rules,
 
       "no-console": ["error", { allow: ["warn", "error"] }],
+
       "no-unused-vars": [
         "warn",
         {
@@ -179,12 +207,14 @@ export default [
           caughtErrorsIgnorePattern: "^_",
         },
       ],
+
       "no-var": "error",
       "prefer-const": ["error", { destructuring: "all" }],
-      "eqeqeq": ["error", "always", { null: "ignore" }],
-      "curly": ["error", "all"],
+      eqeqeq: ["error", "always", { null: "ignore" }],
+      curly: ["error", "all"],
       "no-shadow": "error",
       "no-duplicate-imports": "error",
+
       "no-param-reassign": [
         "error",
         {
@@ -192,9 +222,18 @@ export default [
           ignorePropertyModificationsFor: ["acc", "state", "draft"],
         },
       ],
+
       "object-shorthand": "error",
       "prefer-template": "error",
-      "prefer-destructuring": ["warn", { array: false, object: true }],
+
+      "prefer-destructuring": [
+        "warn",
+        {
+          array: false,
+          object: true,
+        },
+      ],
+
       "prefer-arrow-callback": "error",
       "arrow-body-style": ["warn", "as-needed"],
       "no-nested-ternary": "error",
@@ -203,16 +242,24 @@ export default [
       "consistent-return": "error",
       "default-case": "error",
       "no-else-return": "error",
+
       "no-use-before-define": [
         "error",
         { functions: false, classes: true, variables: true },
       ],
+
       "max-depth": ["warn", 4],
+
       "max-lines": [
         "warn",
-        { max: 300, skipBlankLines: true, skipComments: true },
+        {
+          max: 300,
+          skipBlankLines: true,
+          skipComments: true,
+        },
       ],
-      "complexity": ["warn", 10],
+
+      complexity: ["warn", 10],
 
       // React
       ...reactPlugin.configs.recommended.rules,
@@ -223,18 +270,27 @@ export default [
       "react/jsx-no-target-blank": "error",
       "react/jsx-no-duplicate-props": "error",
       "react/jsx-no-useless-fragment": "warn",
+
       "react/jsx-pascal-case": "error",
+
       "react/jsx-curly-brace-presence": [
         "warn",
-        { props: "never", children: "never" },
+        {
+          props: "never",
+          children: "never",
+        },
       ],
+
       "react/self-closing-comp": "error",
       "react/no-array-index-key": "warn",
       "react/no-unstable-nested-components": "error",
       "react/hook-use-state": "warn",
+
       "react-refresh/only-export-components": [
         "warn",
-        { allowConstantExport: true },
+        {
+          allowConstantExport: true,
+        },
       ],
 
       // Imports
@@ -243,6 +299,7 @@ export default [
       "import/no-cycle": ["warn", { maxDepth: 3 }],
       "import/first": "error",
       "import/newline-after-import": "error",
+
       "import/no-extraneous-dependencies": [
         "error",
         {
@@ -253,6 +310,7 @@ export default [
           ],
         },
       ],
+
       "import/order": [
         "warn",
         {
@@ -265,8 +323,13 @@ export default [
             "index",
             "object",
           ],
+
           "newlines-between": "always",
-          alphabetize: { order: "asc", caseInsensitive: true },
+
+          alphabetize: {
+            order: "asc",
+            caseInsensitive: true,
+          },
         },
       ],
 
