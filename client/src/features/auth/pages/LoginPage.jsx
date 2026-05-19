@@ -1,0 +1,336 @@
+/* eslint-disable max-lines -- file intentionally large; split refactor planned */
+import { signInWithPopup } from "firebase/auth";
+import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useRef, useCallback, useState } from "react";
+
+import { auth, provider } from "../../../utils/firebase";
+import { useAuth } from "../hooks/useAuth";
+
+import STEPS from "./loginSteps";
+
+const LoginPage = () => {
+  const { handleGoogleAuth, error: authError } = useAuth();
+  const stepsListRef = useRef(null);
+  const [activeStepIndex, setActiveStepIndex] = useState(2); // start at index 2 (Customize Props) to match original highlighted state
+  const [isPaused, setIsPaused] = useState(false);
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768);
+
+  useEffect(() => {
+    // Handle window resize
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  useEffect(() => {
+    if (isPaused) {
+      return undefined;
+    }
+
+    const interval = setInterval(() => {
+      setActiveStepIndex((prevIndex) => (prevIndex + 1) % STEPS.length);
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, [isPaused]);
+
+  // Auto-scroll to active step on mobile
+  useEffect(() => {
+    if (stepsListRef.current) {
+      const activeStep = stepsListRef.current.querySelector('[data-active="true"]');
+      if (activeStep) {
+        activeStep.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+      }
+    }
+  }, [activeStepIndex]);
+
+  const handleGoogleLogin = useCallback(async () => {
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const idToken = await result.user.getIdToken();
+      await handleGoogleAuth(idToken);
+    } catch (loginError) {
+      console.warn("Google login error:", loginError.message);
+    }
+  }, [handleGoogleAuth]);
+
+  return (
+    <div className="bg-surface font-sora text-text-primary flex min-h-screen flex-col">
+      {/* TopNavBar */}
+      <header className="bg-surface border-divider fixed top-0 z-50 w-full border-b">
+        <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-8 py-4">
+          <div className="flex items-center gap-2">
+            <div className="bg-charcoal flex h-8 w-8 items-center justify-center rounded-lg">
+              <svg className="text-warm-accent h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z" />
+              </svg>
+            </div>
+            <span className="text-charcoal text-xl font-bold tracking-tight">Cosmic UI</span>
+          </div>
+          <nav className="hidden items-center gap-8 md:flex">
+            <a
+              className="text-text-primary border-warm-accent border-b-2 pb-1 font-medium transition-all"
+              href="https://cosmicui.example.com/how-it-works"
+            >
+              How it works
+            </a>
+            <a
+              className="text-text-secondary hover:text-charcoal transition-colors"
+              href="https://docs.example.com"
+            >
+              Docs
+            </a>
+            <a
+              className="text-text-secondary hover:text-charcoal transition-colors"
+              href="https://cosmicui.example.com/pricing"
+            >
+              Pricing
+            </a>
+          </nav>
+          <div className="flex items-center gap-4">
+            <button className="text-text-secondary hover:text-charcoal rounded-custom hover:bg-surface-container-low px-4 py-2 text-sm font-medium transition-colors">
+              Support
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* MainContent */}
+      <main className="mt-16 flex flex-grow items-center justify-center p-6">
+        <div className="animate-fade-in rounded-custom relative flex min-h-[500px] w-full max-w-4xl flex-col overflow-hidden bg-white shadow-xl md:flex-row">
+          {/* Close Button placed globally relative to the card */}
+          <button className="md:text-text-secondary md:hover:text-charcoal md:hover:bg-surface-dim absolute top-6 right-6 z-50 rounded-full p-2 text-white/50 transition-colors hover:bg-white/10 hover:text-white">
+            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                d="M6 18L18 6M6 6l12 12"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+              />
+            </svg>
+          </button>
+
+          {/* Left Section: Dark sophisticated info */}
+          <section className="bg-charcoal relative flex flex-col justify-between overflow-hidden p-6 pb-4 text-white md:w-5/12 md:p-10">
+            <div className="from-warm-accent/10 to-charcoal/0 pointer-events-none absolute inset-0 bg-gradient-to-br" />
+            <div className="relative z-10">
+              <div className="mb-6 flex items-center gap-3 md:mb-12">
+                <div className="bg-warm-accent/20 border-warm-accent/30 flex h-10 w-10 items-center justify-center rounded-lg border">
+                  <svg className="text-warm-accent h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z" />
+                  </svg>
+                </div>
+                <span className="text-2xl font-semibold tracking-tight">Cosmic UI</span>
+              </div>
+              <div>
+                <p className="text-warm-accent mb-4 text-[10px] font-bold tracking-[0.2em] uppercase md:mb-6">
+                  How it works
+                </p>
+                <ul
+                  ref={stepsListRef}
+                  className="scrollbar-hide md:scrollbar-show flex flex-row space-x-2 overflow-x-auto pb-2 md:flex-col md:space-y-2 md:space-x-0 md:overflow-visible md:overflow-y-visible md:pb-0"
+                >
+                  {STEPS.map((step, index) => {
+                    const isActive = activeStepIndex === index;
+                    return (
+                      <motion.li
+                        layout
+                        key={step.id}
+                        data-active={isActive}
+                        className="relative flex min-w-full cursor-pointer items-start gap-4 rounded-xl p-3.5 select-none md:min-w-auto"
+                        onMouseEnter={() => setIsPaused(true)}
+                        onMouseLeave={() => setIsPaused(false)}
+                        onClick={() => {
+                          setActiveStepIndex(index);
+                          setIsPaused(true);
+                        }}
+                      >
+                        {/* Mobile: Show background on all items */}
+                        <motion.div
+                          className="border-warm-accent/15 bg-warm-accent/10 absolute inset-0 z-0 rounded-xl border shadow-sm backdrop-blur-[2px] md:hidden"
+                          transition={{ type: "spring", stiffness: 350, damping: 30 }}
+                        />
+                        {/* Desktop: Show background only on active item */}
+                        {isActive && (
+                          <motion.div
+                            layoutId="active-step-bg"
+                            className="border-warm-accent/15 bg-warm-accent/10 absolute inset-0 z-0 hidden rounded-xl border shadow-sm backdrop-blur-[2px] md:block"
+                            transition={{ type: "spring", stiffness: 350, damping: 30 }}
+                          />
+                        )}
+                        <div className="relative z-10 flex w-full items-start gap-4">
+                          <div
+                            className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg shadow-sm transition-all duration-500 ${
+                              isActive ? "bg-warm-accent" : "border border-white/10 bg-white/5"
+                            }`}
+                          >
+                            {step.icon(isActive)}
+                          </div>
+                          <div className="flex-grow">
+                            <h4
+                              className={`text-sm font-medium transition-colors duration-500 ${
+                                isActive ? "text-white" : "text-white/80"
+                              }`}
+                            >
+                              {step.title}
+                            </h4>
+                            <AnimatePresence initial={false}>
+                              {isActive || isMobile ? (
+                                <motion.p
+                                  initial={{ opacity: 0, height: 0 }}
+                                  animate={{ opacity: 1, height: "auto" }}
+                                  exit={{ opacity: 0, height: 0 }}
+                                  transition={{ duration: 0.25 }}
+                                  className="mt-1 max-w-70 overflow-hidden text-xs text-white/50"
+                                >
+                                  {step.description}
+                                </motion.p>
+                              ) : null}
+                            </AnimatePresence>
+                          </div>
+                        </div>
+                      </motion.li>
+                    );
+                  })}
+                </ul>
+              </div>
+            </div>
+            <div className="relative z-10 border-t border-white/10 pt-8">
+              <p className="text-[10px] tracking-widest text-white/40 uppercase">
+                Powered by Advanced LLMs
+              </p>
+            </div>
+          </section>
+
+          {/* Right Section: Soft Cream Login */}
+          <section className="bg-soft-cream relative flex flex-col items-center justify-center p-10 text-center md:w-7/12">
+            {/* Close Button */}
+            <button className="text-text-secondary hover:text-charcoal hover:bg-surface-dim absolute top-6 right-6 rounded-full p-2 transition-colors">
+              <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M6 18L18 6M6 6l12 12"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                />
+              </svg>
+            </button>
+            <div className="w-full max-w-[360px]">
+              {/* Logo for Right Side */}
+              <div className="mb-8 flex justify-center">
+                <div className="bg-charcoal flex h-16 w-16 transform items-center justify-center rounded-2xl shadow-xl transition-transform duration-300 hover:scale-105">
+                  <svg
+                    className="text-warm-accent h-10 w-10"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z" />
+                  </svg>
+                </div>
+              </div>
+              <h2 className="text-charcoal mb-4 text-3xl font-bold">Welcome</h2>
+              <p className="text-text-secondary mb-10 text-sm">
+                Sign in to generate AI-powered UI components in seconds
+              </p>
+              {/* Social Stats/Indicators */}
+              <div className="border-divider mb-10 grid grid-cols-3 gap-4 border-y py-6">
+                <div>
+                  <p className="text-charcoal text-lg font-bold">150</p>
+                  <p className="text-text-secondary text-[10px] font-bold uppercase">Credits</p>
+                </div>
+                <div className="border-divider border-x">
+                  <p className="text-charcoal text-lg font-bold">∞</p>
+                  <p className="text-text-secondary text-[10px] font-bold uppercase">Components</p>
+                </div>
+                <div>
+                  <p className="text-charcoal text-lg font-bold">JSX</p>
+                  <p className="text-text-secondary text-[10px] font-bold uppercase">Ready</p>
+                </div>
+              </div>
+
+              {/* Primary Button with Google Login */}
+              <div className="relative flex h-[54px] w-full items-center justify-center">
+                {/* Visual Button - Now functional */}
+                <button
+                  onClick={handleGoogleLogin}
+                  className="border-divider hover:border-warm-accent text-charcoal rounded-custom absolute inset-0 flex h-full w-full items-center justify-center gap-3 border bg-white px-6 py-4 font-semibold shadow-sm transition-all hover:shadow-md active:scale-[0.98]"
+                  type="button"
+                >
+                  <svg className="h-5 w-5 shrink-0" viewBox="0 0 24 24">
+                    <path
+                      d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                      fill="#4285F4"
+                    />
+                    <path
+                      d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                      fill="#34A853"
+                    />
+                    <path
+                      d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"
+                      fill="#FBBC05"
+                    />
+                    <path
+                      d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                      fill="#EA4335"
+                    />
+                  </svg>
+                  <span>Continue with Google</span>
+                </button>
+              </div>
+
+              {authError && (
+                <div className="mt-3 text-xs font-semibold text-red-500">{authError}</div>
+              )}
+              {/* {loading && <div className="text-text-secondary text-xs mt-3 font-medium">Signing in...</div>} */}
+
+              <p className="text-text-secondary mt-8 text-[11px]">
+                No account needed for npm.{" "}
+                <a
+                  className="text-warm-accent font-semibold transition-all hover:underline"
+                  href="https://docs.example.com"
+                >
+                  View docs →
+                </a>
+              </p>
+            </div>
+          </section>
+        </div>
+      </main>
+
+      {/* Footer */}
+      <footer className="bg-surface-container-lowest border-divider mt-auto border-t py-8">
+        <div className="mx-auto flex w-full max-w-7xl flex-col items-center justify-between gap-4 px-8 md:flex-row">
+          <div className="flex flex-col items-center gap-6 md:flex-row">
+            <span className="text-charcoal text-lg font-bold">Cosmic UI</span>
+            <p className="text-text-secondary text-xs">© 2026 Cosmic UI. All rights reserved.</p>
+          </div>
+          <div className="flex items-center gap-6">
+            <a
+              className="text-text-secondary hover:text-warm-accent text-xs transition-all hover:underline"
+              href="https://cosmicui.example.com/privacy"
+            >
+              Privacy Policy
+            </a>
+            <a
+              className="text-text-secondary hover:text-warm-accent text-xs transition-all hover:underline"
+              href="https://cosmicui.example.com/terms"
+            >
+              Terms of Service
+            </a>
+            <a
+              className="text-text-secondary hover:text-warm-accent text-xs transition-all hover:underline"
+              href="https://cosmicui.example.com/security"
+            >
+              Security
+            </a>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+};
+
+export default LoginPage;
