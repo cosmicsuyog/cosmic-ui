@@ -2,11 +2,18 @@
 import { signInWithPopup } from "firebase/auth";
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useRef, useCallback, useState } from "react";
+import { Link } from "react-router-dom";
 
 import { auth, provider } from "../../../utils/firebase";
 import { useAuth } from "../hooks/useAuth";
 
 import STEPS from "./loginSteps";
+
+const footerLinks = [
+  ["Privacy Policy", "/coming-soon/privacy"],
+  ["Terms of Service", "/coming-soon/terms"],
+  ["Security", "/coming-soon/security"],
+];
 
 const LoginPage = () => {
   const { handleGoogleAuth, error: authError } = useAuth();
@@ -50,8 +57,8 @@ const LoginPage = () => {
   const handleGoogleLogin = useCallback(async () => {
     try {
       const result = await signInWithPopup(auth, provider);
-      const idToken = await result.user.getIdToken();
-      await handleGoogleAuth(idToken);
+      const { displayName, email } = result.user;
+      await handleGoogleAuth({ displayName, email });
     } catch (loginError) {
       console.warn("Google login error:", loginError.message);
     }
@@ -63,37 +70,36 @@ const LoginPage = () => {
       <header className="bg-surface border-divider fixed top-0 z-50 w-full border-b">
         <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-8 py-4">
           <div className="flex items-center gap-2">
-            <div className="bg-charcoal flex h-8 w-8 items-center justify-center rounded-lg">
-              <svg className="text-warm-accent h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z" />
-              </svg>
-            </div>
-            <span className="text-charcoal text-xl font-bold tracking-tight">Cosmic UI</span>
+            <img src="/favicon.svg" alt="Cosmic UI logo" className="h-8 w-8" />
+            <span className="navbar-brand-text">Cosmic UI</span>
           </div>
           <nav className="hidden items-center gap-8 md:flex">
-            <a
+            <Link
               className="text-text-primary border-warm-accent border-b-2 pb-1 font-medium transition-all"
-              href="https://cosmicui.example.com/how-it-works"
+              to="/home"
             >
               How it works
-            </a>
-            <a
+            </Link>
+            <Link
               className="text-text-secondary hover:text-charcoal transition-colors"
-              href="https://docs.example.com"
+              to="/coming-soon/docs"
             >
               Docs
-            </a>
-            <a
+            </Link>
+            <Link
               className="text-text-secondary hover:text-charcoal transition-colors"
-              href="https://cosmicui.example.com/pricing"
+              to="/coming-soon/pricing"
             >
               Pricing
-            </a>
+            </Link>
           </nav>
           <div className="flex items-center gap-4">
-            <button className="text-text-secondary hover:text-charcoal rounded-custom hover:bg-surface-container-low px-4 py-2 text-sm font-medium transition-colors">
-              Support
-            </button>
+            <Link
+              to="/home"
+              className="text-text-secondary hover:text-charcoal rounded-custom hover:bg-surface-container-low px-4 py-2 text-sm font-medium transition-colors"
+            >
+              Back to Main
+            </Link>
           </div>
         </div>
       </header>
@@ -102,7 +108,11 @@ const LoginPage = () => {
       <main className="mt-16 flex flex-grow items-center justify-center p-6">
         <div className="animate-fade-in rounded-custom relative flex min-h-[500px] w-full max-w-4xl flex-col overflow-hidden bg-white shadow-xl md:flex-row">
           {/* Close Button placed globally relative to the card */}
-          <button className="md:text-text-secondary md:hover:text-charcoal md:hover:bg-surface-dim absolute top-6 right-6 z-50 rounded-full p-2 text-white/50 transition-colors hover:bg-white/10 hover:text-white">
+          <Link
+            to="/home"
+            aria-label="Close sign in and return home"
+            className="md:text-text-secondary md:hover:text-charcoal md:hover:bg-surface-dim absolute top-6 right-6 z-50 rounded-full p-2 text-white/50 transition-colors hover:bg-white/10 hover:text-white"
+          >
             <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 d="M6 18L18 6M6 6l12 12"
@@ -111,7 +121,7 @@ const LoginPage = () => {
                 strokeWidth="2"
               />
             </svg>
-          </button>
+          </Link>
 
           {/* Left Section: Dark sophisticated info */}
           <section className="bg-charcoal relative flex flex-col justify-between overflow-hidden p-6 pb-4 text-white md:w-5/12 md:p-10">
@@ -208,7 +218,11 @@ const LoginPage = () => {
           {/* Right Section: Soft Cream Login */}
           <section className="bg-soft-cream relative flex flex-col items-center justify-center p-10 text-center md:w-7/12">
             {/* Close Button */}
-            <button className="text-text-secondary hover:text-charcoal hover:bg-surface-dim absolute top-6 right-6 rounded-full p-2 transition-colors">
+            <Link
+              to="/home"
+              aria-label="Close sign in and return home"
+              className="text-text-secondary hover:text-charcoal hover:bg-surface-dim absolute top-6 right-6 rounded-full p-2 transition-colors"
+            >
               <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   d="M6 18L18 6M6 6l12 12"
@@ -217,7 +231,7 @@ const LoginPage = () => {
                   strokeWidth="2"
                 />
               </svg>
-            </button>
+            </Link>
             <div className="w-full max-w-[360px]">
               {/* Logo for Right Side */}
               <div className="mb-8 flex justify-center">
@@ -288,12 +302,12 @@ const LoginPage = () => {
 
               <p className="text-text-secondary mt-8 text-[11px]">
                 No account needed for npm.{" "}
-                <a
+                <Link
                   className="text-warm-accent font-semibold transition-all hover:underline"
-                  href="https://docs.example.com"
+                  to="/coming-soon/docs"
                 >
                   View docs →
-                </a>
+                </Link>
               </p>
             </div>
           </section>
@@ -308,24 +322,15 @@ const LoginPage = () => {
             <p className="text-text-secondary text-xs">© 2026 Cosmic UI. All rights reserved.</p>
           </div>
           <div className="flex items-center gap-6">
-            <a
-              className="text-text-secondary hover:text-warm-accent text-xs transition-all hover:underline"
-              href="https://cosmicui.example.com/privacy"
-            >
-              Privacy Policy
-            </a>
-            <a
-              className="text-text-secondary hover:text-warm-accent text-xs transition-all hover:underline"
-              href="https://cosmicui.example.com/terms"
-            >
-              Terms of Service
-            </a>
-            <a
-              className="text-text-secondary hover:text-warm-accent text-xs transition-all hover:underline"
-              href="https://cosmicui.example.com/security"
-            >
-              Security
-            </a>
+            {footerLinks.map(([label, to]) => (
+              <Link
+                key={label}
+                className="text-text-secondary hover:text-warm-accent text-xs transition-all hover:underline"
+                to={to}
+              >
+                {label}
+              </Link>
+            ))}
           </div>
         </div>
       </footer>
