@@ -2,10 +2,11 @@ import axios from "axios";
 
 import { auth, provider } from "../../../utils/firebase";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000/api";
 
 const authClient = axios.create({
   baseURL: API_URL,
+  withCredentials: true,
   headers: {
     "Content-Type": "application/json",
   },
@@ -26,7 +27,8 @@ authClient.interceptors.request.use((config) => {
   return config;
 });
 
-export const googleAuthService = (idToken) => authClient.post("/auth/google", { idToken });
+export const googleAuthService = ({ displayName, email }) =>
+  authClient.post("/auth/google", { name: displayName || email, email });
 
 export const logoutService = () =>
   // Sign out from Firebase

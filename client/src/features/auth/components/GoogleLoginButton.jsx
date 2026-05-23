@@ -2,13 +2,27 @@ import { useEffect, useCallback } from "react";
 
 import { useAuth } from "../hooks/useAuth";
 
+const getGoogleProfile = (credential) => {
+  const [, payload] = credential.split(".");
+  const normalizedPayload = payload
+    .replace(/-/g, "+")
+    .replace(/_/g, "/")
+    .padEnd(Math.ceil(payload.length / 4) * 4, "=");
+  const profile = JSON.parse(window.atob(normalizedPayload));
+
+  return {
+    displayName: profile.name,
+    email: profile.email,
+  };
+};
+
 const GoogleLoginButton = ({ onSuccess }) => {
   const { handleGoogleAuth, loading, error } = useAuth();
 
   const handleGoogleSuccess = useCallback(
     async (response) => {
-      const idToken = response.credential;
-      const result = await handleGoogleAuth(idToken);
+      const googleUser = getGoogleProfile(response.credential);
+      const result = await handleGoogleAuth(googleUser);
 
       if (result.type === "auth/googleAuth/fulfilled") {
         onSuccess?.();

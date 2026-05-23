@@ -2,13 +2,26 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 import { googleAuthService } from "./services/authService";
 
+const getStoredUser = () => {
+  try {
+    return JSON.parse(localStorage.getItem("user"));
+  } catch {
+    return null;
+  }
+};
+
 export const googleAuth = createAsyncThunk(
   "auth/googleAuth",
-  async (idToken, { rejectWithValue }) => {
+  async (googleUser, { rejectWithValue }) => {
     try {
-      const response = await googleAuthService(idToken);
-      const { token, user } = response.data;
-      localStorage.setItem("token", token);
+      const response = await googleAuthService(googleUser);
+      const { token = null, user } = response.data;
+      if (token) {
+        localStorage.setItem("token", token);
+      }
+      if (user) {
+        localStorage.setItem("user", JSON.stringify(user));
+      }
       return { token, user };
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || "Auth failed");
@@ -25,16 +38,19 @@ export const logout = createAsyncThunk("auth/logout", async (_, { rejectWithValu
       },
     });
     localStorage.removeItem("token");
+    localStorage.removeItem("user");
     return null;
   } catch (error) {
     return rejectWithValue(error.message || "Logout failed");
   }
 });
 
+const storedUser = getStoredUser();
+
 const initialState = {
-  user: null,
+  user: storedUser,
   token: localStorage.getItem("token") || null,
-  isAuthenticated: !!localStorage.getItem("token"),
+  isAuthenticated: !!localStorage.getItem("token") || !!storedUser,
   loading: true,
   error: null,
 };
@@ -45,8 +61,10 @@ const authSlice = createSlice({
   reducers: {
     initializeAuth: (state) => {
       const token = localStorage.getItem("token");
+      const user = getStoredUser();
       state.token = token;
-      state.isAuthenticated = !!token;
+      state.user = user;
+      state.isAuthenticated = !!token || !!user;
       state.loading = false;
     },
     clearError: (state) => {
@@ -78,6 +96,7 @@ const authSlice = createSlice({
         state.user = null;
         state.token = null;
         state.isAuthenticated = false;
+        localStorage.removeItem("user");
       })
       .addCase(logout.rejected, (state, action) => {
         state.loading = false;

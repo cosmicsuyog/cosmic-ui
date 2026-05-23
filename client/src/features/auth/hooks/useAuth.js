@@ -12,8 +12,8 @@ export const useAuth = () => {
     return state.auth;
   });
 
-  const handleGoogleAuth = async (idToken) => {
-    const result = await dispatch(googleAuth(idToken));
+  const handleGoogleAuth = async (googleUser) => {
+    const result = await dispatch(googleAuth(googleUser));
     return result;
   };
 
