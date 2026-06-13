@@ -37,6 +37,127 @@ const normalizeProps = (props) => {
   return [];
 };
 
+const getPropExample = (propName) => {
+  const lowerName = propName.toLowerCase();
+
+  if (lowerName.startsWith("on")) {
+    return `${propName}={() => {}}`;
+  }
+
+  if (
+    lowerName.includes("count") ||
+    lowerName.includes("price") ||
+    lowerName.includes("rating") ||
+    lowerName.includes("value") ||
+    lowerName.includes("total")
+  ) {
+    return `${propName}={3}`;
+  }
+
+  if (
+    lowerName.includes("disabled") ||
+    lowerName.includes("loading") ||
+    lowerName.includes("active") ||
+    lowerName.includes("open")
+  ) {
+    return `${propName}={false}`;
+  }
+
+  if (
+    lowerName.includes("items") ||
+    lowerName.includes("links") ||
+    lowerName.includes("features") ||
+    lowerName.includes("rows") ||
+    lowerName.includes("cards")
+  ) {
+    return `${propName}={[]}`;
+  }
+
+  return `${propName}="${propName} value"`;
+};
+
+const createUsageCode = (componentName, componentProps) => {
+  const propLines = componentProps.slice(0, 10).map((propName) => `        ${getPropExample(propName)}`);
+  const propsBlock = propLines.length > 0 ? `\n${propLines.join("\n")}\n      ` : "";
+
+  return `import { ${componentName} } from "./${componentName}";
+
+export default function App() {
+  return (
+    <div>
+      <${componentName}${propsBlock}/>
+    </div>
+  );
+}`;
+};
+
+const copyToClipboard = async (text) => {
+  if (typeof navigator === "undefined" || !navigator.clipboard) {
+    return;
+  }
+
+  await navigator.clipboard.writeText(text);
+};
+
+const CodePanel = ({ code, label = "JSX" }) => (
+  <div className="overflow-hidden rounded-lg border border-white/10 bg-[#07100f]">
+    <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
+      <span className="type-label-sm text-white/35 tracking-widest uppercase">{label}</span>
+      <button
+        type="button"
+        onClick={() => copyToClipboard(code)}
+        className="flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-bold text-white/50 transition-colors hover:bg-white/10 hover:text-white"
+      >
+        <span className="material-symbols-outlined text-[16px] leading-none">content_copy</span>
+        Copy
+      </button>
+    </div>
+    <pre className="max-h-[520px] overflow-auto p-5 text-sm leading-7 text-green-200">
+      <code>{code}</code>
+    </pre>
+  </div>
+);
+
+const GuideStep = ({ icon, number, title, children }) => (
+  <section className="space-y-3">
+    <div className="flex items-center gap-3">
+      <span className="material-symbols-outlined text-white/45 text-[18px] leading-none">{icon}</span>
+      <span className="font-sora text-sm font-extrabold text-cyan-300">{number}</span>
+      <h3 className="font-sora text-base font-bold text-white/75">{title}</h3>
+    </div>
+    {children}
+  </section>
+);
+
+const UsageGuide = ({ componentName, componentCode, componentProps }) => {
+  const fileName = `${componentName}.jsx`;
+  const usageCode = createUsageCode(componentName, componentProps);
+
+  return (
+    <div className="space-y-7">
+      <p className="type-label-sm text-cyan-300 tracking-[0.35em] uppercase">Usage Guide</p>
+
+      <GuideStep icon="content_copy" number="01" title="Copy the component code">
+        <CodePanel code={componentCode} />
+      </GuideStep>
+
+      <GuideStep icon="data_object" number="02" title="Create a new file">
+        <div className="rounded-lg border border-white/10 bg-[#07100f] p-5">
+          <p className="type-label-sm text-white/35 tracking-widest uppercase">Filename</p>
+          <p className="mt-5 font-mono text-lg font-bold text-green-200">{fileName}</p>
+        </div>
+        <p className="type-body-sm text-white/40">
+          Paste the copied component code into this file.
+        </p>
+      </GuideStep>
+
+      <GuideStep icon="auto_awesome" number="03" title="Import and use in App.jsx">
+        <CodePanel code={usageCode} />
+      </GuideStep>
+    </div>
+  );
+};
+
 const GeneratePage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -358,32 +479,27 @@ const GeneratePage = () => {
 
               {generatedComponent && (
                 <div className="bg-surface-container-low flex w-fit rounded-full p-1">
-                  <button
-                    type="button"
-                    onClick={() => setActiveView("preview")}
-                    className={`flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
-                      activeView === "preview"
-                        ? "bg-white text-charcoal-text shadow-sm"
-                        : "text-text-secondary hover:text-charcoal-text"
-                    }`}
-                  >
-                    <span className="material-symbols-outlined text-base leading-none">
-                      visibility
-                    </span>
-                    Preview
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setActiveView("code")}
-                    className={`flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
-                      activeView === "code"
-                        ? "bg-white text-charcoal-text shadow-sm"
-                        : "text-text-secondary hover:text-charcoal-text"
-                    }`}
-                  >
-                    <span className="material-symbols-outlined text-base leading-none">code</span>
-                    Code
-                  </button>
+                  {[
+                    ["preview", "visibility", "Preview"],
+                    ["code", "code", "Code"],
+                    ["guide", "explore", "Guide"],
+                  ].map(([view, icon, label]) => (
+                    <button
+                      key={view}
+                      type="button"
+                      onClick={() => setActiveView(view)}
+                      className={`flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
+                        activeView === view
+                          ? "bg-white text-charcoal-text shadow-sm"
+                          : "text-text-secondary hover:text-charcoal-text"
+                      }`}
+                    >
+                      <span className="material-symbols-outlined text-base leading-none">
+                        {icon}
+                      </span>
+                      {label}
+                    </button>
+                  ))}
                 </div>
               )}
             </div>
@@ -416,10 +532,14 @@ const GeneratePage = () => {
                   componentName={componentName}
                   componentProps={componentProps}
                 />
+              ) : activeView === "code" ? (
+                <CodePanel code={componentCode} />
               ) : (
-                <pre className="max-h-[460px] overflow-auto rounded-lg border border-white/10 bg-[#070b18] p-5 text-sm leading-7 text-white/80">
-                  <code>{componentCode}</code>
-                </pre>
+                <UsageGuide
+                  componentCode={componentCode}
+                  componentName={componentName}
+                  componentProps={componentProps}
+                />
               )}
             </div>
 
