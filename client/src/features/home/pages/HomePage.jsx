@@ -567,7 +567,7 @@ const HomePage = () => {
                   Generate Component
                 </Link>
                 <Link
-                  to="/coming-soon/components"
+                  to="/components"
                   className="type-label-md flex cursor-pointer items-center justify-center gap-2 rounded-full px-8 py-4 font-semibold transition-colors hover:bg-white/10"
                   style={{ border: "1px solid rgba(255,255,255,0.2)", color: "#fff" }}
                 >

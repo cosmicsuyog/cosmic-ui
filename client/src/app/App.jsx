@@ -6,6 +6,7 @@ import { initializeAuth } from "../features/auth/auth.slice";
 import LoginPage from "../features/auth/pages/LoginPage";
 import AdminPage from "../features/admin/pages/AdminPage";
 import ComingSoonPage from "../features/coming-soon/pages/ComingSoonPage";
+import MyComponentsPage from "../features/components/pages/MyComponentsPage";
 import DocumentationPage from "../features/docs/pages/DocumentationPage";
 import GeneratePage from "../features/generate/pages/GeneratePage";
 import HomePage from "../features/home/pages/HomePage";
@@ -121,6 +122,14 @@ const App = () => {
         <Route
           path="/generate"
           element={isAuthenticated ? <GeneratePage /> : <Navigate to="/" replace />}
+        />
+        <Route
+          path="/components"
+          element={isAuthenticated ? <MyComponentsPage /> : <Navigate to="/" replace />}
+        />
+        <Route
+          path="/coming-soon/components"
+          element={isAuthenticated ? <MyComponentsPage /> : <Navigate to="/" replace />}
         />
         <Route path="/docs" element={<DocumentationPage />} />
         <Route path="/coming-soon/docs" element={<DocumentationPage />} />

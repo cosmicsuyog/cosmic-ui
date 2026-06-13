@@ -116,6 +116,20 @@ export const saveComponent = async (req, res) => {
   }
 };
 
+export const getMyComponents = async (req, res) => {
+  try {
+    const components = await Component.find({ owner: req.userId }).sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      message: "success",
+      success: true,
+      components,
+    });
+  } catch (error) {
+    return res.status(500).json({ message: "Failed to get your components", error });
+  }
+};
+
 export const publishComponent = async (req, res) => {
   try {
     const user = await User.findById(req.userId);
