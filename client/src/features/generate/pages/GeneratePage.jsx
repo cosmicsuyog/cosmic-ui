@@ -244,7 +244,7 @@ const GeneratePage = () => {
         syncStoredCredits(response.data.remainingCredits);
       }
       setActiveView("preview");
-      setStatusMessage("Component generated. Review it before saving.");
+      setStatusMessage("Component generated. Use the Guide button to copy and install it in App.jsx.");
     } catch (error) {
       if (handleAuthFailure(error)) {
         return;
@@ -466,7 +466,21 @@ const GeneratePage = () => {
                   <span className="material-symbols-outlined leading-none">layers</span>
                 </div>
                 <div>
-                  <h2 className="type-headline-sm text-charcoal-text">{componentName}</h2>
+                  <div className="flex flex-wrap items-center gap-3">
+                    <h2 className="type-headline-sm text-charcoal-text">{componentName}</h2>
+                    {generatedComponent && (
+                      <button
+                        type="button"
+                        onClick={() => setActiveView("guide")}
+                        className="bg-blue-soft/70 text-charcoal-text hover:bg-blue-soft flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-extrabold transition-colors"
+                      >
+                        <span className="material-symbols-outlined text-[15px] leading-none">
+                          explore
+                        </span>
+                        Guide ready
+                      </button>
+                    )}
+                  </div>
                   <p className="type-body-sm text-text-secondary">
                     {componentProps.length > 0
                       ? `Props: ${componentProps.join(", ")}`
@@ -571,6 +585,16 @@ const GeneratePage = () => {
                     </div>
                   )}
                   <div className="flex flex-wrap gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setActiveView("guide")}
+                    className="border-outline-variant bg-blue-soft/70 hover:bg-blue-soft flex items-center gap-2 rounded-lg border px-4 py-3 text-sm font-bold text-charcoal-text transition-colors"
+                  >
+                    <span className="material-symbols-outlined text-base leading-none">
+                      integration_instructions
+                    </span>
+                    Open Guide
+                  </button>
                   <button
                     type="button"
                     onClick={handleSave}
