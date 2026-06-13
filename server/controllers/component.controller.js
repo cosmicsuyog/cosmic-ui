@@ -23,6 +23,49 @@ const runNpmCommand = (args, cwd) =>
     stdio: "pipe",
   });
 
+const getLibraryPath = () => path.resolve(process.cwd(), "../library");
+
+const extractProps = (code) => {
+  const propsBlock = code.match(/\(\s*\{\s*([\s\S]*?)\s*\}\s*=\s*\{/);
+
+  if (!propsBlock?.[1]) {
+    return [];
+  }
+
+  return Array.from(propsBlock[1].matchAll(/\b([A-Za-z_$][\w$]*)\s*=/g), (match) => match[1]);
+};
+
+export const getLibraryComponents = () => {
+  const componentsDir = path.join(getLibraryPath(), "src/components");
+
+  if (!fs.existsSync(componentsDir)) {
+    return [];
+  }
+
+  return fs
+    .readdirSync(componentsDir, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory() && entry.name !== "ComponentKit")
+    .map((entry) => {
+      const componentFile = path.join(componentsDir, entry.name, `${entry.name}.jsx`);
+      const code = fs.existsSync(componentFile) ? fs.readFileSync(componentFile, "utf-8") : "";
+      const stat = fs.existsSync(componentFile) ? fs.statSync(componentFile) : null;
+
+      return {
+        _id: `library-${entry.name}`,
+        name: entry.name,
+        code,
+        props: extractProps(code),
+        owner: null,
+        visibility: "public",
+        npmPackage: "cosmic-ui-library",
+        source: "library",
+        createdAt: stat?.mtime || null,
+        updatedAt: stat?.mtime || null,
+      };
+    })
+    .sort((a, b) => a.name.localeCompare(b.name));
+};
+
 export const saveComponent = async (req, res) => {
   try {
     const { name, code, props, visibility } = req.body;
@@ -191,20 +234,29 @@ export const publishComponent = async (req, res) => {
 
 
 export const getAllComponents = async (req, res) => {
-  try{
-    const components = await Component.find({}).populate("owner", "name,email").sort({createdAt: -1})
-    if(!components){
-        return res.status(404).json({
-            message:"Failed to get all components",
-            success:false
-        })
+  try {
+    const databaseComponents = await Component.find({})
+      .populate("owner", "name,email")
+      .sort({ createdAt: -1 });
+    const databaseComponentNames = new Set(databaseComponents.map((component) => component.name));
+    const libraryComponents = getLibraryComponents().filter(
+      (component) => !databaseComponentNames.has(component.name)
+    );
+    const components = [...libraryComponents, ...databaseComponents];
+
+    if (!components) {
+      return res.status(404).json({
+        message: "Failed to get all components",
+        success: false,
+      });
     }
+
     return res.status(200).json({
-        message:"success",
-        success:true,
-        components
-    })
-  }catch(error){
-      return res.status(500).json({ message: "Failed to get all components", error });
+      message: "success",
+      success: true,
+      components,
+    });
+  } catch (error) {
+    return res.status(500).json({ message: "Failed to get all components", error });
   }
-}
+};

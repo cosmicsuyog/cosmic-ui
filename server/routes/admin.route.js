@@ -1,6 +1,6 @@
 import express from "express";
 
-import { getAllComponents } from "../controllers/component.controller.js";
+import { getAllComponents, getLibraryComponents } from "../controllers/component.controller.js";
 import { getAllUsers, getCurrentUser } from "../controllers/user.controller.js";
 import { isAuth } from "../middlewares/isAuth.js";
 import Component from "../models/component.model.js";
@@ -31,6 +31,7 @@ adminRouter.get("/components", getAllComponents);
 
 adminRouter.get("/stats", async (_req, res) => {
   try {
+    const libraryComponents = getLibraryComponents();
     const [totalUsers, totalComponents, publicComponents, privateComponents] = await Promise.all([
       User.countDocuments(),
       Component.countDocuments(),
@@ -42,8 +43,8 @@ adminRouter.get("/stats", async (_req, res) => {
       success: true,
       stats: {
         totalUsers,
-        totalComponents,
-        publicComponents,
+        totalComponents: totalComponents + libraryComponents.length,
+        publicComponents: publicComponents + libraryComponents.length,
         privateComponents,
       },
     });
