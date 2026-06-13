@@ -4,6 +4,14 @@ export { Button } from "./components/Button/Button.jsx"
 export { Card } from "./components/Card/Card.jsx"
 export { ProfileCard } from "./components/ProfileCard/ProfileCard.jsx";
 
+export { Accordion } from "./components/Accordion/Accordion.jsx";
+export { Calendar } from "./components/Calendar/Calendar.jsx";
+export { EcommerceCard } from "./components/EcommerceCard/EcommerceCard.jsx";
+export { ProductCard } from "./components/ProductCard/ProductCard.jsx";
+export { Switch } from "./components/Switch/Switch.jsx";
+export { Table } from "./components/Table/Table.jsx";
+export { Textarea } from "./components/Textarea/Textarea.jsx";
+
 export { ActivityFeed } from "./components/ActivityFeed/ActivityFeed.jsx";
 export { AIChatInterface } from "./components/AIChatInterface/AIChatInterface.jsx";
 export { AICodeViewer } from "./components/AICodeViewer/AICodeViewer.jsx";
