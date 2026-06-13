@@ -5,7 +5,9 @@ import express from "express";
 import morgan from "morgan";
 
 import { connectDB } from "./config/connectDB.js";
+import adminRouter from "./routes/admin.route.js";
 import authRouter from "./routes/auth.routes.js";
+import componentRouter from "./routes/component.route.js";
 
 dotenv.config();
 const app = express();
@@ -27,6 +29,8 @@ app.use(
 );
 
 app.use("/api/auth", authRouter);
+app.use("/api/components", componentRouter);
+app.use("/api/admin", adminRouter);
 
 app.listen(PORT, () => {
   console.info(`Server is running on port ${PORT}`);
