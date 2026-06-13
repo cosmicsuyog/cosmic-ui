@@ -80,7 +80,7 @@ const createUsageCode = (componentName, componentProps) => {
   const propLines = componentProps.slice(0, 10).map((propName) => `        ${getPropExample(propName)}`);
   const propsBlock = propLines.length > 0 ? `\n${propLines.join("\n")}\n      ` : "";
 
-  return `import { ${componentName} } from "./${componentName}";
+  return `import { ${componentName} } from "./components/${componentName}";
 
 export default function App() {
   return (
@@ -99,61 +99,134 @@ const copyToClipboard = async (text) => {
   await navigator.clipboard.writeText(text);
 };
 
-const CodePanel = ({ code, label = "JSX" }) => (
-  <div className="overflow-hidden rounded-lg border border-white/10 bg-[#07100f]">
-    <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
-      <span className="type-label-sm text-white/35 tracking-widest uppercase">{label}</span>
+const CodePanel = ({ code, label = "JSX", maxHeight = "max-h-[520px]" }) => (
+  <div className="border-outline-variant overflow-hidden rounded-xl border bg-[#1E1E1E] shadow-sm">
+    <div className="flex items-center justify-between border-b border-[#3D3D3D] bg-[#2D2D2D] px-4 py-3">
+      <span className="type-label-sm text-gray-400 tracking-widest uppercase">{label}</span>
       <button
         type="button"
         onClick={() => copyToClipboard(code)}
-        className="flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-bold text-white/50 transition-colors hover:bg-white/10 hover:text-white"
+        className="flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-bold text-gray-400 transition-colors hover:bg-white/10 hover:text-white"
       >
         <span className="material-symbols-outlined text-[16px] leading-none">content_copy</span>
         Copy
       </button>
     </div>
-    <pre className="max-h-[520px] overflow-auto p-5 text-sm leading-7 text-green-200">
+    <pre className={`${maxHeight} overflow-auto p-5 text-sm leading-7 text-green-200`}>
       <code>{code}</code>
     </pre>
   </div>
 );
 
-const GuideStep = ({ icon, number, title, children }) => (
-  <section className="space-y-3">
-    <div className="flex items-center gap-3">
-      <span className="material-symbols-outlined text-white/45 text-[18px] leading-none">{icon}</span>
-      <span className="font-sora text-sm font-extrabold text-cyan-300">{number}</span>
-      <h3 className="font-sora text-base font-bold text-white/75">{title}</h3>
+const GuideStepCard = ({ number, title, description, isActive = false }) => (
+  <div className="text-center">
+    <div
+      className={`mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full border text-lg font-bold ${
+        isActive
+          ? "border-warm-accent bg-warm-accent text-charcoal-text"
+          : "border-white/20 bg-white/5 text-warm-accent"
+      }`}
+    >
+      {number}
     </div>
-    {children}
-  </section>
+    <h4 className="mb-2 font-sora text-base font-semibold text-white">{title}</h4>
+    <p className="type-body-sm text-white/50">{description}</p>
+  </div>
 );
 
 const UsageGuide = ({ componentName, componentCode, componentProps }) => {
-  const fileName = `${componentName}.jsx`;
+  const filePath = `src/components/${componentName}.jsx`;
   const usageCode = createUsageCode(componentName, componentProps);
+  const installCommand = "npm i cosmic-ui-library";
+  const guideSteps = [
+    {
+      number: "01",
+      title: "Install Library",
+      description: "Install Cosmic UI once so your project has the package ready.",
+    },
+    {
+      number: "02",
+      title: "Create File",
+      description: `Create ${filePath} and paste the generated JSX code.`,
+    },
+    {
+      number: "03",
+      title: "Import Component",
+      description: "Import the component in App.jsx using the generated local path.",
+    },
+    {
+      number: "04",
+      title: "Copy & Use",
+      description: "Pass props, customize defaults, and use the component in your app.",
+    },
+  ];
 
   return (
-    <div className="space-y-7">
-      <p className="type-label-sm text-cyan-300 tracking-[0.35em] uppercase">Usage Guide</p>
-
-      <GuideStep icon="content_copy" number="01" title="Copy the component code">
-        <CodePanel code={componentCode} />
-      </GuideStep>
-
-      <GuideStep icon="data_object" number="02" title="Create a new file">
-        <div className="rounded-lg border border-white/10 bg-[#07100f] p-5">
-          <p className="type-label-sm text-white/35 tracking-widest uppercase">Filename</p>
-          <p className="mt-5 font-mono text-lg font-bold text-green-200">{fileName}</p>
-        </div>
-        <p className="type-body-sm text-white/40">
-          Paste the copied component code into this file.
+    <div className="space-y-8">
+      <div>
+        <p className="type-label-sm text-warm-accent mb-3 tracking-widest uppercase">
+          Component Documentation
         </p>
-      </GuideStep>
+        <h3 className="font-sora text-2xl font-extrabold text-white">How to use {componentName}</h3>
+        <p className="type-body-sm mt-2 max-w-2xl text-white/55">
+          Follow the same flow from the main documentation: install the package, create the file,
+          import it in App.jsx, then customize the generated props.
+        </p>
+      </div>
 
-      <GuideStep icon="auto_awesome" number="03" title="Import and use in App.jsx">
-        <CodePanel code={usageCode} />
-      </GuideStep>
+      <div className="relative overflow-hidden rounded-2xl bg-[#2a2622] p-8 shadow-xl">
+        <div
+          className="pointer-events-none absolute inset-0 opacity-10"
+          style={{
+            backgroundImage:
+              "linear-gradient(#666 1px, transparent 1px), linear-gradient(90deg, #666 1px, transparent 1px)",
+            backgroundSize: "40px 40px",
+          }}
+        />
+        <div className="relative z-10 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          {guideSteps.map((step, index) => (
+            <GuideStepCard key={step.number} {...step} isActive={index === 1} />
+          ))}
+        </div>
+      </div>
+
+      <div className="grid gap-5 lg:grid-cols-[0.9fr_1.1fr]">
+        <div className="space-y-5">
+          <div className="border-outline-variant rounded-xl border bg-surface-container-lowest p-5">
+            <p className="type-label-sm text-text-secondary mb-3 tracking-widest uppercase">
+              Install command
+            </p>
+            <button
+              type="button"
+              onClick={() => copyToClipboard(installCommand)}
+              className="bg-gentle-gray-surface border-outline-variant type-body-sm text-charcoal-text hover:border-warm-accent group flex w-full items-center gap-4 rounded-lg border px-4 py-3 text-left font-mono shadow-sm transition-all"
+              title="Click to copy install command"
+            >
+              <span className="text-text-secondary group-hover:text-warm-accent transition-colors">
+                $
+              </span>
+              <span className="min-w-0 flex-1 break-all">{installCommand}</span>
+              <span className="material-symbols-outlined text-text-secondary group-hover:text-charcoal-text text-[18px] leading-none transition-colors">
+                content_copy
+              </span>
+            </button>
+          </div>
+
+          <div className="border-outline-variant rounded-xl border bg-surface-container-lowest p-5">
+            <p className="type-label-sm text-text-secondary mb-3 tracking-widest uppercase">
+              Create file
+            </p>
+            <p className="font-mono text-lg font-bold text-charcoal-text">{filePath}</p>
+            <p className="type-body-sm text-text-secondary mt-3">
+              Copy the generated component code and paste it into this file.
+            </p>
+          </div>
+        </div>
+
+        <CodePanel code={usageCode} label="App.jsx" maxHeight="max-h-[360px]" />
+      </div>
+
+      <CodePanel code={componentCode} label={`${componentName}.jsx`} />
     </div>
   );
 };
