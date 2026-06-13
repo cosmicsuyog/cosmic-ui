@@ -228,13 +228,13 @@ const HomePage = () => {
 
           <div className="flex flex-wrap justify-center gap-4">
             <Link
-              to={hasSignedInUser ? "/coming-soon/generate" : "/"}
+              to={hasSignedInUser ? "/generate" : "/"}
               className="bg-warm-accent text-charcoal-text type-label-md cursor-pointer rounded-full px-8 py-4 font-semibold shadow-md transition-transform hover:scale-105"
             >
               GET STARTED
             </Link>
             <Link
-              to="/coming-soon/generate"
+              to="/generate"
               className="bg-gentle-gray-surface text-charcoal-text type-label-md border-outline-variant hover:bg-surface-container-high cursor-pointer rounded-full border px-8 py-4 font-semibold transition-colors"
             >
               Generate AI Component
@@ -558,7 +558,7 @@ const HomePage = () => {
 
               <div className="flex flex-col justify-center gap-4 sm:flex-row">
                 <Link
-                  to="/coming-soon/generate"
+                  to="/generate"
                   className="bg-warm-accent text-charcoal-text type-label-md flex cursor-pointer items-center justify-center gap-2 rounded-full px-8 py-4 font-semibold shadow-[0_4px_16px_rgba(232,160,110,0.4)] transition-transform hover:scale-105"
                 >
                   <span className="material-symbols-outlined text-sm leading-none">

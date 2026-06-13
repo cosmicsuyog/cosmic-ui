@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-import { googleAuthService } from "./services/authService";
+import { googleAuthService, logoutService } from "./services/authService";
 
 const getStoredUser = () => {
   try {
@@ -31,12 +31,7 @@ export const googleAuth = createAsyncThunk(
 
 export const logout = createAsyncThunk("auth/logout", async (_, { rejectWithValue }) => {
   try {
-    await fetch(`${import.meta.env.VITE_API_URL}/auth/logout`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    });
+    await logoutService();
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     return null;

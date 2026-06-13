@@ -68,7 +68,7 @@ const LoginPage = () => {
     <div className="bg-surface font-sora text-text-primary flex min-h-screen flex-col">
       {/* TopNavBar */}
       <header className="bg-surface border-divider fixed top-0 z-50 w-full border-b">
-        <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-8 py-4">
+        <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-3 md:px-8 md:py-4">
           <div className="flex items-center gap-2">
             <img src="/favicon.svg" alt="Cosmic UI logo" className="h-8 w-8" />
             <span className="navbar-brand-text">Cosmic UI</span>
@@ -96,7 +96,7 @@ const LoginPage = () => {
           <div className="flex items-center gap-4">
             <Link
               to="/home"
-              className="text-text-secondary hover:text-charcoal rounded-custom hover:bg-surface-container-low px-4 py-2 text-sm font-medium transition-colors"
+              className="text-text-secondary hover:text-charcoal rounded-custom hover:bg-surface-container-low px-2.5 py-1.5 text-xs font-medium transition-colors md:px-4 md:py-2 md:text-sm"
             >
               Back to Main
             </Link>
@@ -105,7 +105,7 @@ const LoginPage = () => {
       </header>
 
       {/* MainContent */}
-      <main className="mt-16 flex flex-grow items-center justify-center p-6">
+      <main className="mt-14 flex flex-grow items-center justify-center p-3 md:mt-16 md:p-6">
         <div className="animate-fade-in rounded-custom relative flex min-h-[500px] w-full max-w-4xl flex-col overflow-hidden bg-white shadow-xl md:flex-row">
           {/* Close Button placed globally relative to the card */}
           <Link
@@ -124,16 +124,16 @@ const LoginPage = () => {
           </Link>
 
           {/* Left Section: Dark sophisticated info */}
-          <section className="bg-charcoal relative flex flex-col justify-between overflow-hidden p-6 pb-4 text-white md:w-5/12 md:p-10">
+          <section className="bg-charcoal relative flex flex-col justify-between overflow-hidden p-4 pb-3 text-white md:w-5/12 md:p-10">
             <div className="from-warm-accent/10 to-charcoal/0 pointer-events-none absolute inset-0 bg-gradient-to-br" />
             <div className="relative z-10">
-              <div className="mb-6 flex items-center gap-3 md:mb-12">
-                <div className="bg-warm-accent/20 border-warm-accent/30 flex h-10 w-10 items-center justify-center rounded-lg border">
-                  <svg className="text-warm-accent h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+              <div className="mb-4 flex items-center gap-3 md:mb-12">
+                <div className="bg-warm-accent/20 border-warm-accent/30 flex h-9 w-9 items-center justify-center rounded-lg border md:h-10 md:w-10">
+                  <svg className="text-warm-accent h-5 w-5 md:h-6 md:w-6" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z" />
                   </svg>
                 </div>
-                <span className="text-2xl font-semibold tracking-tight">Cosmic UI</span>
+                <span className="text-xl font-semibold tracking-tight md:text-2xl">Cosmic UI</span>
               </div>
               <div>
                 <p className="text-warm-accent mb-4 text-[10px] font-bold tracking-[0.2em] uppercase md:mb-6">
@@ -150,7 +150,7 @@ const LoginPage = () => {
                         layout
                         key={step.id}
                         data-active={isActive}
-                        className="relative flex min-w-full cursor-pointer items-start gap-4 rounded-xl p-3.5 select-none md:min-w-auto"
+                        className="relative flex w-[clamp(15rem,64%,19rem)] shrink-0 cursor-pointer items-start gap-2.5 rounded-lg p-2.5 select-none md:w-auto md:min-w-auto md:gap-4 md:rounded-xl md:p-3.5"
                         onMouseEnter={() => setIsPaused(true)}
                         onMouseLeave={() => setIsPaused(false)}
                         onClick={() => {
@@ -160,7 +160,7 @@ const LoginPage = () => {
                       >
                         {/* Mobile: Show background on all items */}
                         <motion.div
-                          className="border-warm-accent/15 bg-warm-accent/10 absolute inset-0 z-0 rounded-xl border shadow-sm backdrop-blur-[2px] md:hidden"
+                          className="border-warm-accent/15 bg-warm-accent/10 absolute inset-0 z-0 rounded-lg border shadow-sm backdrop-blur-[2px] md:hidden"
                           transition={{ type: "spring", stiffness: 350, damping: 30 }}
                         />
                         {/* Desktop: Show background only on active item */}
@@ -171,9 +171,9 @@ const LoginPage = () => {
                             transition={{ type: "spring", stiffness: 350, damping: 30 }}
                           />
                         )}
-                        <div className="relative z-10 flex w-full items-start gap-4">
+                        <div className="relative z-10 flex w-full items-start gap-3 md:gap-4">
                           <div
-                            className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg shadow-sm transition-all duration-500 ${
+                            className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-md shadow-sm transition-all duration-500 md:h-8 md:w-8 md:rounded-lg ${
                               isActive ? "bg-warm-accent" : "border border-white/10 bg-white/5"
                             }`}
                           >
@@ -181,7 +181,7 @@ const LoginPage = () => {
                           </div>
                           <div className="flex-grow">
                             <h4
-                              className={`text-sm font-medium transition-colors duration-500 ${
+                              className={`text-[13px] leading-snug font-semibold transition-colors duration-500 md:text-sm ${
                                 isActive ? "text-white" : "text-white/80"
                               }`}
                             >
@@ -194,7 +194,7 @@ const LoginPage = () => {
                                   animate={{ opacity: 1, height: "auto" }}
                                   exit={{ opacity: 0, height: 0 }}
                                   transition={{ duration: 0.25 }}
-                                  className="mt-1 max-w-70 overflow-hidden text-xs text-white/50"
+                                  className="mt-0.5 max-w-[12.5rem] overflow-hidden text-[11px] leading-4 text-white/55 md:mt-1 md:max-w-70 md:text-xs md:leading-snug"
                                 >
                                   {step.description}
                                 </motion.p>
@@ -208,7 +208,7 @@ const LoginPage = () => {
                 </ul>
               </div>
             </div>
-            <div className="relative z-10 border-t border-white/10 pt-8">
+            <div className="relative z-10 border-t border-white/10 pt-4 md:pt-8">
               <p className="text-[10px] tracking-widest text-white/40 uppercase">
                 Powered by Advanced LLMs
               </p>
@@ -217,21 +217,6 @@ const LoginPage = () => {
 
           {/* Right Section: Soft Cream Login */}
           <section className="bg-soft-cream relative flex flex-col items-center justify-center p-10 text-center md:w-7/12">
-            {/* Close Button */}
-            <Link
-              to="/home"
-              aria-label="Close sign in and return home"
-              className="text-text-secondary hover:text-charcoal hover:bg-surface-dim absolute top-6 right-6 rounded-full p-2 transition-colors"
-            >
-              <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  d="M6 18L18 6M6 6l12 12"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                />
-              </svg>
-            </Link>
             <div className="w-full max-w-[360px]">
               {/* Logo for Right Side */}
               <div className="mb-8 flex justify-center">
