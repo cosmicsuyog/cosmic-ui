@@ -16,7 +16,7 @@ const HomePage = () => {
   const userDisplayName =
     user?.displayName || user?.name || user?.email?.split("@")[0] || "Developer";
   const footerLinks = [
-    ["Documentation", "/coming-soon/docs"],
+    ["Documentation", "/docs"],
     ["GitHub", "/coming-soon/github"],
     ["Twitter", "/coming-soon/twitter"],
     ["Discord", "/coming-soon/discord"],
@@ -78,7 +78,7 @@ const HomePage = () => {
             </Link>
             <Link
               className="type-body-sm text-text-secondary hover:text-charcoal-text font-medium transition-colors"
-              to="/coming-soon/docs"
+              to="/docs"
             >
               Documentation
             </Link>

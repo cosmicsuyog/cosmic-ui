@@ -6,6 +6,7 @@ import { initializeAuth } from "../features/auth/auth.slice";
 import LoginPage from "../features/auth/pages/LoginPage";
 import AdminPage from "../features/admin/pages/AdminPage";
 import ComingSoonPage from "../features/coming-soon/pages/ComingSoonPage";
+import DocumentationPage from "../features/docs/pages/DocumentationPage";
 import GeneratePage from "../features/generate/pages/GeneratePage";
 import HomePage from "../features/home/pages/HomePage";
 import CustomCursor from "./CustomCursor";
@@ -121,6 +122,8 @@ const App = () => {
           path="/generate"
           element={isAuthenticated ? <GeneratePage /> : <Navigate to="/" replace />}
         />
+        <Route path="/docs" element={<DocumentationPage />} />
+        <Route path="/coming-soon/docs" element={<DocumentationPage />} />
         <Route path="/coming-soon/:page" element={<ComingSoonPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
