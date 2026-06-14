@@ -109,15 +109,15 @@ const CodeBlock = ({ code, label = "JSX", className = "" }) => {
   };
 
   return (
-    <div className={`overflow-hidden rounded-xl border border-cyan-300/10 bg-[#04100f] shadow-[0_20px_80px_rgba(0,0,0,0.22)] ${className}`}>
-      <div className="flex items-center justify-between border-b border-white/5 bg-white/[0.025] px-4 py-3">
-        <span className="text-[11px] font-bold uppercase tracking-widest text-white/35">
+    <div className={`border-outline-variant overflow-hidden rounded-xl border bg-[#1E1E1E] shadow-xl ${className}`}>
+      <div className="flex items-center justify-between border-b border-[#3D3D3D] bg-[#2D2D2D] px-4 py-3">
+        <span className="type-label-sm tracking-widest text-gray-400 uppercase">
           {label}
         </span>
         <button
           type="button"
           onClick={handleCopy}
-          className="flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-semibold text-white/55 transition-colors hover:bg-white/10 hover:text-cyan-200"
+          className="flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-bold text-gray-400 transition-colors hover:bg-white/10 hover:text-white"
         >
           <span className="material-symbols-outlined text-[18px] leading-none">content_copy</span>
           {copied ? "Copied" : "Copy"}
@@ -134,10 +134,10 @@ const DockButton = ({ active, icon, label, onClick }) => (
   <button
     type="button"
     onClick={onClick}
-    className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-bold transition-colors ${
+    className={`flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
       active
-        ? "bg-cyan-400/20 text-cyan-200 shadow-[0_0_24px_rgba(34,211,238,0.12)]"
-        : "text-white/45 hover:bg-white/5 hover:text-white"
+        ? "bg-white text-charcoal-text shadow-sm"
+        : "text-text-secondary hover:text-charcoal-text"
     }`}
   >
     <span className="material-symbols-outlined text-[18px] leading-none">{icon}</span>
@@ -146,19 +146,19 @@ const DockButton = ({ active, icon, label, onClick }) => (
 );
 
 const EmptyState = () => (
-  <div className="flex min-h-[480px] items-center justify-center rounded-2xl border border-cyan-300/10 bg-[#030915] p-8 text-center">
+  <div className="border-outline-variant flex min-h-[480px] items-center justify-center rounded-xl border bg-white p-8 text-center shadow-sm">
     <div className="max-w-md">
-      <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-cyan-400/15 text-cyan-200">
+      <div className="bg-highlight-pink/40 text-charcoal-text mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl">
         <span className="material-symbols-outlined text-[30px] leading-none">widgets</span>
       </div>
-      <h2 className="mb-3 text-2xl font-extrabold text-white">No components saved yet</h2>
-      <p className="mb-7 text-sm leading-6 text-white/50">
+      <h2 className="text-charcoal-text mb-3 text-2xl font-extrabold">No components saved yet</h2>
+      <p className="text-text-secondary mb-7 text-sm leading-6">
         Generate a component, save it, and it will appear here with preview, source code, and
         usage guide.
       </p>
       <Link
         to="/generate"
-        className="inline-flex items-center gap-2 rounded-full bg-cyan-300 px-5 py-3 text-sm font-extrabold text-[#031011] transition-transform hover:scale-105"
+        className="bg-warm-accent text-charcoal-text inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-extrabold shadow-sm transition-transform hover:scale-105"
       >
         <span className="material-symbols-outlined text-[18px] leading-none">auto_awesome</span>
         Generate Component
@@ -175,50 +175,50 @@ const UsageGuide = ({ componentName, componentCode, componentProps }) => {
   return (
     <div className="space-y-7">
       <div>
-        <p className="mb-5 text-[12px] font-extrabold uppercase tracking-[0.42em] text-cyan-300/70">
+        <p className="type-label-sm text-warm-accent mb-5 tracking-widest uppercase">
           Usage Guide
         </p>
         <div className="space-y-9">
           <section className="space-y-4">
             <div className="flex items-center gap-3">
-              <span className="material-symbols-outlined text-[21px] leading-none text-white/45">
+              <span className="material-symbols-outlined text-text-secondary text-[21px] leading-none">
                 content_copy
               </span>
-              <span className="text-lg font-extrabold text-cyan-300">01</span>
-              <h3 className="text-lg font-bold text-white/75">Copy the component code</h3>
+              <span className="text-warm-accent text-lg font-extrabold">01</span>
+              <h3 className="text-charcoal-text text-lg font-bold">Copy the component code</h3>
             </div>
             <CodeBlock code={componentCode} label="JSX" />
           </section>
 
           <section className="space-y-4">
             <div className="flex items-center gap-3">
-              <span className="material-symbols-outlined text-[21px] leading-none text-white/45">
+              <span className="material-symbols-outlined text-text-secondary text-[21px] leading-none">
                 code
               </span>
-              <span className="text-lg font-extrabold text-cyan-300">02</span>
-              <h3 className="text-lg font-bold text-white/75">Create a new file</h3>
+              <span className="text-warm-accent text-lg font-extrabold">02</span>
+              <h3 className="text-charcoal-text text-lg font-bold">Create a new file</h3>
             </div>
             <button
               type="button"
               onClick={() => copyToClipboard(filePath)}
-              className="w-full rounded-xl border border-cyan-300/10 bg-[#04100f] px-5 py-5 text-left transition-colors hover:border-cyan-300/30"
+              className="bg-gentle-gray-surface border-outline-variant hover:border-warm-accent w-full rounded-xl border px-5 py-5 text-left shadow-sm transition-colors"
               title="Copy file path"
             >
-              <span className="mb-4 block text-[11px] font-bold uppercase tracking-widest text-white/35">
+              <span className="text-text-secondary mb-4 block text-[11px] font-bold uppercase tracking-widest">
                 Filename
               </span>
-              <span className="font-mono text-base font-bold text-emerald-200">{filePath}</span>
+              <span className="text-charcoal-text font-mono text-base font-bold">{filePath}</span>
             </button>
-            <p className="text-sm text-white/40">Paste the copied code into this file.</p>
+            <p className="text-text-secondary text-sm">Paste the copied code into this file.</p>
           </section>
 
           <section className="space-y-4">
             <div className="flex items-center gap-3">
-              <span className="material-symbols-outlined text-[21px] leading-none text-white/45">
+              <span className="material-symbols-outlined text-text-secondary text-[21px] leading-none">
                 auto_awesome
               </span>
-              <span className="text-lg font-extrabold text-cyan-300">03</span>
-              <h3 className="text-lg font-bold text-white/75">Import and use in App.jsx</h3>
+              <span className="text-warm-accent text-lg font-extrabold">03</span>
+              <h3 className="text-charcoal-text text-lg font-bold">Import and use in App.jsx</h3>
             </div>
             <CodeBlock code={usageCode} label="JSX" className="mb-2" />
           </section>
@@ -323,13 +323,13 @@ const MyComponentsPage = () => {
   const renderMainContent = () => {
     if (loading) {
       return (
-        <div className="flex min-h-[480px] items-center justify-center rounded-2xl border border-cyan-300/10 bg-[#030915]">
+        <div className="border-outline-variant flex min-h-[480px] items-center justify-center rounded-xl border bg-white shadow-sm">
           <div className="text-center">
-            <span className="material-symbols-outlined mb-4 animate-spin text-4xl leading-none text-cyan-200">
+            <span className="material-symbols-outlined text-warm-accent mb-4 animate-spin text-4xl leading-none">
               progress_activity
             </span>
-            <p className="font-bold text-white">Loading your components</p>
-            <p className="mt-2 text-sm text-white/45">Fetching saved work from your library.</p>
+            <p className="text-charcoal-text font-bold">Loading your components</p>
+            <p className="text-text-secondary mt-2 text-sm">Fetching saved work from your library.</p>
           </div>
         </div>
       );
@@ -337,17 +337,17 @@ const MyComponentsPage = () => {
 
     if (errorMessage) {
       return (
-        <div className="flex min-h-[480px] items-center justify-center rounded-2xl border border-red-300/20 bg-red-500/10 p-8 text-center">
+        <div className="border-red-soft bg-red-soft/40 flex min-h-[480px] items-center justify-center rounded-xl border p-8 text-center">
           <div className="max-w-md">
-            <span className="material-symbols-outlined mb-4 text-4xl leading-none text-red-200">
+            <span className="mb-4 text-4xl leading-none text-red-600 material-symbols-outlined">
               error
             </span>
-            <h2 className="mb-3 text-2xl font-extrabold text-white">Could not load components</h2>
-            <p className="mb-6 text-sm leading-6 text-white/55">{errorMessage}</p>
+            <h2 className="text-charcoal-text mb-3 text-2xl font-extrabold">Could not load components</h2>
+            <p className="text-text-secondary mb-6 text-sm leading-6">{errorMessage}</p>
             <button
               type="button"
               onClick={() => loadComponents()}
-              className="rounded-full bg-white px-5 py-3 text-sm font-extrabold text-[#031011]"
+              className="bg-charcoal-text rounded-full px-5 py-3 text-sm font-extrabold text-white shadow-sm"
             >
               Try Again
             </button>
@@ -375,7 +375,7 @@ const MyComponentsPage = () => {
     }
 
     return (
-      <div className="rounded-2xl border border-cyan-300/10 bg-[#030915] p-5 shadow-[0_20px_80px_rgba(0,0,0,0.22)]">
+      <div className="bg-charcoal rounded-xl p-5 shadow-xl">
         <GeneratedPreview
           componentCode={componentCode}
           componentName={componentName}
@@ -386,32 +386,37 @@ const MyComponentsPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#020b0d] text-white">
+    <div className="bg-soft-cream-bg text-charcoal-text min-h-screen">
       <div className="flex min-h-screen">
-        <aside className="hidden w-[306px] shrink-0 border-r border-cyan-300/10 bg-[#021112] lg:block">
+        <aside className="border-outline-variant/50 bg-surface-container-low hidden w-72 shrink-0 border-r lg:block">
           <div className="sticky top-0 flex h-screen flex-col">
-            <div className="flex items-center gap-3 px-8 py-7">
-              <img src="/favicon.svg" alt="Cosmic UI logo" className="h-11 w-11 rounded-2xl" />
-              <span className="text-2xl font-extrabold">Cosmic UI</span>
-            </div>
+            <Link to="/home" className="border-outline-variant/40 flex items-center gap-3 border-b px-6 py-7">
+              <img src="/favicon.svg" alt="Cosmic UI logo" className="h-10 w-10" />
+              <div>
+                <p className="navbar-brand-text">Cosmic UI</p>
+                <p className="type-label-sm text-warm-accent mt-1 tracking-widest uppercase">
+                  Components
+                </p>
+              </div>
+            </Link>
 
             <div className="px-4 pb-6">
-              <label className="flex items-center gap-3 rounded-xl border border-cyan-300/10 bg-white/[0.035] px-4 py-3 text-white/45 shadow-[0_16px_54px_rgba(0,0,0,0.25)]">
+              <label className="border-outline-variant flex items-center gap-3 rounded-lg border bg-white px-4 py-3 text-text-secondary shadow-sm">
                 <span className="material-symbols-outlined text-[20px] leading-none">search</span>
                 <input
                   value={searchTerm}
                   onChange={(event) => setSearchTerm(event.target.value)}
                   placeholder="Search..."
-                  className="min-w-0 flex-1 bg-transparent text-sm font-semibold text-white outline-none placeholder:text-white/35"
+                  className="text-charcoal-text min-w-0 flex-1 bg-transparent text-sm font-semibold outline-none placeholder:text-text-tertiary"
                 />
               </label>
             </div>
 
-            <div className="px-1">
-              <p className="mb-4 px-4 text-[11px] font-extrabold uppercase tracking-[0.42em] text-white/35">
+            <div className="min-h-0 flex-1 px-3">
+              <p className="type-label-sm text-text-secondary mb-4 px-3 tracking-widest uppercase">
                 My Components - {filteredComponents.length}
               </p>
-              <div className="space-y-1 overflow-auto pr-2">
+              <div className="space-y-1 overflow-auto pr-1">
                 {filteredComponents.map((component) => {
                   const isActive = component._id === displayedActiveComponentId;
 
@@ -425,13 +430,13 @@ const MyComponentsPage = () => {
                       }}
                       className={`flex w-full items-center justify-between rounded-xl px-5 py-4 text-left text-sm font-bold transition-colors ${
                         isActive
-                          ? "border border-cyan-300/15 bg-cyan-400/10 text-cyan-200"
-                          : "text-white/55 hover:bg-white/[0.045] hover:text-white"
+                          ? "bg-highlight-pink/50 text-charcoal-text shadow-sm"
+                          : "text-text-secondary hover:bg-white hover:text-charcoal-text"
                       }`}
                     >
                       <span className="min-w-0 truncate">{component.name}</span>
                       {isActive && (
-                        <span className="material-symbols-outlined text-[18px] leading-none">
+                        <span className="material-symbols-outlined text-warm-accent text-[18px] leading-none">
                           chevron_right
                         </span>
                       )}
@@ -440,47 +445,59 @@ const MyComponentsPage = () => {
                 })}
               </div>
             </div>
+
+            <div className="border-outline-variant/40 border-t p-4">
+              <Link
+                to="/generate"
+                className="bg-warm-accent text-charcoal-text flex items-center justify-center gap-2 rounded-full px-4 py-3 text-sm font-bold shadow-sm transition-transform hover:scale-105"
+              >
+                <span className="material-symbols-outlined text-[18px] leading-none">
+                  auto_awesome
+                </span>
+                Generate Component
+              </Link>
+            </div>
           </div>
         </aside>
 
         <main className="min-w-0 flex-1">
-          <header className="flex items-center justify-between border-b border-cyan-300/5 px-4 py-5 md:px-8">
+          <header className="border-outline-variant/40 bg-soft-cream-bg/90 sticky top-0 z-40 flex items-center justify-between border-b px-4 py-4 backdrop-blur-md md:px-8">
             <Link to="/home" className="flex items-center gap-3 lg:hidden">
-              <img src="/favicon.svg" alt="Cosmic UI logo" className="h-10 w-10 rounded-2xl" />
-              <span className="text-xl font-extrabold">Cosmic UI</span>
+              <img src="/favicon.svg" alt="Cosmic UI logo" className="h-8 w-8" />
+              <span className="navbar-brand-text">Cosmic UI</span>
             </Link>
             <div className="hidden lg:block" />
-            <div className="flex items-center gap-2 text-sm font-semibold text-white/45">
+            <div className="flex items-center gap-2 text-sm font-semibold text-text-secondary">
               <Link
                 to="/generate"
-                className="hidden items-center gap-2 rounded-lg px-3 py-2 transition-colors hover:bg-white/5 hover:text-white md:flex"
+                className="hover:bg-surface-container-low hover:text-charcoal-text hidden items-center gap-2 rounded-full px-4 py-2 transition-colors md:flex"
               >
                 <span className="material-symbols-outlined text-[18px] leading-none">
                   auto_awesome
                 </span>
                 Generate
               </Link>
-              <span className="flex items-center gap-2 rounded-lg px-3 py-2">
+              <span className="bg-white border-outline-variant text-charcoal-text flex items-center gap-2 rounded-full border px-4 py-2 shadow-sm">
                 <span className="material-symbols-outlined text-[18px] leading-none">inventory_2</span>
                 My Components
               </span>
             </div>
           </header>
 
-          <section className="px-4 py-8 md:px-8 lg:px-10">
-            <div className="mb-7 flex flex-col gap-5 border-b border-cyan-300/5 pb-7 xl:flex-row xl:items-end xl:justify-between">
+          <section className="mx-auto max-w-7xl px-4 py-8 md:px-8 lg:px-10">
+            <div className="border-outline-variant/50 mb-7 flex flex-col gap-5 border-b pb-7 xl:flex-row xl:items-end xl:justify-between">
               <div className="min-w-0">
-                <p className="mb-2 text-xs font-bold uppercase tracking-widest text-white/35 lg:hidden">
+                <p className="type-label-sm text-warm-accent mb-3 tracking-widest uppercase lg:hidden">
                   My Components - {filteredComponents.length}
                 </p>
-                <h1 className="truncate text-3xl font-extrabold text-white">
+                <h1 className="text-charcoal-text truncate text-3xl font-extrabold">
                   {activeComponent?.name || "My Components"}
                 </h1>
-                <p className="mt-2 text-sm font-semibold text-white/45">
+                <p className="text-text-secondary mt-2 text-sm font-semibold">
                   {headerDescription}
                 </p>
                 {activeComponent && (
-                  <p className="mt-2 text-xs font-semibold text-white/30">
+                  <p className="text-text-tertiary mt-2 text-xs font-semibold">
                     {formatDate(activeComponent.createdAt)}
                   </p>
                 )}
@@ -490,7 +507,7 @@ const MyComponentsPage = () => {
                 <button
                   type="button"
                   onClick={() => loadComponents({ silent: true })}
-                  className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/5 text-white/50 transition-colors hover:bg-white/10 hover:text-white"
+                  className="border-outline-variant flex h-10 w-10 items-center justify-center rounded-full border bg-white text-text-secondary shadow-sm transition-colors hover:text-charcoal-text"
                   aria-label="Refresh components"
                   title="Refresh components"
                 >
@@ -499,7 +516,7 @@ const MyComponentsPage = () => {
                   </span>
                 </button>
                 {activeComponent && (
-                  <div className="flex rounded-xl bg-[#04100f] p-1">
+                  <div className="bg-surface-container-low flex rounded-full p-1 shadow-sm">
                     <DockButton
                       active={activeView === "preview"}
                       icon="visibility"
@@ -524,13 +541,13 @@ const MyComponentsPage = () => {
             </div>
 
             <div className="mb-6 lg:hidden">
-              <label className="flex items-center gap-3 rounded-xl border border-cyan-300/10 bg-white/[0.035] px-4 py-3 text-white/45">
+              <label className="border-outline-variant flex items-center gap-3 rounded-lg border bg-white px-4 py-3 text-text-secondary shadow-sm">
                 <span className="material-symbols-outlined text-[20px] leading-none">search</span>
                 <input
                   value={searchTerm}
                   onChange={(event) => setSearchTerm(event.target.value)}
                   placeholder="Search components..."
-                  className="min-w-0 flex-1 bg-transparent text-sm font-semibold text-white outline-none placeholder:text-white/35"
+                  className="text-charcoal-text min-w-0 flex-1 bg-transparent text-sm font-semibold outline-none placeholder:text-text-tertiary"
                 />
               </label>
               {filteredComponents.length > 0 && (
@@ -545,8 +562,8 @@ const MyComponentsPage = () => {
                       }}
                       className={`shrink-0 rounded-full px-4 py-2 text-sm font-bold ${
                         component._id === displayedActiveComponentId
-                          ? "bg-cyan-400/20 text-cyan-200"
-                          : "bg-white/5 text-white/55"
+                          ? "bg-highlight-pink/70 text-charcoal-text"
+                          : "bg-white text-text-secondary"
                       }`}
                     >
                       {component.name}
