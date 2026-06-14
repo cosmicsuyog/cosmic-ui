@@ -127,6 +127,12 @@ const DocumentationPage = () => {
 
           <div className="flex items-center gap-3">
             <Link
+              to="/docs/components"
+              className="border-outline-variant type-label-md rounded-full border bg-white px-5 py-2.5 font-semibold text-text-secondary transition-colors hover:text-charcoal-text"
+            >
+              Components
+            </Link>
+            <Link
               to="/generate"
               className="bg-warm-accent type-label-md text-charcoal-text hidden rounded-full px-5 py-2.5 font-semibold shadow-sm transition-all hover:scale-105 hover:shadow-md sm:inline-flex"
             >
@@ -222,6 +228,30 @@ const DocumentationPage = () => {
             label="App.jsx"
             onCopy={handleCopy}
           />
+        </section>
+
+        <section className="border-outline-variant bg-white rounded-xl border p-6 shadow-sm md:p-8">
+          <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
+            <div>
+              <p className="type-label-sm text-warm-accent mb-3 tracking-widest uppercase">
+                Public Components
+              </p>
+              <h2 className="font-sora text-3xl font-bold text-charcoal-text">
+                Browse the shared component library
+              </h2>
+              <p className="type-body-md text-text-secondary mt-3 max-w-2xl">
+                View every public component created by admins, plus npm library components, with
+                preview, code, and guide tabs.
+              </p>
+            </div>
+            <Link
+              to="/docs/components"
+              className="bg-warm-accent text-charcoal-text type-label-md inline-flex w-fit items-center gap-2 rounded-full px-6 py-3 font-semibold shadow-sm transition-all hover:scale-105 hover:shadow-md"
+            >
+              <span className="material-symbols-outlined text-[18px] leading-none">widgets</span>
+              Open Components
+            </Link>
+          </div>
         </section>
 
         <section className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr]">

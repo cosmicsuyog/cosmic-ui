@@ -130,6 +130,27 @@ export const getMyComponents = async (req, res) => {
   }
 };
 
+export const getPublicComponents = async (_req, res) => {
+  try {
+    const databaseComponents = await Component.find({ visibility: "public" })
+      .populate("owner", "name,email")
+      .sort({ createdAt: -1 });
+    const databaseComponentNames = new Set(databaseComponents.map((component) => component.name));
+    const libraryComponents = getLibraryComponents().filter(
+      (component) => !databaseComponentNames.has(component.name)
+    );
+    const components = [...databaseComponents, ...libraryComponents];
+
+    return res.status(200).json({
+      message: "success",
+      success: true,
+      components,
+    });
+  } catch (error) {
+    return res.status(500).json({ message: "Failed to get public components", error });
+  }
+};
+
 export const publishComponent = async (req, res) => {
   try {
     const user = await User.findById(req.userId);
