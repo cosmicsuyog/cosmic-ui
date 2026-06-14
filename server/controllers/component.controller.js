@@ -25,14 +25,78 @@ const runNpmCommand = (args, cwd) =>
 
 const getLibraryPath = () => path.resolve(process.cwd(), "../library");
 
-const extractProps = (code) => {
-  const propsBlock = code.match(/\(\s*\{\s*([\s\S]*?)\s*\}\s*=\s*\{/);
+const escapeRegExp = (value) => String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
-  if (!propsBlock?.[1]) {
+const readDestructuredPropsBlock = (code, startIndex) => {
+  const parenIndex = code.indexOf("(", startIndex);
+
+  if (parenIndex === -1) {
+    return "";
+  }
+
+  const closingParenIndex = code.indexOf(")", parenIndex);
+  const openingBraceIndex = code.indexOf("{", parenIndex);
+
+  if (
+    openingBraceIndex === -1 ||
+    (closingParenIndex !== -1 && openingBraceIndex > closingParenIndex)
+  ) {
+    return "";
+  }
+
+  let depth = 0;
+  let quote = "";
+  let escaped = false;
+
+  for (let index = openingBraceIndex; index < code.length; index += 1) {
+    const char = code[index];
+
+    if (quote) {
+      if (escaped) {
+        escaped = false;
+      } else if (char === "\\") {
+        escaped = true;
+      } else if (char === quote) {
+        quote = "";
+      }
+      continue;
+    }
+
+    if (char === "'" || char === '"' || char === "`") {
+      quote = char;
+      continue;
+    }
+
+    if (char === "{") {
+      depth += 1;
+    }
+
+    if (char === "}") {
+      depth -= 1;
+
+      if (depth === 0) {
+        return code.slice(openingBraceIndex + 1, index);
+      }
+    }
+  }
+
+  return "";
+};
+
+const extractProps = (code, componentName = "") => {
+  const namedExportIndex = componentName
+    ? code.search(new RegExp(`export\\s+const\\s+${escapeRegExp(componentName)}\\s*=`))
+    : -1;
+  const propsBlockText =
+    namedExportIndex >= 0
+      ? readDestructuredPropsBlock(code, namedExportIndex)
+      : readDestructuredPropsBlock(code, 0);
+
+  if (!propsBlockText) {
     return [];
   }
 
-  return Array.from(propsBlock[1].matchAll(/\b([A-Za-z_$][\w$]*)\s*=/g), (match) => match[1]);
+  return Array.from(propsBlockText.matchAll(/\b([A-Za-z_$][\w$]*)\s*=/g), (match) => match[1]);
 };
 
 export const getLibraryComponents = () => {
@@ -44,7 +108,8 @@ export const getLibraryComponents = () => {
 
   return fs
     .readdirSync(componentsDir, { withFileTypes: true })
-    .filter((entry) => entry.isDirectory() && entry.name !== "ComponentKit")
+    .filter((entry) => entry.isDirectory())
+    .filter((entry) => fs.existsSync(path.join(componentsDir, entry.name, `${entry.name}.jsx`)))
     .map((entry) => {
       const componentFile = path.join(componentsDir, entry.name, `${entry.name}.jsx`);
       const code = fs.existsSync(componentFile) ? fs.readFileSync(componentFile, "utf-8") : "";
@@ -54,7 +119,7 @@ export const getLibraryComponents = () => {
         _id: `library-${entry.name}`,
         name: entry.name,
         code,
-        props: extractProps(code),
+        props: extractProps(code, entry.name),
         owner: null,
         visibility: "public",
         npmPackage: "cosmic-ui-library",

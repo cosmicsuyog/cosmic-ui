@@ -73,21 +73,6 @@ export default function App() {
 }`;
 };
 
-const createPackageUsageCode = (componentName) => `import { ${componentName} } from "cosmic-ui-library";
-
-export default function App() {
-  return (
-    <div>
-      <${componentName} />
-    </div>
-  );
-}`;
-
-const isPackageReferenceCode = (code) =>
-  /^\s*export\s+\{\s*[A-Za-z_$][\w$]*\s*\}\s+from\s+["']\.\.\/ComponentKit\/ComponentKit\.jsx["'];?\s*$/.test(
-    code
-  );
-
 const copyToClipboard = async (text) => {
   if (typeof navigator === "undefined" || !navigator.clipboard) {
     return false;
@@ -160,63 +145,6 @@ const EmptyState = () => (
       <p className="text-text-secondary text-sm leading-6">
         Public components created by admins will appear here once they are saved.
       </p>
-    </div>
-  </div>
-);
-
-const PackageReferencePanel = ({ componentName }) => {
-  const usageCode = createPackageUsageCode(componentName);
-
-  return (
-    <div className="border-outline-variant bg-white rounded-xl border p-6 shadow-sm">
-      <div className="bg-blue-soft/60 text-charcoal-text mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl">
-        <span className="material-symbols-outlined text-[26px] leading-none">deployed_code</span>
-      </div>
-      <p className="type-label-sm text-warm-accent mb-3 tracking-widest uppercase">
-        Package Component
-      </p>
-      <h3 className="text-charcoal-text mb-3 text-2xl font-extrabold">{componentName}</h3>
-      <p className="type-body-md text-text-secondary mb-6 max-w-2xl">
-        This entry is exported from the bundled Cosmic UI package. Install the package and import it
-        directly in your app.
-      </p>
-      <CodeBlock code={usageCode} label="App.jsx" />
-    </div>
-  );
-};
-
-const PackageGuide = ({ componentName }) => (
-  <div className="space-y-6">
-    <p className="type-label-sm text-warm-accent tracking-widest uppercase">Usage Guide</p>
-    <div className="grid gap-5 lg:grid-cols-[0.75fr_1.25fr]">
-      <div className="space-y-5">
-        <div className="border-outline-variant bg-white rounded-xl border p-5 shadow-sm">
-          <div className="mb-3 flex items-center gap-3">
-            <span className="text-warm-accent text-lg font-extrabold">01</span>
-            <h3 className="text-charcoal-text text-lg font-bold">Install the package</h3>
-          </div>
-          <button
-            type="button"
-            onClick={() => copyToClipboard("npm i cosmic-ui-library")}
-            className="bg-gentle-gray-surface border-outline-variant hover:border-warm-accent flex w-full items-center gap-3 rounded-lg border px-4 py-3 text-left font-mono text-sm font-bold text-charcoal-text"
-          >
-            <span className="text-text-secondary">$</span>
-            npm i cosmic-ui-library
-          </button>
-        </div>
-
-        <div className="border-outline-variant bg-white rounded-xl border p-5 shadow-sm">
-          <div className="mb-3 flex items-center gap-3">
-            <span className="text-warm-accent text-lg font-extrabold">02</span>
-            <h3 className="text-charcoal-text text-lg font-bold">Import and use</h3>
-          </div>
-          <p className="text-text-secondary text-sm">
-            Import {componentName} from the package and render it in App.jsx.
-          </p>
-        </div>
-      </div>
-
-      <CodeBlock code={createPackageUsageCode(componentName)} label="App.jsx" />
     </div>
   </div>
 );
@@ -348,7 +276,6 @@ const PublicComponentsPage = () => {
 
   const componentName = activeComponent?.name || "GeneratedComponent";
   const componentCode = activeComponent?.code || "";
-  const isPackageReference = isPackageReferenceCode(componentCode);
   const componentProps = useMemo(
     () => normalizeProps(activeComponent?.props),
     [activeComponent?.props]
@@ -409,19 +336,10 @@ const PublicComponentsPage = () => {
     }
 
     if (activeView === "code") {
-      return (
-        <CodeBlock
-          code={isPackageReference ? createPackageUsageCode(componentName) : componentCode}
-          label={isPackageReference ? "App.jsx" : `${componentName}.jsx`}
-        />
-      );
+      return <CodeBlock code={componentCode} label={`${componentName}.jsx`} />;
     }
 
     if (activeView === "guide") {
-      if (isPackageReference) {
-        return <PackageGuide componentName={componentName} />;
-      }
-
       return (
         <UsageGuide
           componentCode={componentCode}
@@ -429,10 +347,6 @@ const PublicComponentsPage = () => {
           componentProps={componentProps}
         />
       );
-    }
-
-    if (isPackageReference) {
-      return <PackageReferencePanel componentName={componentName} />;
     }
 
     return (
