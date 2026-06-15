@@ -622,10 +622,10 @@ const HomePage = () => {
               © 2026 Cosmic UI. Built with precision and warmth.
             </p>
             <a
-              href="mailto:SUYOGMARKAD292@GMAIL.COM"
+              href="mailto:suyogmarkad292@gmail.com"
               className="type-body-sm text-on-surface-variant hover:text-warm-accent transition-colors"
             >
-              SUYOGMARKAD292@GMAIL.COM
+              suyogmarkad292@gmail.com
             </a>
           </div>
         </div>
