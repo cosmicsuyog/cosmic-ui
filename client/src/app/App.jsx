@@ -12,18 +12,12 @@ import HomePage from "../features/home/pages/HomePage";
 import CustomCursor from "./CustomCursor";
 import "./index.css";
 
-const MIN_LOADER_DURATION_MS = 2500;
-const ROUTE_TRANSITION_DURATION_MS = 520;
+const INITIAL_LOADER_DURATION_MS = 900;
+const ROUTE_TRANSITION_DURATION_MS = 650;
 
-const RouteTransitionLoader = () => (
-  <div className="cosmic-route-transition" aria-label="Loading page" aria-live="polite">
-    <div className="cosmic-route-transition-card">
-      <img src="/favicon.svg" alt="" className="cosmic-route-transition-logo" />
-      <span className="cosmic-route-transition-text">COSMIC UI</span>
-      <span className="cosmic-route-transition-track">
-        <span className="cosmic-route-transition-bar" />
-      </span>
-    </div>
+const TopLoadingBar = () => (
+  <div className="cosmic-top-loader" aria-label="Loading page" aria-live="polite" role="status">
+    <span className="cosmic-top-loader-bar" />
   </div>
 );
 
@@ -31,11 +25,10 @@ const App = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   const { loading, isAuthenticated, user } = useSelector((state) => state.auth);
-  const [loaderProgress, setLoaderProgress] = useState(1);
-  const [minimumLoaderComplete, setMinimumLoaderComplete] = useState(false);
+  const [initialLoaderActive, setInitialLoaderActive] = useState(true);
   const [routeTransitioning, setRouteTransitioning] = useState(false);
   const hasSeenFirstRoute = useRef(false);
-  const showLoader = loading || !minimumLoaderComplete;
+  const showInitialLoader = loading || initialLoaderActive;
 
   useEffect(() => {
     dispatch(initializeAuth());
@@ -43,26 +36,14 @@ const App = () => {
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      setMinimumLoaderComplete(true);
-    }, MIN_LOADER_DURATION_MS);
+      setInitialLoaderActive(false);
+    }, INITIAL_LOADER_DURATION_MS);
 
     return () => clearTimeout(timeout);
   }, []);
 
   useEffect(() => {
-    if (!showLoader) {
-      return undefined;
-    }
-
-    const interval = setInterval(() => {
-      setLoaderProgress((progress) => Math.min(progress + 1, 100));
-    }, 25);
-
-    return () => clearInterval(interval);
-  }, [showLoader]);
-
-  useEffect(() => {
-    if (showLoader) {
+    if (showInitialLoader) {
       return undefined;
     }
 
@@ -78,29 +59,13 @@ const App = () => {
     }, ROUTE_TRANSITION_DURATION_MS);
 
     return () => clearTimeout(timeout);
-  }, [location.pathname, showLoader]);
-
-  if (showLoader) {
-    return (
-      <div className="cosmic-loader-screen">
-        <div className="cosmic-loader-brand" aria-label="Loading COSMIC UI">
-          <span>COSMIC UI</span>
-        </div>
-
-        <div className="cosmic-loader-progress" aria-live="polite">
-          <div className="cosmic-loader-percent">{loaderProgress}%</div>
-          <div className="cosmic-loader-track">
-            <div className="cosmic-loader-bar" style={{ width: `${loaderProgress}%` }} />
-          </div>
-        </div>
-      </div>
-    );
-  }
+  }, [location.pathname, showInitialLoader]);
 
   const isAdmin = isAuthenticated && user?.role === "admin";
 
   return (
     <>
+      {(showInitialLoader || routeTransitioning) && <TopLoadingBar />}
       <CustomCursor />
       <Routes>
         <Route
@@ -157,7 +122,6 @@ const App = () => {
         <Route path="/coming-soon/:page" element={<ComingSoonPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-      {routeTransitioning && <RouteTransitionLoader />}
     </>
   );
 };
