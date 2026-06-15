@@ -9,6 +9,7 @@ import ComingSoonPage from "../features/coming-soon/pages/ComingSoonPage";
 import PublicComponentsPage from "../features/docs/pages/PublicComponentsPage";
 import GeneratePage from "../features/generate/pages/GeneratePage";
 import HomePage from "../features/home/pages/HomePage";
+import PricingPage from "../features/pricing/pages/PricingPage";
 import CustomCursor from "./CustomCursor";
 import "./index.css";
 
@@ -115,6 +116,7 @@ const App = () => {
           path="/docs/components"
           element={<PublicComponentsPage key="public-components-docs" initialSource="public" />}
         />
+        <Route path="/pricing" element={<PricingPage />} />
         <Route
           path="/coming-soon/docs"
           element={<PublicComponentsPage key="public-components-alias" initialSource="public" />}

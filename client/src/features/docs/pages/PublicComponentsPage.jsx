@@ -840,7 +840,7 @@ const PublicComponentsPage = ({ initialSource = "public" }) => {
               Showcase
             </Link>
             <Link
-              to="/coming-soon/pricing"
+              to="/pricing"
               className="type-body-sm text-text-secondary hover:text-charcoal-text font-medium transition-colors"
             >
               Pricing

@@ -88,7 +88,7 @@ const LoginPage = () => {
             </Link>
             <Link
               className="text-text-secondary hover:text-charcoal transition-colors"
-              to="/coming-soon/pricing"
+              to="/pricing"
             >
               Pricing
             </Link>

@@ -90,7 +90,7 @@ const HomePage = () => {
             </Link>
             <Link
               className="type-body-sm text-text-secondary hover:text-charcoal-text font-medium transition-colors"
-              to="/coming-soon/pricing"
+              to="/pricing"
             >
               Pricing
             </Link>
