@@ -1,6 +1,6 @@
 {
   "name": "cosmic-ui-library",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "description": "A lightweight React UI component library with cards, forms, navigation, dashboards, AI UI blocks, and utility components.",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

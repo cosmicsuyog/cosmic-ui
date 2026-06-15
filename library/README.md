@@ -12,7 +12,7 @@ import { Button, Card, Input, Navbar } from "cosmic-ui-library";
 
 ## Preview
 
-![Cosmic UI component preview](./docs/assets/component-preview.svg)
+![Cosmic UI component preview](https://unpkg.com/cosmic-ui-library@1.0.15/docs/assets/component-preview.svg)
 
 ## Why Use Cosmic UI?
 
@@ -68,15 +68,15 @@ export default function App() {
 
 ### Cards, Buttons, and Forms
 
-![Cards buttons and forms](./docs/assets/component-preview.svg)
+![Cards buttons and forms](https://unpkg.com/cosmic-ui-library@1.0.15/docs/assets/component-preview.svg)
 
 ### Pricing and Product Cards
 
-![Pricing and product cards](./docs/assets/pricing-product-preview.svg)
+![Pricing and product cards](https://unpkg.com/cosmic-ui-library@1.0.15/docs/assets/pricing-product-preview.svg)
 
 ### AI and Dashboard Components
 
-![AI and dashboard components](./docs/assets/ai-dashboard-preview.svg)
+![AI and dashboard components](https://unpkg.com/cosmic-ui-library@1.0.15/docs/assets/ai-dashboard-preview.svg)
 
 ## Common Examples
 
