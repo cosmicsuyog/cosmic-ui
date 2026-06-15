@@ -58,7 +58,7 @@ The health check endpoint is `http://localhost:3000/api/health`.
 ```text
 PORT=3000
 NODE_ENV=production
-CLIENT_URL=http://localhost:8080
+CLIENT_URL=https://cosmic-ui-z179.vercel.app
 MONGO_URI=
 JWT_SECRET=
 OPENROUTER_API_KEY=

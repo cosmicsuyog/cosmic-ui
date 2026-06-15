@@ -7,7 +7,7 @@ services:
     environment:
       NODE_ENV: production
       PORT: 3000
-      CLIENT_URL: http://localhost:8080
+      CLIENT_URL: https://cosmic-ui-z179.vercel.app
     ports:
       - "3000:3000"
     restart: unless-stopped
