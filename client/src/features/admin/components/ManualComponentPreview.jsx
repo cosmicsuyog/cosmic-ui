@@ -8,9 +8,81 @@ const escapeScriptEnd = (value) => value.replace(/<\/script/gi, "<\\/script");
 
 const createPreviewId = () => `manual-preview-${Math.random().toString(36).slice(2)}`;
 
+const defaultPreviewImage =
+  "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20900%20600%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23fff8f0%22%2F%3E%3Cstop%20offset%3D%220.55%22%20stop-color%3D%22%23e8a06e%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%232a2622%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22900%22%20height%3D%22600%22%20fill%3D%22url(%23g)%22%2F%3E%3Ccircle%20cx%3D%22720%22%20cy%3D%22130%22%20r%3D%22150%22%20fill%3D%22%23ffffff%22%20opacity%3D%220.32%22%2F%3E%3Ccircle%20cx%3D%22160%22%20cy%3D%22500%22%20r%3D%22210%22%20fill%3D%22%232a2622%22%20opacity%3D%220.18%22%2F%3E%3Cpath%20d%3D%22M0%20430C180%20350%20315%20520%20515%20420C665%20345%20760%20355%20900%20305V600H0Z%22%20fill%3D%22%232a2622%22%20opacity%3D%220.82%22%2F%3E%3Ctext%20x%3D%2264%22%20y%3D%2296%22%20font-family%3D%22Arial%2CHelvetica%2Csans-serif%22%20font-size%3D%2252%22%20font-weight%3D%22800%22%20fill%3D%22%232a2622%22%3ECosmic%20UI%3C%2Ftext%3E%3Ctext%20x%3D%2264%22%20y%3D%22150%22%20font-family%3D%22Arial%2CHelvetica%2Csans-serif%22%20font-size%3D%2224%22%20font-weight%3D%22600%22%20fill%3D%22%236d5f56%22%3EPreview%20image%3C%2Ftext%3E%3C%2Fsvg%3E";
+const defaultPreviewImageAlt =
+  "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20900%20600%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%221%22%20y1%3D%220%22%20x2%3D%220%22%20y2%3D%221%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%232a2622%22%2F%3E%3Cstop%20offset%3D%220.5%22%20stop-color%3D%22%237ea7a4%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23fff8f0%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22900%22%20height%3D%22600%22%20fill%3D%22url(%23g)%22%2F%3E%3Crect%20x%3D%2282%22%20y%3D%2286%22%20width%3D%22736%22%20height%3D%22428%22%20rx%3D%2242%22%20fill%3D%22%23ffffff%22%20opacity%3D%220.18%22%2F%3E%3Ccircle%20cx%3D%22260%22%20cy%3D%22245%22%20r%3D%2292%22%20fill%3D%22%23e8a06e%22%20opacity%3D%220.75%22%2F%3E%3Ccircle%20cx%3D%22610%22%20cy%3D%22340%22%20r%3D%22142%22%20fill%3D%22%232a2622%22%20opacity%3D%220.45%22%2F%3E%3Ctext%20x%3D%2296%22%20y%3D%22490%22%20font-family%3D%22Arial%2CHelvetica%2Csans-serif%22%20font-size%3D%2246%22%20font-weight%3D%22800%22%20fill%3D%22%23ffffff%22%3EComponent%20media%3C%2Ftext%3E%3C%2Fsvg%3E";
+const defaultAvatarImage =
+  "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20300%20300%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%232a2622%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23e8a06e%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22300%22%20height%3D%22300%22%20rx%3D%22150%22%20fill%3D%22url(%23g)%22%2F%3E%3Ccircle%20cx%3D%22150%22%20cy%3D%22118%22%20r%3D%2254%22%20fill%3D%22%23fff8f0%22%20opacity%3D%220.92%22%2F%3E%3Cpath%20d%3D%22M68%20258C82%20200%20116%20172%20150%20172S218%20200%20232%20258%22%20fill%3D%22%23fff8f0%22%20opacity%3D%220.92%22%2F%3E%3Ctext%20x%3D%22150%22%20y%3D%22286%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%2CHelvetica%2Csans-serif%22%20font-size%3D%2234%22%20font-weight%3D%22800%22%20fill%3D%22%232a2622%22%3ECU%3C%2Ftext%3E%3C%2Fsvg%3E";
+const defaultLogoImage = "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20160%20160%22%3E%3Crect%20width%3D%22160%22%20height%3D%22160%22%20rx%3D%2236%22%20fill%3D%22%232a2622%22%2F%3E%3Cpath%20d%3D%22M80%2028L118%20126H94L87%20105H50L43%20126H20L58%2028H80Z%22%20fill%3D%22%23e8a06e%22%2F%3E%3Ctext%20x%3D%22104%22%20y%3D%22132%22%20font-family%3D%22Arial%2CHelvetica%2Csans-serif%22%20font-size%3D%2230%22%20font-weight%3D%22900%22%20fill%3D%22%23fff8f0%22%3EUI%3C%2Ftext%3E%3C%2Fsvg%3E";
+const defaultAudioSource =
+  "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
+const defaultVideoSource =
+  "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4";
+
+const mediaPropNames = [
+  "image",
+  "imageUrl",
+  "imageSrc",
+  "src",
+  "avatar",
+  "avatarUrl",
+  "authorAvatar",
+  "profileImage",
+  "userImage",
+  "coverImage",
+  "coverImageUrl",
+  "thumbnail",
+  "thumbnailUrl",
+  "logoUrl",
+  "before",
+  "after",
+  "beforeImage",
+  "afterImage",
+  "audioSrc",
+  "videoSrc",
+];
+
+const getMediaSample = (propName, lowerText) => {
+  const lowerName = propName.toLowerCase();
+
+  if (lowerName.includes("audio")) {
+    return defaultAudioSource;
+  }
+
+  if (lowerName.includes("video")) {
+    return defaultVideoSource;
+  }
+
+  if (lowerName.includes("avatar") || lowerName.includes("profile") || lowerName.includes("user")) {
+    return defaultAvatarImage;
+  }
+
+  if (lowerName.includes("logo")) {
+    return defaultLogoImage;
+  }
+
+  if (lowerName.includes("after")) {
+    return defaultPreviewImageAlt;
+  }
+
+  if (lowerName === "src") {
+    if (lowerText.includes("audio")) {
+      return defaultAudioSource;
+    }
+
+    if (lowerText.includes("video")) {
+      return defaultVideoSource;
+    }
+  }
+
+  return defaultPreviewImage;
+};
+
 const getSampleProps = (code) => {
   const sampleProps = {};
   const callbackNames = new Set();
+  const lowerText = code.toLowerCase();
 
   const propNames = new Set(
     Array.from(code.matchAll(/(?:^|[\s,{])([A-Za-z_$][\w$]*)\s*=/g), (match) => match[1])
@@ -27,6 +99,9 @@ const getSampleProps = (code) => {
         subtitle: "Cosmic UI",
         content: "Reusable interface blocks with polished motion and responsive behavior.",
         icon: "AI",
+        image: defaultPreviewImage,
+        imageUrl: defaultPreviewImage,
+        avatarUrl: defaultAvatarImage,
         tags: ["React", "Preview", "Motion"],
         buttonText: "Explore",
       },
@@ -35,6 +110,9 @@ const getSampleProps = (code) => {
         subtitle: "Production ready",
         content: "Organize variants, props, and reusable patterns in one clean workflow.",
         icon: "UI",
+        image: defaultPreviewImageAlt,
+        imageUrl: defaultPreviewImageAlt,
+        avatarUrl: defaultAvatarImage,
         tags: ["JSX", "Props"],
         buttonText: "Open",
       },
@@ -43,6 +121,9 @@ const getSampleProps = (code) => {
         subtitle: "Ship faster",
         content: "Save and publish components without leaving the admin studio.",
         icon: "NPM",
+        image: defaultPreviewImage,
+        imageUrl: defaultPreviewImage,
+        avatarUrl: defaultAvatarImage,
         tags: ["NPM", "Admin"],
         buttonText: "Publish",
       },
@@ -57,12 +138,39 @@ const getSampleProps = (code) => {
     ];
   }
 
+  if (propNames.has("images") || lowerText.includes("gallery")) {
+    sampleProps.images = [
+      defaultPreviewImage,
+      defaultPreviewImageAlt,
+      "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20900%20600%22%3E%3Crect%20width%3D%22900%22%20height%3D%22600%22%20fill%3D%22%23f7efe8%22%2F%3E%3Cpath%20d%3D%22M0%2090H900V600H0Z%22%20fill%3D%22%232a2622%22%20opacity%3D%220.92%22%2F%3E%3Cpath%20d%3D%22M60%20468C210%20315%20310%20450%20455%20332C610%20205%20720%20285%20840%20160%22%20fill%3D%22none%22%20stroke%3D%22%23e8a06e%22%20stroke-width%3D%2246%22%20stroke-linecap%3D%22round%22%2F%3E%3Ccircle%20cx%3D%22178%22%20cy%3D%22162%22%20r%3D%2282%22%20fill%3D%22%23e8a06e%22%2F%3E%3Ccircle%20cx%3D%22710%22%20cy%3D%22456%22%20r%3D%2296%22%20fill%3D%22%23ffffff%22%20opacity%3D%220.18%22%2F%3E%3Ctext%20x%3D%2262%22%20y%3D%2270%22%20font-family%3D%22Arial%2CHelvetica%2Csans-serif%22%20font-size%3D%2242%22%20font-weight%3D%22800%22%20fill%3D%22%232a2622%22%3ECosmic%20UI%3C%2Ftext%3E%3C%2Fsvg%3E",
+    ];
+  }
+
   const scalarSamples = {
     title: "Cosmic UI Component",
     subtitle: "Live manual preview",
     content: "This preview uses sample props so pasted components can render immediately.",
     description: "Preview how your component behaves before saving it.",
-    image: "https://images.unsplash.com/photo-1557682250-33bd709cbe85?w=900&q=80",
+    image: defaultPreviewImage,
+    imageUrl: defaultPreviewImage,
+    imageSrc: defaultPreviewImage,
+    src: getMediaSample("src", lowerText),
+    avatar: defaultAvatarImage,
+    avatarUrl: defaultAvatarImage,
+    authorAvatar: defaultAvatarImage,
+    profileImage: defaultAvatarImage,
+    userImage: defaultAvatarImage,
+    coverImage: defaultPreviewImage,
+    coverImageUrl: defaultPreviewImage,
+    thumbnail: defaultPreviewImage,
+    thumbnailUrl: defaultPreviewImage,
+    logoUrl: defaultLogoImage,
+    before: defaultPreviewImage,
+    after: defaultPreviewImageAlt,
+    beforeImage: defaultPreviewImage,
+    afterImage: defaultPreviewImageAlt,
+    audioSrc: defaultAudioSource,
+    videoSrc: defaultVideoSource,
     buttonText: "Get Started",
     text: "Cosmic UI",
     label: "Preview",
@@ -71,7 +179,13 @@ const getSampleProps = (code) => {
     price: 149,
     rating: 4.8,
     accentColor: "#e8a06e",
-    backgroundColor: "#f8f3ee",
+    bg: "#ffffff",
+    background: "#ffffff",
+    backgroundColor: "#ffffff",
+    color: "#2a2622",
+    textColor: "#2a2622",
+    foregroundColor: "#2a2622",
+    borderColor: "#d7c2b7",
     cardBackgroundColor: "#ffffff",
     cardTextColor: "#2f2925",
   };
@@ -79,6 +193,12 @@ const getSampleProps = (code) => {
   Object.entries(scalarSamples).forEach(([name, value]) => {
     if (propNames.has(name)) {
       sampleProps[name] = value;
+    }
+  });
+
+  mediaPropNames.forEach((name) => {
+    if (propNames.has(name) && !sampleProps[name]) {
+      sampleProps[name] = getMediaSample(name, lowerText);
     }
   });
 
@@ -252,8 +372,12 @@ const ManualComponentPreview = ({ code, componentName }) => {
   );
 
   useEffect(() => {
-    setHasMeasured(false);
-    setIsOversized(false);
+    const frameId = window.requestAnimationFrame(() => {
+      setHasMeasured(false);
+      setIsOversized(false);
+    });
+
+    return () => window.cancelAnimationFrame(frameId);
   }, [previewDocument]);
 
   useEffect(() => {

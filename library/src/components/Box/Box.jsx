@@ -22,7 +22,8 @@ export const Box = ({
   padding,
   backgroundColor,
   borderRadius,
-  boxSizing: "border-box"
+  boxSizing: "border-box",
+  color: colors.text
 }, style)}>{children}</div>;
 
 export default Box;

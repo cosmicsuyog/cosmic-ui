@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 export const EcommerceCard = ({
-  image = "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=600&q=80",
+  image = "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20600%20420%22%3E%3Crect%20width%3D%22600%22%20height%3D%22420%22%20fill%3D%22%23f8f3ee%22%2F%3E%3Crect%20x%3D%2280%22%20y%3D%22255%22%20width%3D%22440%22%20height%3D%2258%22%20rx%3D%2229%22%20fill%3D%22%232a2622%22%20opacity%3D%220.92%22%2F%3E%3Cpath%20d%3D%22M145%20254C198%20188%20278%20152%20354%20168C420%20182%20478%20218%20510%20254H145Z%22%20fill%3D%22%23e8a06e%22%2F%3E%3Ccircle%20cx%3D%22212%22%20cy%3D%22314%22%20r%3D%2234%22%20fill%3D%22%232a2622%22%2F%3E%3Ccircle%20cx%3D%22438%22%20cy%3D%22314%22%20r%3D%2234%22%20fill%3D%22%232a2622%22%2F%3E%3Ctext%20x%3D%2274%22%20y%3D%2286%22%20font-family%3D%22Arial%2CHelvetica%2Csans-serif%22%20font-size%3D%2238%22%20font-weight%3D%22800%22%20fill%3D%22%232a2622%22%3EProduct%20preview%3C%2Ftext%3E%3C%2Fsvg%3E",
   title = "Premium Sunglasses",
   description = "Polarized UV400 protection lenses with trendy frame design.",
   price = 149,

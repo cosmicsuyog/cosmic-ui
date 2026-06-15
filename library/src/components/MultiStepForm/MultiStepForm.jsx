@@ -38,6 +38,7 @@ const cardBase = ({
   width,
   boxSizing: "border-box",
   boxShadow: shadow ? "0 8px 28px rgba(15,23,42,0.08)" : "none",
+  color: colors.text,
   fontFamily: "inherit"
 });
 const Flex = ({
