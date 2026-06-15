@@ -820,19 +820,34 @@ const PublicComponentsPage = ({ initialSource = "public" }) => {
             <span className="navbar-brand-text">Cosmic UI</span>
           </Link>
 
-          <div className="flex items-center gap-3">
+          <nav className="hidden items-center gap-6 md:flex" aria-label="Primary navigation">
+            <Link
+              to="/home"
+              className="type-body-sm text-text-secondary hover:text-charcoal-text font-medium transition-colors"
+            >
+              Home
+            </Link>
             <Link
               to="/docs"
-              className="border-outline-variant type-label-md rounded-full border bg-white px-5 py-2.5 font-semibold text-text-secondary transition-colors hover:text-charcoal-text"
+              className="type-body-sm text-charcoal-text border-warm-accent border-b-2 pb-0.5 font-bold"
             >
               Components
             </Link>
             <Link
-              to="/components"
-              className="border-outline-variant type-label-md hidden rounded-full border bg-white px-5 py-2.5 font-semibold text-text-secondary transition-colors hover:text-charcoal-text sm:inline-flex"
+              to="/coming-soon/showcase"
+              className="type-body-sm text-text-secondary hover:text-charcoal-text font-medium transition-colors"
             >
-              My Components
+              Showcase
             </Link>
+            <Link
+              to="/coming-soon/pricing"
+              className="type-body-sm text-text-secondary hover:text-charcoal-text font-medium transition-colors"
+            >
+              Pricing
+            </Link>
+          </nav>
+
+          <div className="flex items-center gap-3">
             <Link
               to="/generate"
               className="bg-warm-accent type-label-md text-charcoal-text hidden rounded-full px-5 py-2.5 font-semibold shadow-sm transition-all hover:scale-105 hover:shadow-md sm:inline-flex"

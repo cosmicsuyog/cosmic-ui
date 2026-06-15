@@ -113,7 +113,7 @@ const App = () => {
             )
           }
         />
-        <Route path="/home" element={isAdmin ? <Navigate to="/admin" replace /> : <HomePage />} />
+        <Route path="/home" element={<HomePage />} />
         <Route
           path="/admin"
           element={isAdmin ? <AdminPage /> : <Navigate to={isAuthenticated ? "/home" : "/"} replace />}
