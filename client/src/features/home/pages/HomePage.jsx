@@ -228,7 +228,7 @@ const HomePage = () => {
 
           <div className="flex flex-wrap justify-center gap-4">
             <Link
-              to={hasSignedInUser ? "/generate" : "/"}
+              to="/docs"
               className="bg-warm-accent text-charcoal-text type-label-md cursor-pointer rounded-full px-8 py-4 font-semibold shadow-md transition-transform hover:scale-105"
             >
               GET STARTED
