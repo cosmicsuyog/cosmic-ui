@@ -16,14 +16,7 @@ const HomePage = () => {
   const isAdmin = user?.role === "admin";
   const userDisplayName =
     user?.displayName || user?.name || user?.email?.split("@")[0] || "Developer";
-  const footerLinks = [
-    ["Components", "/docs"],
-    ["GitHub", "/coming-soon/github"],
-    ["Twitter", "/coming-soon/twitter"],
-    ["Discord", "/coming-soon/discord"],
-    ["Privacy Policy", "/coming-soon/privacy"],
-    ["Contact Admin", "/coming-soon/contact"],
-  ];
+  const footerLinks = [["Components", "/docs"]];
 
   const handleCopyCode = async () => {
     try {
@@ -628,9 +621,12 @@ const HomePage = () => {
             <p className="type-body-sm text-on-surface-variant">
               © 2026 Cosmic UI. Built with precision and warmth.
             </p>
-            <p className="type-body-sm text-on-surface-variant hover:text-warm-accent transition-colors">
-              admin@cosmicui.com
-            </p>
+            <a
+              href="mailto:SUYOGMARKAD292@GMAIL.COM"
+              className="type-body-sm text-on-surface-variant hover:text-warm-accent transition-colors"
+            >
+              SUYOGMARKAD292@GMAIL.COM
+            </a>
           </div>
         </div>
       </footer>
