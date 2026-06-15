@@ -1,4 +1,4 @@
-/* eslint-disable max-lines */
+/* eslint-disable complexity */
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
@@ -83,7 +83,6 @@ const getBuyButtonLabel = ({ isAuthenticated, price, processing }) => {
   return "Sign in to buy";
 };
 
-// eslint-disable-next-line complexity
 const PricingPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -209,12 +208,6 @@ const PricingPage = () => {
             >
               Components
             </Link>
-            <Link
-              to="/coming-soon/showcase"
-              className="type-body-sm text-text-secondary hover:text-charcoal-text font-medium transition-colors"
-            >
-              Showcase
-            </Link>
             <span className="type-body-sm text-charcoal-text border-warm-accent border-b-2 pb-0.5 font-bold">
               Pricing
             </span>
@@ -229,15 +222,15 @@ const PricingPage = () => {
       </header>
 
       <main className="mx-auto flex max-w-7xl flex-col gap-10 px-4 py-12 md:px-16 md:py-16">
-        <section className="mx-auto max-w-3xl text-center">
+        <section className="mx-auto flex max-w-3xl flex-col items-center text-center">
           <Link
             to="/home"
-            className="text-text-secondary hover:text-charcoal-text mb-9 inline-flex items-center gap-2 text-sm font-bold transition-colors"
+            className="text-text-secondary hover:text-charcoal-text mb-5 inline-flex items-center gap-2 self-start text-sm font-bold transition-colors sm:self-center"
           >
             <span className="material-symbols-outlined text-[18px] leading-none">arrow_back</span>
             Back
           </Link>
-          <div className="bg-highlight-pink/50 border-outline-variant/50 text-charcoal-text mx-auto mb-6 inline-flex items-center gap-2 rounded-full border px-5 py-2 text-xs font-extrabold tracking-widest uppercase">
+          <div className="bg-highlight-pink/50 border-outline-variant/50 text-charcoal-text mb-6 inline-flex max-w-full items-center justify-center gap-2 rounded-full border px-5 py-2 text-xs font-extrabold tracking-widest uppercase">
             <span className="material-symbols-outlined text-warm-accent text-[16px] leading-none">
               bolt
             </span>

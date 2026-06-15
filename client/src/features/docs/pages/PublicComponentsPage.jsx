@@ -1,3 +1,4 @@
+/* eslint-disable complexity, max-lines */
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -37,7 +38,8 @@ const componentSources = [
     description:
       "Review components you generated or saved. Switch back to public components whenever you need shared examples.",
     emptyTitle: "No components saved yet",
-    emptyCopy: "Generate a component, save it, and it will appear here with preview, code, and guide tabs.",
+    emptyCopy:
+      "Generate a component, save it, and it will appear here with preview, code, and guide tabs.",
     loadingTitle: "Loading your components",
     loadingCopy: "Fetching saved work from your library.",
     errorCopy: "Failed to load your saved components.",
@@ -138,7 +140,9 @@ const getPropExample = (propName) => {
 };
 
 const createUsageCode = (componentName, componentProps) => {
-  const propLines = componentProps.slice(0, 10).map((propName) => `        ${getPropExample(propName)}`);
+  const propLines = componentProps
+    .slice(0, 10)
+    .map((propName) => `        ${getPropExample(propName)}`);
   const propsBlock = propLines.length > 0 ? `\n${propLines.join("\n")}\n      ` : "";
 
   return `import { ${componentName} } from "./components/${componentName}";
@@ -188,7 +192,9 @@ const CodeBlock = ({ code, label = "JSX", className = "" }) => {
   };
 
   return (
-    <div className={`border-outline-variant overflow-hidden rounded-xl border bg-[#1E1E1E] shadow-xl ${className}`}>
+    <div
+      className={`border-outline-variant overflow-hidden rounded-xl border bg-[#1E1E1E] shadow-xl ${className}`}
+    >
       <div className="flex items-center justify-between border-b border-[#3D3D3D] bg-[#2D2D2D] px-4 py-3">
         <span className="type-label-sm tracking-widest text-gray-400 uppercase">{label}</span>
         <button
@@ -196,9 +202,7 @@ const CodeBlock = ({ code, label = "JSX", className = "" }) => {
           onClick={handleCopy}
           className="flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-bold text-gray-400 transition-colors hover:bg-white/10 hover:text-white"
         >
-          <span className="material-symbols-outlined text-[16px] leading-none">
-            content_copy
-          </span>
+          <span className="material-symbols-outlined text-[16px] leading-none">content_copy</span>
           {copied ? "Copied" : "Copy"}
         </button>
       </div>
@@ -215,7 +219,7 @@ const DockButton = ({ active, icon, label, onClick }) => (
     onClick={onClick}
     className={`flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
       active
-        ? "bg-white text-charcoal-text shadow-sm"
+        ? "text-charcoal-text bg-white shadow-sm"
         : "text-text-secondary hover:text-charcoal-text"
     }`}
   >
@@ -232,12 +236,8 @@ const EmptyState = ({ onAddComponent, sourceConfig }) => (
           {sourceConfig.icon}
         </span>
       </div>
-      <h2 className="text-charcoal-text mb-3 text-2xl font-extrabold">
-        {sourceConfig.emptyTitle}
-      </h2>
-      <p className="text-text-secondary text-sm leading-6">
-        {sourceConfig.emptyCopy}
-      </p>
+      <h2 className="text-charcoal-text mb-3 text-2xl font-extrabold">{sourceConfig.emptyTitle}</h2>
+      <p className="text-text-secondary text-sm leading-6">{sourceConfig.emptyCopy}</p>
       {sourceConfig.value === "mine" && onAddComponent && (
         <div className="mt-7 flex flex-wrap justify-center gap-3">
           <button
@@ -250,7 +250,7 @@ const EmptyState = ({ onAddComponent, sourceConfig }) => (
           </button>
           <Link
             to="/generate"
-            className="border-outline-variant text-charcoal-text inline-flex items-center gap-2 rounded-full border bg-white px-5 py-3 text-sm font-extrabold shadow-sm transition-colors hover:border-warm-accent"
+            className="border-outline-variant text-charcoal-text hover:border-warm-accent inline-flex items-center gap-2 rounded-full border bg-white px-5 py-3 text-sm font-extrabold shadow-sm transition-colors"
           >
             <span className="material-symbols-outlined text-[18px] leading-none">auto_awesome</span>
             Generate
@@ -268,9 +268,7 @@ const UsageGuide = ({ componentCode, componentName, componentProps }) => {
   return (
     <div className="space-y-8">
       <div>
-        <p className="type-label-sm text-warm-accent mb-5 tracking-widest uppercase">
-          Usage Guide
-        </p>
+        <p className="type-label-sm text-warm-accent mb-5 tracking-widest uppercase">Usage Guide</p>
         <div className="space-y-9">
           <section className="space-y-4">
             <div className="flex items-center gap-3">
@@ -297,7 +295,7 @@ const UsageGuide = ({ componentCode, componentName, componentProps }) => {
               className="bg-gentle-gray-surface border-outline-variant hover:border-warm-accent w-full rounded-xl border px-5 py-5 text-left shadow-sm transition-colors"
               title="Copy file path"
             >
-              <span className="text-text-secondary mb-4 block text-[11px] font-bold uppercase tracking-widest">
+              <span className="text-text-secondary mb-4 block text-[11px] font-bold tracking-widest uppercase">
                 Filename
               </span>
               <span className="text-charcoal-text font-mono text-base font-bold">{filePath}</span>
@@ -357,7 +355,7 @@ const ManualAddComponentForm = ({
           </div>
         )}
 
-        <div className="border-outline-variant bg-white rounded-xl border p-5 shadow-sm">
+        <div className="border-outline-variant rounded-xl border bg-white p-5 shadow-sm">
           <label
             htmlFor="manual-component-name"
             className="type-label-sm text-text-secondary tracking-widest uppercase"
@@ -369,11 +367,11 @@ const ManualAddComponentForm = ({
             value={componentName}
             onChange={(event) => onComponentNameChange(event.target.value)}
             placeholder='e.g. "PricingCard", "HeroSection"'
-            className="border-outline-variant mt-3 w-full rounded-lg border bg-surface-container-low px-4 py-3 text-sm font-semibold outline-none focus:border-warm-accent"
+            className="border-outline-variant bg-surface-container-low focus:border-warm-accent mt-3 w-full rounded-lg border px-4 py-3 text-sm font-semibold outline-none"
           />
         </div>
 
-        <div className="border-outline-variant bg-white rounded-xl border p-5 shadow-sm">
+        <div className="border-outline-variant rounded-xl border bg-white p-5 shadow-sm">
           <label
             htmlFor="manual-component-prop"
             className="type-label-sm text-text-secondary tracking-widest uppercase"
@@ -389,7 +387,7 @@ const ManualAddComponentForm = ({
                 key={prop}
                 type="button"
                 onClick={() => onRemoveProp(prop)}
-                className="bg-purple-soft/70 rounded-full px-3 py-1 text-sm font-bold text-on-surface-variant"
+                className="bg-purple-soft/70 text-on-surface-variant rounded-full px-3 py-1 text-sm font-bold"
                 title={`Remove ${prop}`}
               >
                 {prop} x
@@ -403,7 +401,7 @@ const ManualAddComponentForm = ({
               onChange={(event) => onPropInputChange(event.target.value)}
               onKeyDown={onPropKeyDown}
               placeholder='e.g. "title", "onClick", "children"'
-              className="border-outline-variant min-w-0 flex-1 rounded-lg border bg-surface-container-low px-4 py-3 text-sm font-semibold outline-none focus:border-warm-accent"
+              className="border-outline-variant bg-surface-container-low focus:border-warm-accent min-w-0 flex-1 rounded-lg border px-4 py-3 text-sm font-semibold outline-none"
             />
             <button
               type="button"
@@ -422,22 +420,20 @@ const ManualAddComponentForm = ({
             disabled={saving}
             className="bg-warm-accent text-charcoal-text inline-flex items-center gap-2 rounded-lg px-6 py-3 text-sm font-extrabold shadow-md transition-transform hover:scale-105 disabled:opacity-60"
           >
-            <span className="material-symbols-outlined text-[18px] leading-none">
-              save
-            </span>
+            <span className="material-symbols-outlined text-[18px] leading-none">save</span>
             {saving ? "Saving..." : "Save Component"}
           </button>
           <button
             type="button"
             onClick={onBack}
-            className="border-outline-variant bg-white text-text-secondary hover:text-charcoal-text rounded-lg border px-5 py-3 text-sm font-extrabold shadow-sm transition-colors"
+            className="border-outline-variant text-text-secondary hover:text-charcoal-text rounded-lg border bg-white px-5 py-3 text-sm font-extrabold shadow-sm transition-colors"
           >
             Back to Library
           </button>
         </div>
       </div>
 
-      <div className="border-outline-variant bg-white overflow-hidden rounded-xl border shadow-sm">
+      <div className="border-outline-variant overflow-hidden rounded-xl border bg-white shadow-sm">
         <div className="border-outline-variant/50 flex items-center justify-between border-b p-4">
           <label
             htmlFor="manual-component-code"
@@ -472,9 +468,7 @@ const ManualAddComponentForm = ({
                   : "text-text-secondary hover:text-charcoal-text"
               }`}
             >
-              <span className="material-symbols-outlined text-[18px] leading-none">
-                visibility
-              </span>
+              <span className="material-symbols-outlined text-[18px] leading-none">visibility</span>
             </button>
           </div>
         </div>
@@ -532,42 +526,45 @@ const PublicComponentsPage = ({ initialSource = "public" }) => {
     setManualError("");
   };
 
-  const loadComponents = useCallback(async ({ silent = false } = {}) => {
-    if (silent) {
-      setRefreshing(true);
-    } else {
-      setLoading(true);
-    }
-
-    setErrorMessage("");
-
-    try {
-      const response =
-        componentSource === "mine"
-          ? await getMyComponentsService()
-          : await getPublicComponentsService();
-      const nextComponents = response.data?.components || [];
-      setComponents(nextComponents);
-      setActiveComponentId((currentId) => {
-        if (nextComponents.some((component) => component._id === currentId)) {
-          return currentId;
-        }
-
-        return nextComponents[0]?._id || "";
-      });
-    } catch (error) {
-      if (componentSource === "mine" && error.response?.status === 401) {
-        setComponents([]);
-        setActiveComponentId("");
-        setErrorMessage("Sign in to view your saved components.");
+  const loadComponents = useCallback(
+    async ({ silent = false } = {}) => {
+      if (silent) {
+        setRefreshing(true);
       } else {
-        setErrorMessage(getApiErrorMessage(error, sourceConfig.errorCopy));
+        setLoading(true);
       }
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
-    }
-  }, [componentSource, sourceConfig.errorCopy]);
+
+      setErrorMessage("");
+
+      try {
+        const response =
+          componentSource === "mine"
+            ? await getMyComponentsService()
+            : await getPublicComponentsService();
+        const nextComponents = response.data?.components || [];
+        setComponents(nextComponents);
+        setActiveComponentId((currentId) => {
+          if (nextComponents.some((component) => component._id === currentId)) {
+            return currentId;
+          }
+
+          return nextComponents[0]?._id || "";
+        });
+      } catch (error) {
+        if (componentSource === "mine" && error.response?.status === 401) {
+          setComponents([]);
+          setActiveComponentId("");
+          setErrorMessage("Sign in to view your saved components.");
+        } else {
+          setErrorMessage(getApiErrorMessage(error, sourceConfig.errorCopy));
+        }
+      } finally {
+        setLoading(false);
+        setRefreshing(false);
+      }
+    },
+    [componentSource, sourceConfig.errorCopy]
+  );
 
   const resetManualForm = () => {
     setManualComponentName("");
@@ -834,12 +831,6 @@ const PublicComponentsPage = ({ initialSource = "public" }) => {
               Components
             </Link>
             <Link
-              to="/coming-soon/showcase"
-              className="type-body-sm text-text-secondary hover:text-charcoal-text font-medium transition-colors"
-            >
-              Showcase
-            </Link>
-            <Link
               to="/pricing"
               className="type-body-sm text-text-secondary hover:text-charcoal-text font-medium transition-colors"
             >
@@ -873,9 +864,7 @@ const PublicComponentsPage = ({ initialSource = "public" }) => {
           >
             {sourceConfig.heading}
           </h1>
-          <p className="type-body-lg text-text-secondary max-w-2xl">
-            {sourceConfig.description}
-          </p>
+          <p className="type-body-lg text-text-secondary max-w-2xl">{sourceConfig.description}</p>
         </section>
 
         <section className="grid gap-6 lg:grid-cols-[18rem_1fr]">
@@ -894,7 +883,7 @@ const PublicComponentsPage = ({ initialSource = "public" }) => {
                 id="component-source-select"
                 value={componentSource}
                 onChange={(event) => handleSourceChange(event.target.value)}
-                className="border-outline-variant text-charcoal-text h-12 w-full appearance-none rounded-lg border bg-white pr-10 pl-12 text-sm font-extrabold outline-none transition-colors hover:border-warm-accent focus:border-warm-accent"
+                className="border-outline-variant text-charcoal-text hover:border-warm-accent focus:border-warm-accent h-12 w-full appearance-none rounded-lg border bg-white pr-10 pl-12 text-sm font-extrabold transition-colors outline-none"
               >
                 {componentSources.map((source) => (
                   <option key={source.value} value={source.value}>
@@ -914,7 +903,7 @@ const PublicComponentsPage = ({ initialSource = "public" }) => {
                 className={`mb-4 flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left text-sm font-extrabold shadow-sm transition-colors ${
                   isManualAddView
                     ? "bg-warm-accent text-charcoal-text"
-                    : "bg-white text-text-secondary hover:text-charcoal-text"
+                    : "text-text-secondary hover:text-charcoal-text bg-white"
                 }`}
               >
                 <span className="material-symbols-outlined text-[20px] leading-none">add</span>
@@ -922,13 +911,13 @@ const PublicComponentsPage = ({ initialSource = "public" }) => {
               </button>
             )}
 
-            <label className="border-outline-variant mb-5 flex items-center gap-3 rounded-lg border bg-white px-4 py-3 text-text-secondary shadow-sm">
+            <label className="border-outline-variant text-text-secondary mb-5 flex items-center gap-3 rounded-lg border bg-white px-4 py-3 shadow-sm">
               <span className="material-symbols-outlined text-[20px] leading-none">search</span>
               <input
                 value={searchTerm}
                 onChange={(event) => setSearchTerm(event.target.value)}
                 placeholder="Search components..."
-                className="text-charcoal-text min-w-0 flex-1 bg-transparent text-sm font-semibold outline-none placeholder:text-text-tertiary"
+                className="text-charcoal-text placeholder:text-text-tertiary min-w-0 flex-1 bg-transparent text-sm font-semibold outline-none"
               />
             </label>
 
@@ -955,11 +944,11 @@ const PublicComponentsPage = ({ initialSource = "public" }) => {
                     className={`flex w-full items-center justify-between rounded-xl px-4 py-3 text-left text-sm font-bold transition-colors ${
                       isActive
                         ? "bg-highlight-pink/50 text-charcoal-text shadow-sm"
-                        : "text-text-secondary hover:bg-white hover:text-charcoal-text"
+                        : "text-text-secondary hover:text-charcoal-text hover:bg-white"
                     }`}
                   >
                     <span className="min-w-0 truncate">{component.name}</span>
-                    <span className="bg-blue-soft/70 ml-2 shrink-0 rounded-full px-2 py-1 text-[10px] font-extrabold text-charcoal-text">
+                    <span className="bg-blue-soft/70 text-charcoal-text ml-2 shrink-0 rounded-full px-2 py-1 text-[10px] font-extrabold">
                       {componentBadge}
                     </span>
                   </button>
@@ -999,7 +988,7 @@ const PublicComponentsPage = ({ initialSource = "public" }) => {
                     onClick={isManualAddView ? handleCloseManualAdd : handleOpenManualAdd}
                     className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-extrabold shadow-sm transition-colors ${
                       isManualAddView
-                        ? "border-outline-variant border bg-white text-text-secondary hover:text-charcoal-text"
+                        ? "border-outline-variant text-text-secondary hover:text-charcoal-text border bg-white"
                         : "bg-warm-accent text-charcoal-text"
                     }`}
                   >
@@ -1013,11 +1002,13 @@ const PublicComponentsPage = ({ initialSource = "public" }) => {
                   <button
                     type="button"
                     onClick={() => loadComponents({ silent: true })}
-                    className="border-outline-variant flex h-10 w-10 items-center justify-center rounded-full border bg-white text-text-secondary shadow-sm transition-colors hover:text-charcoal-text"
+                    className="border-outline-variant text-text-secondary hover:text-charcoal-text flex h-10 w-10 items-center justify-center rounded-full border bg-white shadow-sm transition-colors"
                     aria-label={`Refresh ${sourceConfig.label.toLowerCase()}`}
                     title={`Refresh ${sourceConfig.label.toLowerCase()}`}
                   >
-                    <span className={`material-symbols-outlined text-[20px] leading-none ${refreshing ? "animate-spin" : ""}`}>
+                    <span
+                      className={`material-symbols-outlined text-[20px] leading-none ${refreshing ? "animate-spin" : ""}`}
+                    >
                       refresh
                     </span>
                   </button>

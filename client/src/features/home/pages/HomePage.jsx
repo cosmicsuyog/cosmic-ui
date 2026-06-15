@@ -13,6 +13,7 @@ const HomePage = () => {
   const [generationStatus, setGenerationStatus] = useState("Compiling responsive layout...");
 
   const hasSignedInUser = isAuthenticated && Boolean(user);
+  const isAdmin = user?.role === "admin";
   const userDisplayName =
     user?.displayName || user?.name || user?.email?.split("@")[0] || "Developer";
   const footerLinks = [
@@ -24,7 +25,6 @@ const HomePage = () => {
     ["Contact Admin", "/coming-soon/contact"],
   ];
 
-  /* Copy npm install command */
   const handleCopyCode = async () => {
     try {
       await navigator.clipboard.writeText("npm i cosmic-ui-library");
@@ -35,7 +35,6 @@ const HomePage = () => {
     }
   };
 
-  /* Simulate AI generation progress bar */
   useEffect(() => {
     const statuses = [
       "Analyzing layout requirements...",
@@ -84,12 +83,6 @@ const HomePage = () => {
             </Link>
             <Link
               className="type-body-sm text-text-secondary hover:text-charcoal-text font-medium transition-colors"
-              to="/coming-soon/showcase"
-            >
-              Showcase
-            </Link>
-            <Link
-              className="type-body-sm text-text-secondary hover:text-charcoal-text font-medium transition-colors"
               to="/pricing"
             >
               Pricing
@@ -132,21 +125,35 @@ const HomePage = () => {
                       <p className="type-body-sm text-text-secondary truncate">{user?.email}</p>
                     </div>
                     <div className="py-1">
+                      {isAdmin && (
+                        <Link
+                          to="/admin"
+                          onClick={() => setShowUserMenu(false)}
+                          className="type-body-sm text-charcoal-text hover:bg-surface-container-low flex items-center gap-2 px-4 py-2 transition-colors"
+                        >
+                          <span className="material-symbols-outlined text-[18px] leading-none">
+                            admin_panel_settings
+                          </span>
+                          Admin Dashboard
+                        </Link>
+                      )}
                       <Link
-                        to="/coming-soon/settings"
+                        to="/components"
+                        onClick={() => setShowUserMenu(false)}
                         className="type-body-sm text-charcoal-text hover:bg-surface-container-low flex items-center gap-2 px-4 py-2 transition-colors"
                       >
                         <span className="material-symbols-outlined text-[18px] leading-none">
-                          settings
+                          inventory_2
                         </span>
-                        Settings
+                        My Components
                       </Link>
                       <Link
-                        to="/coming-soon/billing"
+                        to="/pricing"
+                        onClick={() => setShowUserMenu(false)}
                         className="type-body-sm text-charcoal-text hover:bg-surface-container-low flex items-center gap-2 px-4 py-2 transition-colors"
                       >
                         <span className="material-symbols-outlined text-[18px] leading-none">
-                          database
+                          bolt
                         </span>
                         Usage &amp; Billing
                       </Link>
