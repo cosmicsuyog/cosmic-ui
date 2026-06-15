@@ -484,35 +484,39 @@ const PublicComponentsPage = ({ initialSource = "public" }) => {
       </header>
 
       <main className="mx-auto flex max-w-7xl flex-col gap-8 px-4 py-12 md:px-16">
-        <section className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-          <div className="max-w-4xl">
-            <p className="type-label-sm text-warm-accent mb-4 tracking-widest uppercase">
-              {sourceConfig.eyebrow}
-            </p>
-            <h1
-              className="text-charcoal-text mb-6 font-extrabold"
-              style={{
-                fontFamily: "'Sora', sans-serif",
-                fontSize: "clamp(2.5rem, 8vw, 5rem)",
-                lineHeight: 1.05,
-              }}
-            >
-              {sourceConfig.heading}
-            </h1>
-            <p className="type-body-lg text-text-secondary max-w-2xl">
-              {sourceConfig.description}
-            </p>
-          </div>
+        <section className="max-w-4xl">
+          <p className="type-label-sm text-warm-accent mb-4 tracking-widest uppercase">
+            {sourceConfig.eyebrow}
+          </p>
+          <h1
+            className="text-charcoal-text mb-6 font-extrabold"
+            style={{
+              fontFamily: "'Sora', sans-serif",
+              fontSize: "clamp(2.5rem, 8vw, 5rem)",
+              lineHeight: 1.05,
+            }}
+          >
+            {sourceConfig.heading}
+          </h1>
+          <p className="type-body-lg text-text-secondary max-w-2xl">
+            {sourceConfig.description}
+          </p>
+        </section>
 
-          <div className="border-outline-variant bg-surface-container-low w-full rounded-xl border p-4 shadow-sm lg:w-80">
-            <label className="type-label-sm text-text-secondary mb-2 block tracking-widest uppercase">
+        <section className="grid gap-6 lg:grid-cols-[18rem_1fr]">
+          <aside className="border-outline-variant bg-surface-container-low h-fit rounded-xl border p-4 shadow-sm lg:sticky lg:top-24">
+            <label
+              htmlFor="component-source-select"
+              className="type-label-sm text-text-secondary mb-2 block tracking-widest uppercase"
+            >
               Component Source
             </label>
-            <div className="relative">
+            <div className="relative mb-4">
               <span className="material-symbols-outlined text-text-secondary pointer-events-none absolute top-1/2 left-4 -translate-y-1/2 text-[20px] leading-none">
                 {sourceConfig.icon}
               </span>
               <select
+                id="component-source-select"
                 value={componentSource}
                 onChange={(event) => handleSourceChange(event.target.value)}
                 className="border-outline-variant text-charcoal-text h-12 w-full appearance-none rounded-lg border bg-white pr-10 pl-12 text-sm font-extrabold outline-none transition-colors hover:border-warm-accent focus:border-warm-accent"
@@ -527,29 +531,7 @@ const PublicComponentsPage = ({ initialSource = "public" }) => {
                 expand_more
               </span>
             </div>
-            <div className="mt-3 flex flex-wrap gap-2">
-              <Link
-                to="/generate"
-                className="bg-warm-accent text-charcoal-text inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-extrabold shadow-sm"
-              >
-                <span className="material-symbols-outlined text-[16px] leading-none">
-                  auto_awesome
-                </span>
-                Generate
-              </Link>
-              <Link
-                to="/home"
-                className="border-outline-variant text-text-secondary hover:text-charcoal-text inline-flex items-center gap-2 rounded-full border bg-white px-4 py-2 text-xs font-extrabold shadow-sm transition-colors"
-              >
-                <span className="material-symbols-outlined text-[16px] leading-none">home</span>
-                Home
-              </Link>
-            </div>
-          </div>
-        </section>
 
-        <section className="grid gap-6 lg:grid-cols-[18rem_1fr]">
-          <aside className="border-outline-variant bg-surface-container-low h-fit rounded-xl border p-4 shadow-sm lg:sticky lg:top-24">
             <label className="border-outline-variant mb-5 flex items-center gap-3 rounded-lg border bg-white px-4 py-3 text-text-secondary shadow-sm">
               <span className="material-symbols-outlined text-[20px] leading-none">search</span>
               <input
