@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
@@ -17,7 +18,7 @@ const fallbackProPlan = {
   amount: 9900,
   currency: "INR",
   credits: 200,
-  displayPrice: "₹99",
+  displayPrice: "Rs 99",
   description: "More credits to build faster with no interruptions.",
 };
 
@@ -62,14 +63,27 @@ const getErrorMessage = (error, fallback) =>
   error.response?.data?.message || error.response?.data?.error || error.message || fallback;
 
 const PlanFeature = ({ children }) => (
-  <li className="flex items-center gap-3 text-sm font-semibold text-white/72">
-    <span className="material-symbols-outlined text-warm-accent text-[18px] leading-none">
-      check
+  <li className="text-text-secondary flex items-center gap-3 text-sm font-semibold">
+    <span className="bg-green-soft text-charcoal-text flex h-6 w-6 items-center justify-center rounded-full">
+      <span className="material-symbols-outlined text-[16px] leading-none">check</span>
     </span>
     {children}
   </li>
 );
 
+const getBuyButtonLabel = ({ isAuthenticated, price, processing }) => {
+  if (processing) {
+    return "Opening checkout...";
+  }
+
+  if (isAuthenticated) {
+    return `Buy for ${price}`;
+  }
+
+  return "Sign in to buy";
+};
+
+// eslint-disable-next-line complexity
 const PricingPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -80,7 +94,8 @@ const PricingPage = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const currentCredits = user?.aiCredit ?? 150;
   const userDisplayName = user?.displayName || user?.name || "Creator";
-  const price = useMemo(() => proPlan.displayPrice || "₹99", [proPlan.displayPrice]);
+  const price = useMemo(() => proPlan.displayPrice || "Rs 99", [proPlan.displayPrice]);
+  const buyButtonLabel = getBuyButtonLabel({ isAuthenticated, price, processing });
 
   useEffect(() => {
     let isMounted = true;
@@ -174,80 +189,83 @@ const PricingPage = () => {
   };
 
   return (
-    <div className="bg-charcoal text-white min-h-screen overflow-hidden">
-      <header className="border-white/10 bg-charcoal/90 sticky top-0 z-40 border-b backdrop-blur-md">
+    <div className="bg-soft-cream-bg text-charcoal-text min-h-screen overflow-hidden">
+      <header className="border-outline-variant/40 bg-soft-cream-bg/90 sticky top-0 z-40 border-b backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 md:px-16">
           <Link to="/home" className="flex items-center gap-2">
             <img src="/favicon.svg" alt="Cosmic UI logo" className="h-8 w-8" />
-            <span className="font-sora text-xl font-bold text-white">Cosmic UI</span>
+            <span className="navbar-brand-text">Cosmic UI</span>
           </Link>
           <nav className="hidden items-center gap-6 md:flex">
-            <Link to="/home" className="text-sm font-semibold text-white/62 hover:text-white">
+            <Link
+              to="/home"
+              className="type-body-sm text-text-secondary hover:text-charcoal-text font-medium transition-colors"
+            >
               Home
             </Link>
-            <Link to="/docs" className="text-sm font-semibold text-white/62 hover:text-white">
+            <Link
+              to="/docs"
+              className="type-body-sm text-text-secondary hover:text-charcoal-text font-medium transition-colors"
+            >
               Components
             </Link>
             <Link
               to="/coming-soon/showcase"
-              className="text-sm font-semibold text-white/62 hover:text-white"
+              className="type-body-sm text-text-secondary hover:text-charcoal-text font-medium transition-colors"
             >
               Showcase
             </Link>
-            <span className="border-warm-accent text-sm font-bold text-white border-b-2 pb-1">
+            <span className="type-body-sm text-charcoal-text border-warm-accent border-b-2 pb-0.5 font-bold">
               Pricing
             </span>
           </nav>
           <Link
             to="/generate"
-            className="bg-warm-accent text-charcoal-text rounded-full px-5 py-2.5 text-sm font-extrabold shadow-sm transition-transform hover:scale-105"
+            className="bg-warm-accent type-label-md text-charcoal-text rounded-full px-5 py-2.5 font-semibold shadow-sm transition-all hover:scale-105 hover:shadow-md"
           >
             Generate Component
           </Link>
         </div>
       </header>
 
-      <main className="relative mx-auto flex max-w-7xl flex-col gap-10 px-4 py-12 md:px-16 md:py-16">
-        <div className="pointer-events-none absolute inset-0 opacity-70">
-          <div className="absolute top-20 right-8 h-72 w-72 rounded-full bg-blue-soft/15 blur-3xl" />
-          <div className="absolute bottom-20 left-8 h-80 w-80 rounded-full bg-warm-accent/14 blur-3xl" />
-        </div>
-
-        <section className="relative z-10 mx-auto max-w-3xl text-center">
+      <main className="mx-auto flex max-w-7xl flex-col gap-10 px-4 py-12 md:px-16 md:py-16">
+        <section className="mx-auto max-w-3xl text-center">
           <Link
             to="/home"
-            className="mb-10 inline-flex items-center gap-2 text-sm font-bold text-white/54 transition-colors hover:text-white"
+            className="text-text-secondary hover:text-charcoal-text mb-9 inline-flex items-center gap-2 text-sm font-bold transition-colors"
           >
             <span className="material-symbols-outlined text-[18px] leading-none">arrow_back</span>
             Back
           </Link>
-          <div className="bg-white/8 border-white/10 text-blue-soft mx-auto mb-6 inline-flex items-center gap-2 rounded-full border px-5 py-2 text-xs font-extrabold tracking-widest uppercase">
-            <span className="material-symbols-outlined text-[16px] leading-none">bolt</span>
+          <div className="bg-highlight-pink/50 border-outline-variant/50 text-charcoal-text mx-auto mb-6 inline-flex items-center gap-2 rounded-full border px-5 py-2 text-xs font-extrabold tracking-widest uppercase">
+            <span className="material-symbols-outlined text-warm-accent text-[16px] leading-none">
+              bolt
+            </span>
             AI Credits
           </div>
-          <h1 className="font-sora text-5xl font-black tracking-normal text-white md:text-7xl">
+          <h1 className="font-sora text-charcoal-text text-5xl font-black tracking-normal md:text-7xl">
             Simple <span className="text-warm-accent">Pricing</span>
           </h1>
-          <p className="mx-auto mt-5 max-w-xl text-base font-semibold leading-7 text-white/54">
+          <p className="type-body-lg text-text-secondary mx-auto mt-5 max-w-xl">
             Choose a plan that fits your workflow. Credits are used each time you generate a
             component.
           </p>
         </section>
 
-        <section className="relative z-10 mx-auto grid w-full max-w-5xl gap-6 lg:grid-cols-2">
-          <article className="rounded-xl border border-white/10 bg-white/[0.055] p-7 shadow-2xl">
+        <section className="mx-auto grid w-full max-w-5xl gap-6 lg:grid-cols-2">
+          <article className="border-outline-variant rounded-xl border bg-white p-7 shadow-lg">
             <div className="mb-7 flex items-center justify-between">
-              <span className="rounded-full bg-white/10 px-4 py-2 text-sm font-extrabold text-white/62">
+              <span className="bg-surface-container-high text-text-secondary rounded-full px-4 py-2 text-sm font-extrabold">
                 Current Plan
               </span>
-              <span className="material-symbols-outlined text-white/24">lock</span>
+              <span className="material-symbols-outlined text-text-tertiary">lock</span>
             </div>
-            <h2 className="font-sora text-2xl font-extrabold text-white">Free</h2>
-            <p className="mt-3 text-sm font-semibold text-white/48">
+            <h2 className="font-sora text-charcoal-text text-2xl font-extrabold">Free</h2>
+            <p className="text-text-secondary mt-3 text-sm font-semibold">
               Get started with AI-powered component generation.
             </p>
-            <p className="font-sora mt-8 text-5xl font-black text-white">Free</p>
-            <span className="mt-4 inline-flex rounded-lg bg-white/8 px-4 py-2 text-sm font-extrabold text-white/68">
+            <p className="font-sora text-charcoal-text mt-8 text-5xl font-black">Free</p>
+            <span className="bg-surface-container-low border-outline-variant text-charcoal-text mt-4 inline-flex rounded-lg border px-4 py-2 text-sm font-extrabold">
               {currentCredits} AI Credits
             </span>
             <ul className="mt-8 space-y-4">
@@ -258,23 +276,27 @@ const PricingPage = () => {
             <button
               type="button"
               disabled
-              className="mt-10 flex w-full items-center justify-center gap-2 rounded-lg bg-white/8 px-5 py-4 text-sm font-extrabold text-white/46"
+              className="bg-surface-container-high text-text-tertiary mt-10 flex w-full items-center justify-center gap-2 rounded-lg px-5 py-4 text-sm font-extrabold"
             >
               <span className="material-symbols-outlined text-[18px] leading-none">check</span>
               Active
             </button>
           </article>
 
-          <article className="border-warm-accent/35 relative overflow-hidden rounded-xl border bg-gradient-to-br from-white/[0.1] to-blue-soft/10 p-7 shadow-2xl">
-            <div className="bg-warm-accent/8 pointer-events-none absolute -right-20 -bottom-24 h-72 w-72 rounded-full blur-3xl" />
+          <article className="border-warm-accent/70 bg-surface-container-lowest relative overflow-hidden rounded-xl border p-7 shadow-xl">
+            <span className="bg-warm-accent absolute top-0 right-0 left-0 h-1" />
             <div className="relative">
-              <span className="bg-blue-soft/15 text-blue-soft mb-7 inline-flex rounded-full px-4 py-2 text-sm font-extrabold">
+              <span className="bg-warm-accent/20 text-charcoal-text mb-7 inline-flex rounded-full px-4 py-2 text-sm font-extrabold">
                 Most Popular
               </span>
-              <h2 className="font-sora text-2xl font-extrabold text-white">{proPlan.name}</h2>
-              <p className="mt-3 text-sm font-semibold text-white/52">{proPlan.description}</p>
-              <p className="font-sora mt-8 text-5xl font-black text-white">{price}</p>
-              <span className="bg-blue-soft/15 text-blue-soft mt-4 inline-flex rounded-lg px-4 py-2 text-sm font-extrabold">
+              <h2 className="font-sora text-charcoal-text text-2xl font-extrabold">
+                {proPlan.name}
+              </h2>
+              <p className="text-text-secondary mt-3 text-sm font-semibold">
+                {proPlan.description}
+              </p>
+              <p className="font-sora text-charcoal-text mt-8 text-5xl font-black">{price}</p>
+              <span className="bg-blue-soft/70 text-charcoal-text mt-4 inline-flex rounded-lg px-4 py-2 text-sm font-extrabold">
                 {proPlan.credits} AI Credits
               </span>
               <ul className="mt-8 space-y-4">
@@ -286,13 +308,9 @@ const PricingPage = () => {
                 type="button"
                 onClick={handleBuyPlan}
                 disabled={processing}
-                className="bg-warm-accent text-charcoal-text mt-10 w-full rounded-lg px-5 py-4 text-sm font-extrabold shadow-[0_16px_36px_rgba(232,160,110,0.22)] transition-transform hover:scale-[1.02] disabled:opacity-60"
+                className="bg-warm-accent text-charcoal-text mt-10 w-full rounded-lg px-5 py-4 text-sm font-extrabold shadow-md transition-transform hover:scale-[1.02] disabled:opacity-60"
               >
-                {processing
-                  ? "Opening checkout..."
-                  : isAuthenticated
-                    ? `Buy for ${price}`
-                    : "Sign in to buy"}
+                {buyButtonLabel}
               </button>
             </div>
           </article>
@@ -300,17 +318,17 @@ const PricingPage = () => {
 
         {(statusMessage || errorMessage) && (
           <p
-            className={`relative z-10 mx-auto max-w-2xl rounded-lg border px-4 py-3 text-center text-sm font-bold ${
+            className={`mx-auto max-w-2xl rounded-lg border px-4 py-3 text-center text-sm font-bold ${
               errorMessage
-                ? "border-red-soft/30 bg-red-soft/10 text-red-soft"
-                : "border-green-soft/30 bg-green-soft/10 text-green-soft"
+                ? "border-red-soft bg-red-soft/40 text-red-700"
+                : "border-green-soft bg-green-soft/60 text-on-surface-variant"
             }`}
           >
             {errorMessage || statusMessage}
           </p>
         )}
 
-        <p className="relative z-10 text-center text-sm font-semibold text-white/38">
+        <p className="text-text-secondary text-center text-sm font-semibold">
           Credits are added to your account instantly after successful payment verification.
         </p>
       </main>

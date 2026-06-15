@@ -6,7 +6,7 @@ export const creditPlans = [
     amount: 9900,
     currency: "INR",
     credits: 200,
-    displayPrice: "₹99",
+    displayPrice: "Rs 99",
   },
 ];
 
