@@ -16,7 +16,7 @@ const HomePage = () => {
   const userDisplayName =
     user?.displayName || user?.name || user?.email?.split("@")[0] || "Developer";
   const footerLinks = [
-    ["Documentation", "/docs"],
+    ["Components", "/docs"],
     ["GitHub", "/coming-soon/github"],
     ["Twitter", "/coming-soon/twitter"],
     ["Discord", "/coming-soon/discord"],
@@ -74,13 +74,13 @@ const HomePage = () => {
               className="type-body-sm text-charcoal-text border-warm-accent border-b-2 pb-0.5 font-bold"
               to="/home"
             >
-              Components
+              Home
             </Link>
             <Link
               className="type-body-sm text-text-secondary hover:text-charcoal-text font-medium transition-colors"
               to="/docs"
             >
-              Documentation
+              Components
             </Link>
             <Link
               className="type-body-sm text-text-secondary hover:text-charcoal-text font-medium transition-colors"

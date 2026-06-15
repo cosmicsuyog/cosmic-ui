@@ -1,8 +1,49 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
-import { getPublicComponentsService } from "../../components/services/componentService";
+import {
+  getMyComponentsService,
+  getPublicComponentsService,
+} from "../../components/services/componentService";
 import GeneratedPreview from "../../generate/components/GeneratedPreview";
+
+const componentSources = [
+  {
+    value: "public",
+    label: "Public Components",
+    shortLabel: "Public",
+    icon: "public",
+    badge: "npm",
+    heading: "Public Cosmic UI components",
+    eyebrow: "Component Library",
+    description:
+      "Browse npm library components and admin-created documentation components. Preview, copy, and use them from one place.",
+    emptyTitle: "No public components yet",
+    emptyCopy: "Public components created by admins will appear here once they are saved.",
+    loadingTitle: "Loading public components",
+    loadingCopy: "Fetching the shared documentation library.",
+    errorCopy: "Failed to load public components.",
+  },
+  {
+    value: "mine",
+    label: "My Components",
+    shortLabel: "Mine",
+    icon: "inventory_2",
+    badge: "saved",
+    heading: "My saved components",
+    eyebrow: "Personal Library",
+    description:
+      "Review components you generated or saved. Switch back to public components whenever you need shared examples.",
+    emptyTitle: "No components saved yet",
+    emptyCopy: "Generate a component, save it, and it will appear here with preview, code, and guide tabs.",
+    loadingTitle: "Loading your components",
+    loadingCopy: "Fetching saved work from your library.",
+    errorCopy: "Failed to load your saved components.",
+  },
+];
+
+const getSourceConfig = (source) =>
+  componentSources.find((item) => item.value === source) || componentSources[0];
 
 const normalizeProps = (props) => {
   if (Array.isArray(props)) {
@@ -82,6 +123,18 @@ const copyToClipboard = async (text) => {
   return true;
 };
 
+const formatDate = (dateValue) => {
+  if (!dateValue) {
+    return "";
+  }
+
+  return new Intl.DateTimeFormat("en", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  }).format(new Date(dateValue));
+};
+
 const CodeBlock = ({ code, label = "JSX", className = "" }) => {
   const [copied, setCopied] = useState(false);
 
@@ -133,18 +186,29 @@ const DockButton = ({ active, icon, label, onClick }) => (
   </button>
 );
 
-const EmptyState = () => (
+const EmptyState = ({ sourceConfig }) => (
   <div className="border-outline-variant flex min-h-[420px] items-center justify-center rounded-xl border bg-white p-8 text-center shadow-sm">
     <div className="max-w-md">
       <div className="bg-highlight-pink/40 text-charcoal-text mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl">
-        <span className="material-symbols-outlined text-[30px] leading-none">widgets</span>
+        <span className="material-symbols-outlined text-[30px] leading-none">
+          {sourceConfig.icon}
+        </span>
       </div>
       <h2 className="text-charcoal-text mb-3 text-2xl font-extrabold">
-        No public components yet
+        {sourceConfig.emptyTitle}
       </h2>
       <p className="text-text-secondary text-sm leading-6">
-        Public components created by admins will appear here once they are saved.
+        {sourceConfig.emptyCopy}
       </p>
+      {sourceConfig.value === "mine" && (
+        <Link
+          to="/generate"
+          className="bg-warm-accent text-charcoal-text mt-7 inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-extrabold shadow-sm transition-transform hover:scale-105"
+        >
+          <span className="material-symbols-outlined text-[18px] leading-none">auto_awesome</span>
+          Generate Component
+        </Link>
+      )}
     </div>
   </div>
 );
@@ -209,7 +273,8 @@ const UsageGuide = ({ componentCode, componentName, componentProps }) => {
   );
 };
 
-const PublicComponentsPage = () => {
+const PublicComponentsPage = ({ initialSource = "public" }) => {
+  const [componentSource, setComponentSource] = useState(initialSource);
   const [components, setComponents] = useState([]);
   const [activeComponentId, setActiveComponentId] = useState("");
   const [activeView, setActiveView] = useState("preview");
@@ -217,6 +282,14 @@ const PublicComponentsPage = () => {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const sourceConfig = useMemo(() => getSourceConfig(componentSource), [componentSource]);
+
+  const handleSourceChange = (nextSource) => {
+    setComponentSource(nextSource);
+    setSearchTerm("");
+    setActiveView("preview");
+    setActiveComponentId("");
+  };
 
   const loadComponents = useCallback(async ({ silent = false } = {}) => {
     if (silent) {
@@ -228,7 +301,10 @@ const PublicComponentsPage = () => {
     setErrorMessage("");
 
     try {
-      const response = await getPublicComponentsService();
+      const response =
+        componentSource === "mine"
+          ? await getMyComponentsService()
+          : await getPublicComponentsService();
       const nextComponents = response.data?.components || [];
       setComponents(nextComponents);
       setActiveComponentId((currentId) => {
@@ -239,12 +315,18 @@ const PublicComponentsPage = () => {
         return nextComponents[0]?._id || "";
       });
     } catch (error) {
-      setErrorMessage(getApiErrorMessage(error, "Failed to load public components."));
+      if (componentSource === "mine" && error.response?.status === 401) {
+        setComponents([]);
+        setActiveComponentId("");
+        setErrorMessage("Sign in to view your saved components.");
+      } else {
+        setErrorMessage(getApiErrorMessage(error, sourceConfig.errorCopy));
+      }
     } finally {
       setLoading(false);
       setRefreshing(false);
     }
-  }, []);
+  }, [componentSource, sourceConfig.errorCopy]);
 
   useEffect(() => {
     const timeoutId = window.setTimeout(() => {
@@ -281,9 +363,10 @@ const PublicComponentsPage = () => {
     [activeComponent?.props]
   );
   const displayedActiveComponentId = activeComponent?._id || "";
+  const activeSavedDate = formatDate(activeComponent?.createdAt);
   const headerDescription = useMemo(() => {
     if (!activeComponent) {
-      return "Preview, code, and guide for public components.";
+      return `Preview, code, and guide for ${sourceConfig.label.toLowerCase()}.`;
     }
 
     if (!componentProps.length) {
@@ -291,7 +374,7 @@ const PublicComponentsPage = () => {
     }
 
     return `Props: ${componentProps.join(", ")}`;
-  }, [activeComponent, componentProps]);
+  }, [activeComponent, componentProps, sourceConfig.label]);
 
   const renderMainContent = () => {
     if (loading) {
@@ -301,8 +384,8 @@ const PublicComponentsPage = () => {
             <span className="material-symbols-outlined text-warm-accent mb-4 animate-spin text-4xl leading-none">
               progress_activity
             </span>
-            <p className="text-charcoal-text font-bold">Loading public components</p>
-            <p className="text-text-secondary mt-2 text-sm">Fetching the documentation library.</p>
+            <p className="text-charcoal-text font-bold">{sourceConfig.loadingTitle}</p>
+            <p className="text-text-secondary mt-2 text-sm">{sourceConfig.loadingCopy}</p>
           </div>
         </div>
       );
@@ -326,13 +409,21 @@ const PublicComponentsPage = () => {
             >
               Try Again
             </button>
+            {componentSource === "mine" && errorMessage.includes("Sign in") && (
+              <Link
+                to="/"
+                className="border-outline-variant text-charcoal-text mt-3 inline-flex rounded-full border bg-white px-5 py-3 text-sm font-extrabold shadow-sm"
+              >
+                Sign In
+              </Link>
+            )}
           </div>
         </div>
       );
     }
 
     if (!activeComponent) {
-      return <EmptyState />;
+      return <EmptyState sourceConfig={sourceConfig} />;
     }
 
     if (activeView === "code") {
@@ -374,7 +465,13 @@ const PublicComponentsPage = () => {
               to="/docs"
               className="border-outline-variant type-label-md rounded-full border bg-white px-5 py-2.5 font-semibold text-text-secondary transition-colors hover:text-charcoal-text"
             >
-              Docs
+              Components
+            </Link>
+            <Link
+              to="/components"
+              className="border-outline-variant type-label-md hidden rounded-full border bg-white px-5 py-2.5 font-semibold text-text-secondary transition-colors hover:text-charcoal-text sm:inline-flex"
+            >
+              My Components
             </Link>
             <Link
               to="/generate"
@@ -387,24 +484,68 @@ const PublicComponentsPage = () => {
       </header>
 
       <main className="mx-auto flex max-w-7xl flex-col gap-8 px-4 py-12 md:px-16">
-        <section className="max-w-4xl">
-          <p className="type-label-sm text-warm-accent mb-4 tracking-widest uppercase">
-            Component Library
-          </p>
-          <h1
-            className="text-charcoal-text mb-6 font-extrabold"
-            style={{
-              fontFamily: "'Sora', sans-serif",
-              fontSize: "clamp(2.5rem, 8vw, 5rem)",
-              lineHeight: 1.05,
-            }}
-          >
-            Public Cosmic UI components
-          </h1>
-          <p className="type-body-lg text-text-secondary max-w-2xl">
-            Browse public components from the npm library and admin-created documentation
-            components. Preview them, copy the code, and drop them into App.jsx.
-          </p>
+        <section className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+          <div className="max-w-4xl">
+            <p className="type-label-sm text-warm-accent mb-4 tracking-widest uppercase">
+              {sourceConfig.eyebrow}
+            </p>
+            <h1
+              className="text-charcoal-text mb-6 font-extrabold"
+              style={{
+                fontFamily: "'Sora', sans-serif",
+                fontSize: "clamp(2.5rem, 8vw, 5rem)",
+                lineHeight: 1.05,
+              }}
+            >
+              {sourceConfig.heading}
+            </h1>
+            <p className="type-body-lg text-text-secondary max-w-2xl">
+              {sourceConfig.description}
+            </p>
+          </div>
+
+          <div className="border-outline-variant bg-surface-container-low w-full rounded-xl border p-4 shadow-sm lg:w-80">
+            <label className="type-label-sm text-text-secondary mb-2 block tracking-widest uppercase">
+              Component Source
+            </label>
+            <div className="relative">
+              <span className="material-symbols-outlined text-text-secondary pointer-events-none absolute top-1/2 left-4 -translate-y-1/2 text-[20px] leading-none">
+                {sourceConfig.icon}
+              </span>
+              <select
+                value={componentSource}
+                onChange={(event) => handleSourceChange(event.target.value)}
+                className="border-outline-variant text-charcoal-text h-12 w-full appearance-none rounded-lg border bg-white pr-10 pl-12 text-sm font-extrabold outline-none transition-colors hover:border-warm-accent focus:border-warm-accent"
+              >
+                {componentSources.map((source) => (
+                  <option key={source.value} value={source.value}>
+                    {source.label}
+                  </option>
+                ))}
+              </select>
+              <span className="material-symbols-outlined text-text-secondary pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 text-[20px] leading-none">
+                expand_more
+              </span>
+            </div>
+            <div className="mt-3 flex flex-wrap gap-2">
+              <Link
+                to="/generate"
+                className="bg-warm-accent text-charcoal-text inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-extrabold shadow-sm"
+              >
+                <span className="material-symbols-outlined text-[16px] leading-none">
+                  auto_awesome
+                </span>
+                Generate
+              </Link>
+              <Link
+                to="/home"
+                className="border-outline-variant text-text-secondary hover:text-charcoal-text inline-flex items-center gap-2 rounded-full border bg-white px-4 py-2 text-xs font-extrabold shadow-sm transition-colors"
+              >
+                <span className="material-symbols-outlined text-[16px] leading-none">home</span>
+                Home
+              </Link>
+            </div>
+          </div>
         </section>
 
         <section className="grid gap-6 lg:grid-cols-[18rem_1fr]">
@@ -420,11 +561,15 @@ const PublicComponentsPage = () => {
             </label>
 
             <p className="type-label-sm text-text-secondary mb-4 tracking-widest uppercase">
-              Components - {filteredComponents.length}
+              {sourceConfig.shortLabel} - {filteredComponents.length}
             </p>
             <div className="max-h-[60vh] space-y-1 overflow-auto pr-1">
               {filteredComponents.map((component) => {
                 const isActive = component._id === displayedActiveComponentId;
+                const componentBadge =
+                  componentSource === "public" && component.source === "library"
+                    ? "npm"
+                    : sourceConfig.badge;
 
                 return (
                   <button
@@ -441,11 +586,9 @@ const PublicComponentsPage = () => {
                     }`}
                   >
                     <span className="min-w-0 truncate">{component.name}</span>
-                    {component.source === "library" && (
-                      <span className="bg-blue-soft/70 ml-2 shrink-0 rounded-full px-2 py-1 text-[10px] font-extrabold text-charcoal-text">
-                        npm
-                      </span>
-                    )}
+                    <span className="bg-blue-soft/70 ml-2 shrink-0 rounded-full px-2 py-1 text-[10px] font-extrabold text-charcoal-text">
+                      {componentBadge}
+                    </span>
                   </button>
                 );
               })}
@@ -455,12 +598,25 @@ const PublicComponentsPage = () => {
           <div className="min-w-0">
             <div className="border-outline-variant/50 mb-6 flex flex-col gap-5 border-b pb-6 xl:flex-row xl:items-end xl:justify-between">
               <div className="min-w-0">
-                <h2 className="text-charcoal-text truncate text-3xl font-extrabold">
-                  {activeComponent?.name || "Public Components"}
-                </h2>
+                <div className="flex flex-wrap items-center gap-3">
+                  <h2 className="text-charcoal-text truncate text-3xl font-extrabold">
+                    {activeComponent?.name || sourceConfig.label}
+                  </h2>
+                  <span className="bg-highlight-pink/50 text-charcoal-text inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-extrabold">
+                    <span className="material-symbols-outlined text-[15px] leading-none">
+                      {sourceConfig.icon}
+                    </span>
+                    {sourceConfig.shortLabel}
+                  </span>
+                </div>
                 <p className="text-text-secondary mt-2 text-sm font-semibold">
                   {headerDescription}
                 </p>
+                {activeSavedDate && componentSource === "mine" && (
+                  <p className="text-text-tertiary mt-2 text-xs font-semibold">
+                    Saved {activeSavedDate}
+                  </p>
+                )}
               </div>
 
               <div className="flex flex-wrap items-center gap-2">
@@ -468,8 +624,8 @@ const PublicComponentsPage = () => {
                   type="button"
                   onClick={() => loadComponents({ silent: true })}
                   className="border-outline-variant flex h-10 w-10 items-center justify-center rounded-full border bg-white text-text-secondary shadow-sm transition-colors hover:text-charcoal-text"
-                  aria-label="Refresh public components"
-                  title="Refresh public components"
+                  aria-label={`Refresh ${sourceConfig.label.toLowerCase()}`}
+                  title={`Refresh ${sourceConfig.label.toLowerCase()}`}
                 >
                   <span className={`material-symbols-outlined text-[20px] leading-none ${refreshing ? "animate-spin" : ""}`}>
                     refresh

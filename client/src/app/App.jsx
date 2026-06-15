@@ -6,8 +6,6 @@ import { initializeAuth } from "../features/auth/auth.slice";
 import LoginPage from "../features/auth/pages/LoginPage";
 import AdminPage from "../features/admin/pages/AdminPage";
 import ComingSoonPage from "../features/coming-soon/pages/ComingSoonPage";
-import MyComponentsPage from "../features/components/pages/MyComponentsPage";
-import DocumentationPage from "../features/docs/pages/DocumentationPage";
 import PublicComponentsPage from "../features/docs/pages/PublicComponentsPage";
 import GeneratePage from "../features/generate/pages/GeneratePage";
 import HomePage from "../features/home/pages/HomePage";
@@ -126,15 +124,36 @@ const App = () => {
         />
         <Route
           path="/components"
-          element={isAuthenticated ? <MyComponentsPage /> : <Navigate to="/" replace />}
+          element={
+            isAuthenticated ? (
+              <PublicComponentsPage key="my-components" initialSource="mine" />
+            ) : (
+              <Navigate to="/" replace />
+            )
+          }
         />
         <Route
           path="/coming-soon/components"
-          element={isAuthenticated ? <MyComponentsPage /> : <Navigate to="/" replace />}
+          element={
+            isAuthenticated ? (
+              <PublicComponentsPage key="my-components-alias" initialSource="mine" />
+            ) : (
+              <Navigate to="/" replace />
+            )
+          }
         />
-        <Route path="/docs" element={<DocumentationPage />} />
-        <Route path="/docs/components" element={<PublicComponentsPage />} />
-        <Route path="/coming-soon/docs" element={<DocumentationPage />} />
+        <Route
+          path="/docs"
+          element={<PublicComponentsPage key="public-components" initialSource="public" />}
+        />
+        <Route
+          path="/docs/components"
+          element={<PublicComponentsPage key="public-components-docs" initialSource="public" />}
+        />
+        <Route
+          path="/coming-soon/docs"
+          element={<PublicComponentsPage key="public-components-alias" initialSource="public" />}
+        />
         <Route path="/coming-soon/:page" element={<ComingSoonPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

@@ -82,9 +82,9 @@ const LoginPage = () => {
             </Link>
             <Link
               className="text-text-secondary hover:text-charcoal transition-colors"
-              to="/coming-soon/docs"
+              to="/docs"
             >
-              Docs
+              Components
             </Link>
             <Link
               className="text-text-secondary hover:text-charcoal transition-colors"
@@ -289,9 +289,9 @@ const LoginPage = () => {
                 No account needed for npm.{" "}
                 <Link
                   className="text-warm-accent font-semibold transition-all hover:underline"
-                  to="/coming-soon/docs"
+                  to="/docs"
                 >
-                  View docs →
+                  View components →
                 </Link>
               </p>
             </div>
