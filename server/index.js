@@ -1,3 +1,6 @@
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -10,7 +13,9 @@ import authRouter from "./routes/auth.routes.js";
 import componentRouter from "./routes/component.route.js";
 import paymentRouter from "./routes/payment.route.js";
 
-dotenv.config();
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+dotenv.config({ path: resolve(__dirname, ".env") });
 const app = express();
 
 const PORT = process.env.PORT;
