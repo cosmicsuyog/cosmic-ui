@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
+import { useAuth } from "../../auth/hooks/useAuth";
 import {
   getMyComponentsService,
   getPublicComponentsService,
+  saveMyComponentService,
 } from "../../components/services/componentService";
 import GeneratedPreview from "../../generate/components/GeneratedPreview";
 
@@ -41,6 +43,42 @@ const componentSources = [
     errorCopy: "Failed to load your saved components.",
   },
 ];
+
+const defaultManualComponentCode = `export const MyComponent = ({
+  title = "My Component",
+  content = "Saved privately in Cosmic UI.",
+  buttonText = "Open"
+}) => {
+  return (
+    <div
+      style={{
+        width: "320px",
+        padding: "24px",
+        borderRadius: "14px",
+        background: "#ffffff",
+        color: "#2a2622",
+        boxShadow: "0 16px 40px rgba(42, 38, 34, 0.14)"
+      }}
+    >
+      <h3 style={{ margin: "0 0 10px", fontSize: "1.4rem" }}>{title}</h3>
+      <p style={{ margin: "0 0 18px", lineHeight: 1.6 }}>{content}</p>
+      <button
+        style={{
+          border: "none",
+          borderRadius: "8px",
+          background: "#e8a06e",
+          color: "#2a2622",
+          padding: "10px 16px",
+          fontWeight: 700
+        }}
+      >
+        {buttonText}
+      </button>
+    </div>
+  );
+};
+
+export default MyComponent;`;
 
 const getSourceConfig = (source) =>
   componentSources.find((item) => item.value === source) || componentSources[0];
@@ -186,7 +224,7 @@ const DockButton = ({ active, icon, label, onClick }) => (
   </button>
 );
 
-const EmptyState = ({ sourceConfig }) => (
+const EmptyState = ({ onAddComponent, sourceConfig }) => (
   <div className="border-outline-variant flex min-h-[420px] items-center justify-center rounded-xl border bg-white p-8 text-center shadow-sm">
     <div className="max-w-md">
       <div className="bg-highlight-pink/40 text-charcoal-text mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl">
@@ -200,14 +238,24 @@ const EmptyState = ({ sourceConfig }) => (
       <p className="text-text-secondary text-sm leading-6">
         {sourceConfig.emptyCopy}
       </p>
-      {sourceConfig.value === "mine" && (
-        <Link
-          to="/generate"
-          className="bg-warm-accent text-charcoal-text mt-7 inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-extrabold shadow-sm transition-transform hover:scale-105"
-        >
-          <span className="material-symbols-outlined text-[18px] leading-none">auto_awesome</span>
-          Generate Component
-        </Link>
+      {sourceConfig.value === "mine" && onAddComponent && (
+        <div className="mt-7 flex flex-wrap justify-center gap-3">
+          <button
+            type="button"
+            onClick={onAddComponent}
+            className="bg-warm-accent text-charcoal-text inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-extrabold shadow-sm transition-transform hover:scale-105"
+          >
+            <span className="material-symbols-outlined text-[18px] leading-none">add</span>
+            Add Component
+          </button>
+          <Link
+            to="/generate"
+            className="border-outline-variant text-charcoal-text inline-flex items-center gap-2 rounded-full border bg-white px-5 py-3 text-sm font-extrabold shadow-sm transition-colors hover:border-warm-accent"
+          >
+            <span className="material-symbols-outlined text-[18px] leading-none">auto_awesome</span>
+            Generate
+          </Link>
+        </div>
       )}
     </div>
   </div>
@@ -273,7 +321,186 @@ const UsageGuide = ({ componentCode, componentName, componentProps }) => {
   );
 };
 
+const ManualAddComponentForm = ({
+  code,
+  componentName,
+  error,
+  manualView,
+  message,
+  onAddProp,
+  onBack,
+  onCodeChange,
+  onComponentNameChange,
+  onManualViewChange,
+  onPropInputChange,
+  onPropKeyDown,
+  onRemoveProp,
+  onSave,
+  propInput,
+  propsList,
+  saving,
+}) => {
+  const previewName = componentName.trim() || "MyComponent";
+
+  return (
+    <section className="grid gap-6 xl:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
+      <div className="space-y-5">
+        {(message || error) && (
+          <div
+            className={`rounded-lg border px-4 py-3 text-sm font-semibold ${
+              error
+                ? "border-red-soft bg-red-soft/40 text-red-700"
+                : "border-green-soft bg-green-soft/60 text-on-surface-variant"
+            }`}
+          >
+            {error || message}
+          </div>
+        )}
+
+        <div className="border-outline-variant bg-white rounded-xl border p-5 shadow-sm">
+          <label
+            htmlFor="manual-component-name"
+            className="type-label-sm text-text-secondary tracking-widest uppercase"
+          >
+            Component Name
+          </label>
+          <input
+            id="manual-component-name"
+            value={componentName}
+            onChange={(event) => onComponentNameChange(event.target.value)}
+            placeholder='e.g. "PricingCard", "HeroSection"'
+            className="border-outline-variant mt-3 w-full rounded-lg border bg-surface-container-low px-4 py-3 text-sm font-semibold outline-none focus:border-warm-accent"
+          />
+        </div>
+
+        <div className="border-outline-variant bg-white rounded-xl border p-5 shadow-sm">
+          <label
+            htmlFor="manual-component-prop"
+            className="type-label-sm text-text-secondary tracking-widest uppercase"
+          >
+            Props
+          </label>
+          <div className="mt-4 flex flex-wrap gap-2">
+            {propsList.length === 0 && (
+              <span className="type-body-sm text-text-tertiary">No props added yet</span>
+            )}
+            {propsList.map((prop) => (
+              <button
+                key={prop}
+                type="button"
+                onClick={() => onRemoveProp(prop)}
+                className="bg-purple-soft/70 rounded-full px-3 py-1 text-sm font-bold text-on-surface-variant"
+                title={`Remove ${prop}`}
+              >
+                {prop} x
+              </button>
+            ))}
+          </div>
+          <div className="mt-4 flex gap-3">
+            <input
+              id="manual-component-prop"
+              value={propInput}
+              onChange={(event) => onPropInputChange(event.target.value)}
+              onKeyDown={onPropKeyDown}
+              placeholder='e.g. "title", "onClick", "children"'
+              className="border-outline-variant min-w-0 flex-1 rounded-lg border bg-surface-container-low px-4 py-3 text-sm font-semibold outline-none focus:border-warm-accent"
+            />
+            <button
+              type="button"
+              onClick={onAddProp}
+              className="bg-purple-soft text-charcoal-text rounded-lg px-5 py-3 text-sm font-bold"
+            >
+              Add
+            </button>
+          </div>
+        </div>
+
+        <div className="flex flex-wrap gap-3">
+          <button
+            type="button"
+            onClick={onSave}
+            disabled={saving}
+            className="bg-warm-accent text-charcoal-text inline-flex items-center gap-2 rounded-lg px-6 py-3 text-sm font-extrabold shadow-md transition-transform hover:scale-105 disabled:opacity-60"
+          >
+            <span className="material-symbols-outlined text-[18px] leading-none">
+              save
+            </span>
+            {saving ? "Saving..." : "Save Component"}
+          </button>
+          <button
+            type="button"
+            onClick={onBack}
+            className="border-outline-variant bg-white text-text-secondary hover:text-charcoal-text rounded-lg border px-5 py-3 text-sm font-extrabold shadow-sm transition-colors"
+          >
+            Back to Library
+          </button>
+        </div>
+      </div>
+
+      <div className="border-outline-variant bg-white overflow-hidden rounded-xl border shadow-sm">
+        <div className="border-outline-variant/50 flex items-center justify-between border-b p-4">
+          <label
+            htmlFor="manual-component-code"
+            className="type-label-sm text-text-secondary tracking-widest uppercase"
+          >
+            Component Code
+          </label>
+          <div className="bg-surface-container-low flex rounded-full p-1">
+            <button
+              type="button"
+              aria-label="Edit component code"
+              title="Code"
+              onClick={() => onManualViewChange("code")}
+              className={`flex h-9 w-10 items-center justify-center rounded-full transition-colors ${
+                manualView === "code"
+                  ? "bg-blue-soft text-charcoal-text shadow-sm"
+                  : "text-text-secondary hover:text-charcoal-text"
+              }`}
+            >
+              <span className="material-symbols-outlined text-[18px] leading-none">
+                data_object
+              </span>
+            </button>
+            <button
+              type="button"
+              aria-label="Preview component"
+              title="Preview"
+              onClick={() => onManualViewChange("preview")}
+              className={`flex h-9 w-10 items-center justify-center rounded-full transition-colors ${
+                manualView === "preview"
+                  ? "bg-blue-soft text-charcoal-text shadow-sm"
+                  : "text-text-secondary hover:text-charcoal-text"
+              }`}
+            >
+              <span className="material-symbols-outlined text-[18px] leading-none">
+                visibility
+              </span>
+            </button>
+          </div>
+        </div>
+        {manualView === "code" ? (
+          <textarea
+            id="manual-component-code"
+            value={code}
+            onChange={(event) => onCodeChange(event.target.value)}
+            className="min-h-[560px] w-full resize-y bg-[#11151d] p-5 font-mono text-sm leading-7 text-white/80 outline-none"
+          />
+        ) : (
+          <div className="bg-charcoal p-5">
+            <GeneratedPreview
+              componentCode={code}
+              componentName={previewName}
+              componentProps={propsList}
+            />
+          </div>
+        )}
+      </div>
+    </section>
+  );
+};
+
 const PublicComponentsPage = ({ initialSource = "public" }) => {
+  const { isAuthenticated } = useAuth();
   const [componentSource, setComponentSource] = useState(initialSource);
   const [components, setComponents] = useState([]);
   const [activeComponentId, setActiveComponentId] = useState("");
@@ -282,13 +509,27 @@ const PublicComponentsPage = ({ initialSource = "public" }) => {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [workspaceView, setWorkspaceView] = useState("browse");
+  const [manualComponentName, setManualComponentName] = useState("");
+  const [manualPropInput, setManualPropInput] = useState("");
+  const [manualPropsList, setManualPropsList] = useState([]);
+  const [manualCode, setManualCode] = useState(defaultManualComponentCode);
+  const [manualView, setManualView] = useState("code");
+  const [manualMessage, setManualMessage] = useState("");
+  const [manualError, setManualError] = useState("");
+  const [manualSaving, setManualSaving] = useState(false);
   const sourceConfig = useMemo(() => getSourceConfig(componentSource), [componentSource]);
+  const canAddComponent = componentSource === "mine" && isAuthenticated;
+  const isManualAddView = canAddComponent && workspaceView === "add";
 
   const handleSourceChange = (nextSource) => {
     setComponentSource(nextSource);
     setSearchTerm("");
     setActiveView("preview");
     setActiveComponentId("");
+    setWorkspaceView("browse");
+    setManualMessage("");
+    setManualError("");
   };
 
   const loadComponents = useCallback(async ({ silent = false } = {}) => {
@@ -327,6 +568,88 @@ const PublicComponentsPage = ({ initialSource = "public" }) => {
       setRefreshing(false);
     }
   }, [componentSource, sourceConfig.errorCopy]);
+
+  const resetManualForm = () => {
+    setManualComponentName("");
+    setManualPropsList([]);
+    setManualPropInput("");
+    setManualCode(defaultManualComponentCode);
+    setManualView("code");
+  };
+
+  const handleOpenManualAdd = () => {
+    if (!isAuthenticated) {
+      setWorkspaceView("browse");
+      setManualError("Sign in to add components to your library.");
+      return;
+    }
+
+    setComponentSource("mine");
+    setWorkspaceView("add");
+    setManualMessage("");
+    setManualError("");
+    setActiveView("preview");
+  };
+
+  const handleCloseManualAdd = () => {
+    setWorkspaceView("browse");
+    setManualError("");
+  };
+
+  const addManualProp = () => {
+    const nextProp = manualPropInput.trim();
+
+    if (!nextProp || manualPropsList.includes(nextProp)) {
+      return;
+    }
+
+    setManualPropsList((current) => [...current, nextProp]);
+    setManualPropInput("");
+  };
+
+  const handleManualPropKeyDown = (event) => {
+    if (event.key === "Enter" || event.key === ",") {
+      event.preventDefault();
+      addManualProp();
+    }
+  };
+
+  const handleSaveManualComponent = async () => {
+    const trimmedName = manualComponentName.trim();
+    const trimmedCode = manualCode.trim();
+
+    if (!trimmedName || !trimmedCode || manualSaving) {
+      setManualError("Component name and code are required.");
+      return;
+    }
+
+    setManualSaving(true);
+    setManualMessage("");
+    setManualError("");
+
+    try {
+      const response = await saveMyComponentService({
+        name: trimmedName,
+        props: manualPropsList,
+        code: trimmedCode,
+      });
+      const savedComponentId = response.data?.component?._id || "";
+
+      resetManualForm();
+      setWorkspaceView("browse");
+      setSearchTerm("");
+      setActiveView("preview");
+      await loadComponents({ silent: true });
+      if (savedComponentId) {
+        setActiveComponentId(savedComponentId);
+      }
+      setManualMessage("Component saved to My Components.");
+    } catch (saveError) {
+      setManualError(getApiErrorMessage(saveError, "Failed to save component."));
+    } finally {
+      setManualSaving(false);
+    }
+  };
 
   useEffect(() => {
     const timeoutId = window.setTimeout(() => {
@@ -375,8 +698,40 @@ const PublicComponentsPage = ({ initialSource = "public" }) => {
 
     return `Props: ${componentProps.join(", ")}`;
   }, [activeComponent, componentProps, sourceConfig.label]);
+  const contentTitle = isManualAddView
+    ? "Add Component"
+    : activeComponent?.name || sourceConfig.label;
+  const contentDescription = isManualAddView
+    ? "Paste JSX, add props, preview it, and save it privately to My Components."
+    : headerDescription;
 
   const renderMainContent = () => {
+    if (isManualAddView) {
+      return (
+        <ManualAddComponentForm
+          code={manualCode}
+          componentName={manualComponentName}
+          error={manualError}
+          manualView={manualView}
+          message={manualMessage}
+          onAddProp={addManualProp}
+          onBack={handleCloseManualAdd}
+          onCodeChange={setManualCode}
+          onComponentNameChange={setManualComponentName}
+          onManualViewChange={setManualView}
+          onPropInputChange={setManualPropInput}
+          onPropKeyDown={handleManualPropKeyDown}
+          onRemoveProp={(prop) =>
+            setManualPropsList((current) => current.filter((item) => item !== prop))
+          }
+          onSave={handleSaveManualComponent}
+          propInput={manualPropInput}
+          propsList={manualPropsList}
+          saving={manualSaving}
+        />
+      );
+    }
+
     if (loading) {
       return (
         <div className="border-outline-variant flex min-h-[460px] items-center justify-center rounded-xl border bg-white shadow-sm">
@@ -423,7 +778,12 @@ const PublicComponentsPage = ({ initialSource = "public" }) => {
     }
 
     if (!activeComponent) {
-      return <EmptyState sourceConfig={sourceConfig} />;
+      return (
+        <EmptyState
+          onAddComponent={canAddComponent ? handleOpenManualAdd : undefined}
+          sourceConfig={sourceConfig}
+        />
+      );
     }
 
     if (activeView === "code") {
@@ -532,6 +892,21 @@ const PublicComponentsPage = ({ initialSource = "public" }) => {
               </span>
             </div>
 
+            {canAddComponent && (
+              <button
+                type="button"
+                onClick={handleOpenManualAdd}
+                className={`mb-4 flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left text-sm font-extrabold shadow-sm transition-colors ${
+                  isManualAddView
+                    ? "bg-warm-accent text-charcoal-text"
+                    : "bg-white text-text-secondary hover:text-charcoal-text"
+                }`}
+              >
+                <span className="material-symbols-outlined text-[20px] leading-none">add</span>
+                Add Component
+              </button>
+            )}
+
             <label className="border-outline-variant mb-5 flex items-center gap-3 rounded-lg border bg-white px-4 py-3 text-text-secondary shadow-sm">
               <span className="material-symbols-outlined text-[20px] leading-none">search</span>
               <input
@@ -560,6 +935,7 @@ const PublicComponentsPage = ({ initialSource = "public" }) => {
                     onClick={() => {
                       setActiveComponentId(component._id);
                       setActiveView("preview");
+                      setWorkspaceView("browse");
                     }}
                     className={`flex w-full items-center justify-between rounded-xl px-4 py-3 text-left text-sm font-bold transition-colors ${
                       isActive
@@ -582,7 +958,7 @@ const PublicComponentsPage = ({ initialSource = "public" }) => {
               <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-3">
                   <h2 className="text-charcoal-text truncate text-3xl font-extrabold">
-                    {activeComponent?.name || sourceConfig.label}
+                    {contentTitle}
                   </h2>
                   <span className="bg-highlight-pink/50 text-charcoal-text inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-extrabold">
                     <span className="material-symbols-outlined text-[15px] leading-none">
@@ -592,9 +968,9 @@ const PublicComponentsPage = ({ initialSource = "public" }) => {
                   </span>
                 </div>
                 <p className="text-text-secondary mt-2 text-sm font-semibold">
-                  {headerDescription}
+                  {contentDescription}
                 </p>
-                {activeSavedDate && componentSource === "mine" && (
+                {activeSavedDate && componentSource === "mine" && !isManualAddView && (
                   <p className="text-text-tertiary mt-2 text-xs font-semibold">
                     Saved {activeSavedDate}
                   </p>
@@ -602,18 +978,36 @@ const PublicComponentsPage = ({ initialSource = "public" }) => {
               </div>
 
               <div className="flex flex-wrap items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => loadComponents({ silent: true })}
-                  className="border-outline-variant flex h-10 w-10 items-center justify-center rounded-full border bg-white text-text-secondary shadow-sm transition-colors hover:text-charcoal-text"
-                  aria-label={`Refresh ${sourceConfig.label.toLowerCase()}`}
-                  title={`Refresh ${sourceConfig.label.toLowerCase()}`}
-                >
-                  <span className={`material-symbols-outlined text-[20px] leading-none ${refreshing ? "animate-spin" : ""}`}>
-                    refresh
-                  </span>
-                </button>
-                {activeComponent && (
+                {canAddComponent && (
+                  <button
+                    type="button"
+                    onClick={isManualAddView ? handleCloseManualAdd : handleOpenManualAdd}
+                    className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-extrabold shadow-sm transition-colors ${
+                      isManualAddView
+                        ? "border-outline-variant border bg-white text-text-secondary hover:text-charcoal-text"
+                        : "bg-warm-accent text-charcoal-text"
+                    }`}
+                  >
+                    <span className="material-symbols-outlined text-[18px] leading-none">
+                      {isManualAddView ? "arrow_back" : "add"}
+                    </span>
+                    {isManualAddView ? "Back to Library" : "Add Component"}
+                  </button>
+                )}
+                {!isManualAddView && (
+                  <button
+                    type="button"
+                    onClick={() => loadComponents({ silent: true })}
+                    className="border-outline-variant flex h-10 w-10 items-center justify-center rounded-full border bg-white text-text-secondary shadow-sm transition-colors hover:text-charcoal-text"
+                    aria-label={`Refresh ${sourceConfig.label.toLowerCase()}`}
+                    title={`Refresh ${sourceConfig.label.toLowerCase()}`}
+                  >
+                    <span className={`material-symbols-outlined text-[20px] leading-none ${refreshing ? "animate-spin" : ""}`}>
+                      refresh
+                    </span>
+                  </button>
+                )}
+                {activeComponent && !isManualAddView && (
                   <div className="bg-surface-container-low flex rounded-full p-1 shadow-sm">
                     <DockButton
                       active={activeView === "preview"}
@@ -637,6 +1031,18 @@ const PublicComponentsPage = ({ initialSource = "public" }) => {
                 )}
               </div>
             </div>
+
+            {!isManualAddView && (manualMessage || manualError) && (
+              <div
+                className={`mb-5 rounded-lg border px-4 py-3 text-sm font-semibold ${
+                  manualError
+                    ? "border-red-soft bg-red-soft/40 text-red-700"
+                    : "border-green-soft bg-green-soft/60 text-on-surface-variant"
+                }`}
+              >
+                {manualError || manualMessage}
+              </div>
+            )}
 
             {renderMainContent()}
           </div>

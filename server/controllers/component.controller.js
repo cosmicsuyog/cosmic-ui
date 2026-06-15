@@ -140,7 +140,10 @@ export const saveComponent = async (req, res) => {
       return res.status(404).json({ message: "User Not Found" });
     }
 
-    if (user.role === "admin") {
+    const normalizedVisibility =
+      user.role === "admin" && visibility === "public" ? "public" : "private";
+
+    if (user.role === "admin" && normalizedVisibility === "public") {
       const existing = await Component.findOne({
         name,
         visibility: "public",
@@ -168,7 +171,7 @@ export const saveComponent = async (req, res) => {
       name,
       code,
       props,
-      visibility,
+      visibility: normalizedVisibility,
       owner: req.userId,
     });
 
