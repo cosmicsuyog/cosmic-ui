@@ -36,6 +36,8 @@ const GoogleLoginButton = ({ onSuccess }) => {
       window.google.accounts.id.initialize({
         client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
         callback: handleGoogleSuccess,
+        auto_select: false,
+        prompt_parent_id: "google-signin-button",
       });
       window.google.accounts.id.renderButton(document.getElementById("google-signin-button"), {
         theme: "outline",

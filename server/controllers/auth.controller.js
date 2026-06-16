@@ -1,6 +1,13 @@
 import { generateToken } from "../config/token.js";
 import userModel from "../models/user.model.js";
 
+const getAuthCookieOptions = () => ({
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+  maxAge: 7 * 24 * 60 * 60 * 1000,
+});
+
 export const googleAuth = async (req, res) => {
   try {
     const { name, email } = req.body;
@@ -34,14 +41,9 @@ export const googleAuth = async (req, res) => {
       });
     }
 
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: false,
-      sameSite: "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
+    res.cookie("token", token, getAuthCookieOptions());
 
-    return res.status(200).json({ success: true, user });
+    return res.status(200).json({ success: true, token, user });
   } catch (error) {
     return res.status(500).json({ success: false, message: `Google Auth Error : ${error}` });
   }
@@ -49,11 +51,7 @@ export const googleAuth = async (req, res) => {
 
 export const logout = async (req, res) => {
   try {
-    res.clearCookie("token", {
-      httpOnly: true,
-      secure: false,
-      sameSite: "strict",
-    });
+    res.clearCookie("token", getAuthCookieOptions());
     return res.status(200).json({ success: true, message: "Logout successful" });
   } catch (error) {
     return res.status(500).json({ success: false, message: `Logout Error : ${error}` });
