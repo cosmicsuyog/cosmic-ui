@@ -2,7 +2,7 @@ import axios from "axios";
 
 import { auth, provider } from "../../../utils/firebase";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000/api";
+const API_URL = import.meta.env.VITE_API_URL || "https://cosmic-ui.onrender.com/api";
 
 const authClient = axios.create({
   baseURL: API_URL,

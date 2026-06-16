@@ -16,7 +16,7 @@ services:
     build:
       context: ./client
       args:
-        VITE_API_URL: /api
+        VITE_API_URL: https://cosmic-ui.onrender.com/api
         VITE_FIREBASE_API_KEY: ${VITE_FIREBASE_API_KEY:-}
         VITE_GOOGLE_CLIENT_ID: ${VITE_GOOGLE_CLIENT_ID:-}
     depends_on:

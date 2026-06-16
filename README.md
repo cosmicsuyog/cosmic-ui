@@ -50,8 +50,8 @@ docker compose up --build
 ```
 
 The frontend runs at `http://localhost:8080`.
-The API runs at `http://localhost:3000`.
-The health check endpoint is `http://localhost:3000/api/health`.
+The production API runs at `https://cosmic-ui.onrender.com`.
+The health check endpoint is `https://cosmic-ui.onrender.com/api/health`.
 
 ## Required Server Environment
 
@@ -70,7 +70,7 @@ RAZORPAY_KEY_SECRET=
 ## Client Build Environment
 
 ```text
-VITE_API_URL=/api
+VITE_API_URL=https://cosmic-ui.onrender.com/api
 VITE_FIREBASE_API_KEY=
 VITE_GOOGLE_CLIENT_ID=
 ```
