@@ -16,6 +16,13 @@ export const googleAuth = createAsyncThunk(
     try {
       const response = await googleAuthService(googleUser);
       const { token = null, user } = response.data;
+      if (!token) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        return rejectWithValue(
+          "Sign-in token missing. Please try again after the backend deploys."
+        );
+      }
       if (token) {
         localStorage.setItem("token", token);
       }
@@ -43,9 +50,9 @@ export const logout = createAsyncThunk("auth/logout", async (_, { rejectWithValu
 const storedUser = getStoredUser();
 
 const initialState = {
-  user: storedUser,
+  user: localStorage.getItem("token") ? storedUser : null,
   token: localStorage.getItem("token") || null,
-  isAuthenticated: !!localStorage.getItem("token") || !!storedUser,
+  isAuthenticated: !!localStorage.getItem("token"),
   loading: true,
   error: null,
 };
@@ -57,9 +64,12 @@ const authSlice = createSlice({
     initializeAuth: (state) => {
       const token = localStorage.getItem("token");
       const user = getStoredUser();
+      if (!token) {
+        localStorage.removeItem("user");
+      }
       state.token = token;
-      state.user = user;
-      state.isAuthenticated = !!token || !!user;
+      state.user = token ? user : null;
+      state.isAuthenticated = !!token;
       state.loading = false;
     },
     clearError: (state) => {
@@ -76,7 +86,7 @@ const authSlice = createSlice({
         state.loading = false;
         state.token = action.payload.token;
         state.user = action.payload.user;
-        state.isAuthenticated = true;
+        state.isAuthenticated = !!action.payload.token;
       })
       .addCase(googleAuth.rejected, (state, action) => {
         state.loading = false;
