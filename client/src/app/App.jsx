@@ -10,6 +10,8 @@ import PublicComponentsPage from "../features/docs/pages/PublicComponentsPage";
 import GeneratePage from "../features/generate/pages/GeneratePage";
 import HomePage from "../features/home/pages/HomePage";
 import PricingPage from "../features/pricing/pages/PricingPage";
+import PowerKitLanding from "../features/power-kit/PowerKitLanding";
+import UtilityDocsPage from "../features/power-kit/UtilityDocsPage";
 import CustomCursor from "./CustomCursor";
 import "./index.css";
 
@@ -69,20 +71,20 @@ const App = () => {
       {(showInitialLoader || routeTransitioning) && <TopLoadingBar />}
       <CustomCursor />
       <Routes>
+        <Route path="/" element={<PowerKitLanding />} />
         <Route
-          path="/"
+          path="/login"
           element={
-            isAuthenticated ? (
-              <Navigate to={isAdmin ? "/admin" : "/home"} replace />
-            ) : (
-              <LoginPage />
-            )
+            isAuthenticated ? <Navigate to={isAdmin ? "/admin" : "/home"} replace /> : <LoginPage />
           }
         />
+        <Route path="/utility-docs" element={<UtilityDocsPage />} />
         <Route path="/home" element={<HomePage />} />
         <Route
           path="/admin"
-          element={isAdmin ? <AdminPage /> : <Navigate to={isAuthenticated ? "/home" : "/"} replace />}
+          element={
+            isAdmin ? <AdminPage /> : <Navigate to={isAuthenticated ? "/home" : "/"} replace />
+          }
         />
         <Route
           path="/generate"

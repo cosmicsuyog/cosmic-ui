@@ -241,7 +241,7 @@ const LoginPage = () => {
                   <p className="text-text-secondary text-[10px] font-bold uppercase">Credits</p>
                 </div>
                 <div className="border-divider border-x">
-                  <p className="text-charcoal text-lg font-bold">∞</p>
+                  <p className="text-charcoal text-lg font-bold">âˆž</p>
                   <p className="text-text-secondary text-[10px] font-bold uppercase">Components</p>
                 </div>
                 <div>
@@ -291,7 +291,7 @@ const LoginPage = () => {
                   className="text-warm-accent font-semibold transition-all hover:underline"
                   to="/docs"
                 >
-                  View components →
+                  View components â†’
                 </Link>
               </p>
             </div>
@@ -304,7 +304,7 @@ const LoginPage = () => {
         <div className="mx-auto flex w-full max-w-7xl flex-col items-center justify-between gap-4 px-8 md:flex-row">
           <div className="flex flex-col items-center gap-6 md:flex-row">
             <span className="text-charcoal text-lg font-bold">Cosmic UI</span>
-            <p className="text-text-secondary text-xs">© 2026 Cosmic UI. All rights reserved.</p>
+            <p className="text-text-secondary text-xs">Â© 2026 Cosmic UI. All rights reserved.</p>
           </div>
           <div className="flex items-center gap-6">
             {footerLinks.map(([label, to]) => (

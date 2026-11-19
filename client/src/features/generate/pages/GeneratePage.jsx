@@ -16,7 +16,8 @@ const samplePrompts = [
   "Responsive dashboard stats panel with compact charts",
 ];
 
-const getGeneratedPayload = (responseData) => responseData?.component || responseData?.parsed || null;
+const getGeneratedPayload = (responseData) =>
+  responseData?.component || responseData?.parsed || null;
 
 const getApiErrorMessage = (error, fallback) =>
   error.response?.data?.error || error.response?.data?.message || error.message || fallback;
@@ -77,7 +78,9 @@ const getPropExample = (propName) => {
 };
 
 const createUsageCode = (componentName, componentProps) => {
-  const propLines = componentProps.slice(0, 10).map((propName) => `        ${getPropExample(propName)}`);
+  const propLines = componentProps
+    .slice(0, 10)
+    .map((propName) => `        ${getPropExample(propName)}`);
   const propsBlock = propLines.length > 0 ? `\n${propLines.join("\n")}\n      ` : "";
 
   return `import { ${componentName} } from "./components/${componentName}";
@@ -102,7 +105,7 @@ const copyToClipboard = async (text) => {
 const CodePanel = ({ code, label = "JSX", maxHeight = "max-h-[520px]" }) => (
   <div className="border-outline-variant overflow-hidden rounded-xl border bg-[#1E1E1E] shadow-sm">
     <div className="flex items-center justify-between border-b border-[#3D3D3D] bg-[#2D2D2D] px-4 py-3">
-      <span className="type-label-sm text-gray-400 tracking-widest uppercase">{label}</span>
+      <span className="type-label-sm tracking-widest text-gray-400 uppercase">{label}</span>
       <button
         type="button"
         onClick={() => copyToClipboard(code)}
@@ -124,12 +127,12 @@ const GuideStepCard = ({ number, title, description, isActive = false }) => (
       className={`mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full border text-lg font-bold ${
         isActive
           ? "border-warm-accent bg-warm-accent text-charcoal-text"
-          : "border-white/20 bg-white/5 text-warm-accent"
+          : "text-warm-accent border-white/20 bg-white/5"
       }`}
     >
       {number}
     </div>
-    <h4 className="mb-2 font-sora text-base font-semibold text-white">{title}</h4>
+    <h4 className="font-sora mb-2 text-base font-semibold text-white">{title}</h4>
     <p className="type-body-sm text-white/50">{description}</p>
   </div>
 );
@@ -192,7 +195,7 @@ const UsageGuide = ({ componentName, componentCode, componentProps }) => {
 
       <div className="grid gap-5 lg:grid-cols-[0.9fr_1.1fr]">
         <div className="space-y-5">
-          <div className="border-outline-variant rounded-xl border bg-surface-container-lowest p-5">
+          <div className="border-outline-variant bg-surface-container-lowest rounded-xl border p-5">
             <p className="type-label-sm text-text-secondary mb-3 tracking-widest uppercase">
               Install command
             </p>
@@ -212,11 +215,11 @@ const UsageGuide = ({ componentName, componentCode, componentProps }) => {
             </button>
           </div>
 
-          <div className="border-outline-variant rounded-xl border bg-surface-container-lowest p-5">
+          <div className="border-outline-variant bg-surface-container-lowest rounded-xl border p-5">
             <p className="type-label-sm text-text-secondary mb-3 tracking-widest uppercase">
               Create file
             </p>
-            <p className="font-mono text-lg font-bold text-charcoal-text">{filePath}</p>
+            <p className="text-charcoal-text font-mono text-lg font-bold">{filePath}</p>
             <p className="type-body-sm text-text-secondary mt-3">
               Copy the generated component code and paste it into this file.
             </p>
@@ -242,7 +245,6 @@ const GeneratePage = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [isPublishing, setIsPublishing] = useState(false);
   const [savedComponentId, setSavedComponentId] = useState(null);
-  const [generatedPrompt, setGeneratedPrompt] = useState("");
   const [remainingCredits, setRemainingCredits] = useState(null);
   const [isPublished, setIsPublished] = useState(false);
   const [needsNpmOtp, setNeedsNpmOtp] = useState(false);
@@ -311,13 +313,14 @@ const GeneratePage = () => {
       }
 
       setGeneratedComponent(nextComponent);
-      setGeneratedPrompt(prompt.trim());
       if (response.data?.remainingCredits !== undefined) {
         setRemainingCredits(response.data.remainingCredits);
         syncStoredCredits(response.data.remainingCredits);
       }
       setActiveView("preview");
-      setStatusMessage("Component generated. Use the Guide button to copy and install it in App.jsx.");
+      setStatusMessage(
+        "Component generated. Use the Guide button to copy and install it in App.jsx."
+      );
     } catch (error) {
       if (handleAuthFailure(error)) {
         return;
@@ -406,11 +409,11 @@ const GeneratePage = () => {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-soft-cream-bg text-charcoal-text">
+    <div className="bg-soft-cream-bg text-charcoal-text relative min-h-screen overflow-hidden">
       <div className="pointer-events-none fixed inset-0 opacity-[0.38]">
         <div className="absolute inset-0 bg-[linear-gradient(rgba(42,38,34,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(42,38,34,0.045)_1px,transparent_1px)] bg-[size:48px_48px]" />
-        <div className="absolute right-[-10%] bottom-[-20%] h-96 w-96 rounded-full bg-blue-soft/70 blur-3xl" />
-        <div className="absolute top-24 left-[-8%] h-80 w-80 rounded-full bg-highlight-pink/80 blur-3xl" />
+        <div className="bg-blue-soft/70 absolute right-[-10%] bottom-[-20%] h-96 w-96 rounded-full blur-3xl" />
+        <div className="bg-highlight-pink/80 absolute top-24 left-[-8%] h-80 w-80 rounded-full blur-3xl" />
       </div>
       <header className="border-outline-variant/40 bg-soft-cream-bg/90 sticky top-0 z-50 border-b backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 md:px-16">
@@ -460,11 +463,14 @@ const GeneratePage = () => {
 
       <main className="relative z-10 mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-10 md:px-16 md:py-14">
         <section className="mx-auto max-w-3xl text-center">
-          <div className="bg-purple-soft/60 border-outline-variant text-charcoal-text mb-5 inline-flex items-center gap-2 rounded-full border px-4 py-2 type-label-sm uppercase tracking-widest">
+          <div className="bg-purple-soft/60 border-outline-variant text-charcoal-text type-label-sm mb-5 inline-flex items-center gap-2 rounded-full border px-4 py-2 tracking-widest uppercase">
             <span className="material-symbols-outlined text-base leading-none">memory</span>
             AI Component Studio
           </div>
-          <h1 className="mb-5 text-charcoal-text" style={{ fontSize: "clamp(2.5rem, 7vw, 4.75rem)" }}>
+          <h1
+            className="text-charcoal-text mb-5"
+            style={{ fontSize: "clamp(2.5rem, 7vw, 4.75rem)" }}
+          >
             Build with <span className="text-warm-accent">AI</span>
           </h1>
           <p className="type-body-lg text-text-secondary">
@@ -473,7 +479,7 @@ const GeneratePage = () => {
           </p>
         </section>
 
-        <section className="border-outline-variant bg-surface-container-lowest shadow-lg rounded-xl border p-4 md:p-6">
+        <section className="border-outline-variant bg-surface-container-lowest rounded-xl border p-4 shadow-lg md:p-6">
           <div className="flex items-start gap-3">
             <span className="material-symbols-outlined text-warm-accent mt-1 leading-none">
               auto_awesome
@@ -487,7 +493,7 @@ const GeneratePage = () => {
             />
           </div>
 
-          <div className="mt-4 flex flex-col gap-4 border-t border-outline-variant/50 pt-4 md:flex-row md:items-center md:justify-between">
+          <div className="border-outline-variant/50 mt-4 flex flex-col gap-4 border-t pt-4 md:flex-row md:items-center md:justify-between">
             <div className="flex flex-wrap gap-2">
               {samplePrompts.map((sample) => (
                 <button
@@ -508,7 +514,7 @@ const GeneratePage = () => {
                 type="button"
                 onClick={handleGenerate}
                 disabled={!canSubmit}
-                className="bg-warm-accent text-charcoal-text disabled:bg-surface-container-high disabled:text-text-tertiary flex items-center justify-center gap-2 rounded-full px-6 py-3 type-label-md font-semibold shadow-md transition-all hover:scale-105 disabled:scale-100 disabled:cursor-not-allowed disabled:shadow-none"
+                className="bg-warm-accent text-charcoal-text disabled:bg-surface-container-high disabled:text-text-tertiary type-label-md flex items-center justify-center gap-2 rounded-full px-6 py-3 font-semibold shadow-md transition-all hover:scale-105 disabled:scale-100 disabled:cursor-not-allowed disabled:shadow-none"
               >
                 <span className="material-symbols-outlined text-base leading-none">
                   {isGenerating ? "progress_activity" : "bolt"}
@@ -521,7 +527,7 @@ const GeneratePage = () => {
 
         {(statusMessage || errorMessage) && (
           <div
-            className={`rounded-lg border px-4 py-3 type-body-sm ${
+            className={`type-body-sm rounded-lg border px-4 py-3 ${
               errorMessage
                 ? "border-red-soft bg-red-soft/40 text-red-600"
                 : "border-green-soft bg-green-soft/50 text-on-surface-variant"
@@ -535,7 +541,7 @@ const GeneratePage = () => {
           <section className="border-outline-variant bg-surface-container-lowest overflow-hidden rounded-xl border shadow-lg">
             <div className="border-outline-variant/50 flex flex-col gap-4 border-b p-4 md:flex-row md:items-center md:justify-between md:p-6">
               <div className="flex items-center gap-3">
-                <div className="bg-purple-soft flex h-11 w-11 items-center justify-center rounded-lg text-charcoal-text">
+                <div className="bg-purple-soft text-charcoal-text flex h-11 w-11 items-center justify-center rounded-lg">
                   <span className="material-symbols-outlined leading-none">layers</span>
                 </div>
                 <div>
@@ -577,7 +583,7 @@ const GeneratePage = () => {
                       onClick={() => setActiveView(view)}
                       className={`flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
                         activeView === view
-                          ? "bg-white text-charcoal-text shadow-sm"
+                          ? "text-charcoal-text bg-white shadow-sm"
                           : "text-text-secondary hover:text-charcoal-text"
                       }`}
                     >
@@ -650,7 +656,7 @@ const GeneratePage = () => {
                         inputMode="numeric"
                         maxLength={8}
                         placeholder="Optional now"
-                        className="border-outline-variant bg-white text-charcoal-text w-36 rounded-lg border px-3 py-2 text-sm font-semibold outline-none focus:border-warm-accent"
+                        className="border-outline-variant text-charcoal-text focus:border-warm-accent w-36 rounded-lg border bg-white px-3 py-2 text-sm font-semibold outline-none"
                       />
                       <span className="type-body-sm text-text-secondary">
                         If 2FA is disabled, leave this blank and retry.
@@ -658,55 +664,50 @@ const GeneratePage = () => {
                     </div>
                   )}
                   <div className="flex flex-wrap gap-3">
-                  <button
-                    type="button"
-                    onClick={() => setActiveView("guide")}
-                    className="border-outline-variant bg-blue-soft/70 hover:bg-blue-soft flex items-center gap-2 rounded-lg border px-4 py-3 text-sm font-bold text-charcoal-text transition-colors"
-                  >
-                    <span className="material-symbols-outlined text-base leading-none">
-                      integration_instructions
-                    </span>
-                    Open Guide
-                  </button>
-                  <button
-                    type="button"
-                    onClick={handleSave}
-                    disabled={isSaving}
-                    className="border-outline-variant bg-surface-container-low hover:bg-green-soft/60 disabled:text-text-tertiary flex items-center gap-2 rounded-lg border px-4 py-3 text-sm font-semibold text-on-surface-variant transition-colors disabled:cursor-not-allowed"
-                  >
-                    <span className="material-symbols-outlined text-base leading-none">
-                      check_circle
-                    </span>
-                    {isSaving ? "Saving" : savedComponentId ? "Saved" : "Save Component"}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={handlePublish}
-                    disabled={
-                      !savedComponentId ||
-                      isPublishing ||
-                      isPublished
-                    }
-                    className="border-outline-variant bg-surface-container-low hover:bg-blue-soft/60 disabled:text-text-tertiary flex items-center gap-2 rounded-lg border px-4 py-3 text-sm font-semibold text-on-surface-variant transition-colors disabled:cursor-not-allowed"
-                  >
-                    <span className="material-symbols-outlined text-base leading-none">
-                      cloud_upload
-                    </span>
-                    {isPublishing
-                      ? "Publishing"
-                      : isPublished
-                        ? "Published"
-                        : needsNpmOtp
-                          ? "Publish with OTP"
-                          : "Publish to npm"}
-                  </button>
+                    <button
+                      type="button"
+                      onClick={() => setActiveView("guide")}
+                      className="border-outline-variant bg-blue-soft/70 hover:bg-blue-soft text-charcoal-text flex items-center gap-2 rounded-lg border px-4 py-3 text-sm font-bold transition-colors"
+                    >
+                      <span className="material-symbols-outlined text-base leading-none">
+                        integration_instructions
+                      </span>
+                      Open Guide
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleSave}
+                      disabled={isSaving}
+                      className="border-outline-variant bg-surface-container-low hover:bg-green-soft/60 disabled:text-text-tertiary text-on-surface-variant flex items-center gap-2 rounded-lg border px-4 py-3 text-sm font-semibold transition-colors disabled:cursor-not-allowed"
+                    >
+                      <span className="material-symbols-outlined text-base leading-none">
+                        check_circle
+                      </span>
+                      {isSaving ? "Saving" : savedComponentId ? "Saved" : "Save Component"}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handlePublish}
+                      disabled={!savedComponentId || isPublishing || isPublished}
+                      className="border-outline-variant bg-surface-container-low hover:bg-blue-soft/60 disabled:text-text-tertiary text-on-surface-variant flex items-center gap-2 rounded-lg border px-4 py-3 text-sm font-semibold transition-colors disabled:cursor-not-allowed"
+                    >
+                      <span className="material-symbols-outlined text-base leading-none">
+                        cloud_upload
+                      </span>
+                      {isPublishing
+                        ? "Publishing"
+                        : isPublished
+                          ? "Published"
+                          : needsNpmOtp
+                            ? "Publish with OTP"
+                            : "Publish to npm"}
+                    </button>
                   </div>
                 </div>
                 <button
                   type="button"
                   onClick={() => {
                     setGeneratedComponent(null);
-                    setGeneratedPrompt("");
                     setSavedComponentId(null);
                     setIsPublished(false);
                     setNeedsNpmOtp(false);
@@ -714,7 +715,7 @@ const GeneratePage = () => {
                     setStatusMessage("");
                     setErrorMessage("");
                   }}
-                  className="bg-charcoal-text flex items-center justify-center gap-2 rounded-full px-6 py-3 type-label-md font-semibold text-white transition-all hover:scale-105"
+                  className="bg-charcoal-text type-label-md flex items-center justify-center gap-2 rounded-full px-6 py-3 font-semibold text-white transition-all hover:scale-105"
                 >
                   <span className="material-symbols-outlined text-base leading-none">refresh</span>
                   Generate New

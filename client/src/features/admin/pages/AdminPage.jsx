@@ -108,7 +108,11 @@ const AdminPage = () => {
   };
 
   useEffect(() => {
-    loadAdminData();
+    const timer = window.setTimeout(() => {
+      void loadAdminData();
+    }, 0);
+
+    return () => window.clearTimeout(timer);
   }, []);
 
   const addProp = () => {
@@ -181,7 +185,7 @@ const AdminPage = () => {
                 className={`flex items-center gap-3 rounded-lg px-4 py-3 text-left font-semibold transition-all ${
                   activeView === id
                     ? "bg-highlight-pink/50 text-charcoal-text shadow-sm"
-                    : "text-text-secondary hover:bg-white hover:text-charcoal-text"
+                    : "text-text-secondary hover:text-charcoal-text hover:bg-white"
                 }`}
               >
                 <span className="material-symbols-outlined text-[20px] leading-none">{icon}</span>
@@ -223,7 +227,7 @@ const AdminPage = () => {
                 </Link>
                 <Link
                   to="/home"
-                  className="border-outline-variant bg-white text-text-secondary hover:text-charcoal-text rounded-full border px-4 py-3 text-sm font-semibold"
+                  className="border-outline-variant text-text-secondary hover:text-charcoal-text rounded-full border bg-white px-4 py-3 text-sm font-semibold"
                 >
                   Home
                 </Link>
@@ -253,11 +257,12 @@ const AdminPage = () => {
                     ["Public Components", stats.publicComponents || 0, "public"],
                     ["Private Components", stats.privateComponents || 0, "lock"],
                   ].map(([label, value, icon]) => (
-                    <div key={label} className="border-outline-variant bg-white rounded-xl border p-6 shadow-sm">
+                    <div
+                      key={label}
+                      className="border-outline-variant rounded-xl border bg-white p-6 shadow-sm"
+                    >
                       <div className="bg-blue-soft/70 mb-6 flex h-12 w-12 items-center justify-center rounded-lg">
-                        <span className="material-symbols-outlined text-charcoal-text">
-                          {icon}
-                        </span>
+                        <span className="material-symbols-outlined text-charcoal-text">{icon}</span>
                       </div>
                       <p className="type-headline-lg text-charcoal-text">{value}</p>
                       <p className="type-body-sm text-text-secondary">{label}</p>
@@ -265,7 +270,7 @@ const AdminPage = () => {
                   ))}
                 </section>
 
-                <section className="border-outline-variant bg-white rounded-xl border p-6 shadow-sm">
+                <section className="border-outline-variant rounded-xl border bg-white p-6 shadow-sm">
                   <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
                     <div>
                       <h2 className="type-headline-sm text-charcoal-text">
@@ -300,7 +305,7 @@ const AdminPage = () => {
                       </div>
                     </div>
 
-                    <div className="border-outline-variant/40 bg-white/60 relative h-56 rounded-lg border px-4 pt-8 pb-4">
+                    <div className="border-outline-variant/40 relative h-56 rounded-lg border bg-white/60 px-4 pt-8 pb-4">
                       <div className="pointer-events-none absolute inset-x-4 top-8 bottom-12 flex flex-col justify-between">
                         {[0, 1, 2, 3].map((line) => (
                           <span
@@ -318,7 +323,10 @@ const AdminPage = () => {
                             : 8;
 
                           return (
-                            <div key={item.label} className="flex h-full flex-col items-center justify-end gap-3">
+                            <div
+                              key={item.label}
+                              className="flex h-full flex-col items-center justify-end gap-3"
+                            >
                               <span className="text-charcoal-text text-xs font-bold">
                                 {item.count}
                               </span>
@@ -332,7 +340,7 @@ const AdminPage = () => {
                                   style={{ height: `${barHeight}px` }}
                                 />
                               </div>
-                              <span className="text-text-secondary whitespace-nowrap text-xs font-semibold">
+                              <span className="text-text-secondary text-xs font-semibold whitespace-nowrap">
                                 {item.label}
                               </span>
                             </div>
@@ -343,7 +351,7 @@ const AdminPage = () => {
                   </div>
                 </section>
 
-                <section className="border-outline-variant bg-white overflow-hidden rounded-xl border shadow-sm">
+                <section className="border-outline-variant overflow-hidden rounded-xl border bg-white shadow-sm">
                   <div className="border-outline-variant/50 flex flex-col gap-4 border-b p-5 md:flex-row md:items-center md:justify-between">
                     <div>
                       <h2 className="type-headline-sm text-charcoal-text">Public Components</h2>
@@ -366,10 +374,13 @@ const AdminPage = () => {
 
                   <div className="divide-outline-variant/40 divide-y">
                     {loading ? (
-                      <p className="p-6 text-text-secondary">Loading admin data...</p>
+                      <p className="text-text-secondary p-6">Loading admin data...</p>
                     ) : (
                       filteredComponents.map((component) => (
-                        <div key={component._id} className="flex flex-col gap-3 p-5 md:flex-row md:items-center md:justify-between">
+                        <div
+                          key={component._id}
+                          className="flex flex-col gap-3 p-5 md:flex-row md:items-center md:justify-between"
+                        >
                           <div className="flex items-start gap-4">
                             <div className="bg-purple-soft/70 flex h-11 w-11 items-center justify-center rounded-lg">
                               <span className="material-symbols-outlined text-[20px] leading-none">
@@ -377,21 +388,24 @@ const AdminPage = () => {
                               </span>
                             </div>
                             <div>
-                              <h3 className="font-sora text-lg font-bold text-charcoal-text">
+                              <h3 className="font-sora text-charcoal-text text-lg font-bold">
                                 {component.name}
                               </h3>
                               <div className="mt-2 flex flex-wrap gap-2">
                                 {(component.props || []).slice(0, 4).map((prop) => (
-                                  <span key={prop} className="bg-purple-soft/60 rounded-md px-2 py-1 text-xs font-bold text-on-surface-variant">
+                                  <span
+                                    key={prop}
+                                    className="bg-purple-soft/60 text-on-surface-variant rounded-md px-2 py-1 text-xs font-bold"
+                                  >
                                     {prop}
                                   </span>
                                 ))}
                               </div>
                             </div>
                           </div>
-                          <div className="flex items-center gap-3 text-sm text-text-secondary">
+                          <div className="text-text-secondary flex items-center gap-3 text-sm">
                             <span>{formatDate(component.createdAt)}</span>
-                            <span className="bg-green-soft/70 rounded-full px-3 py-1 text-xs font-bold text-on-surface-variant">
+                            <span className="bg-green-soft/70 text-on-surface-variant rounded-full px-3 py-1 text-xs font-bold">
                               {component.visibility}
                             </span>
                           </div>
@@ -410,7 +424,7 @@ const AdminPage = () => {
                   </p>
                 </div>
 
-                <div className="border-outline-variant bg-white rounded-xl border p-6 shadow-sm">
+                <div className="border-outline-variant rounded-xl border bg-white p-6 shadow-sm">
                   <label className="type-label-sm text-text-secondary tracking-widest uppercase">
                     Component Name
                   </label>
@@ -418,11 +432,11 @@ const AdminPage = () => {
                     value={componentName}
                     onChange={(event) => setComponentName(event.target.value)}
                     placeholder='e.g. "PricingCard", "HeroSection"'
-                    className="border-outline-variant mt-3 w-full rounded-lg border bg-surface-container-low px-4 py-3 outline-none focus:border-warm-accent"
+                    className="border-outline-variant bg-surface-container-low focus:border-warm-accent mt-3 w-full rounded-lg border px-4 py-3 outline-none"
                   />
                 </div>
 
-                <div className="border-outline-variant bg-white rounded-xl border p-6 shadow-sm">
+                <div className="border-outline-variant rounded-xl border bg-white p-6 shadow-sm">
                   <label className="type-label-sm text-text-secondary tracking-widest uppercase">
                     Props
                   </label>
@@ -434,8 +448,10 @@ const AdminPage = () => {
                       <button
                         key={prop}
                         type="button"
-                        onClick={() => setPropsList((current) => current.filter((item) => item !== prop))}
-                        className="bg-purple-soft/70 rounded-full px-3 py-1 text-sm font-bold text-on-surface-variant"
+                        onClick={() =>
+                          setPropsList((current) => current.filter((item) => item !== prop))
+                        }
+                        className="bg-purple-soft/70 text-on-surface-variant rounded-full px-3 py-1 text-sm font-bold"
                       >
                         {prop} x
                       </button>
@@ -447,7 +463,7 @@ const AdminPage = () => {
                       onChange={(event) => setPropInput(event.target.value)}
                       onKeyDown={handlePropKeyDown}
                       placeholder='e.g. "title", "onClick", "children"'
-                      className="border-outline-variant flex-1 rounded-lg border bg-surface-container-low px-4 py-3 outline-none focus:border-warm-accent"
+                      className="border-outline-variant bg-surface-container-low focus:border-warm-accent flex-1 rounded-lg border px-4 py-3 outline-none"
                     />
                     <button
                       type="button"
@@ -459,7 +475,7 @@ const AdminPage = () => {
                   </div>
                 </div>
 
-                <div className="border-outline-variant bg-white overflow-hidden rounded-xl border shadow-sm">
+                <div className="border-outline-variant overflow-hidden rounded-xl border bg-white shadow-sm">
                   <div className="border-outline-variant/50 flex items-center justify-between border-b p-5">
                     <label className="type-label-sm text-text-secondary tracking-widest uppercase">
                       Component Code

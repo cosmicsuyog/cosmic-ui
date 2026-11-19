@@ -1,5 +1,32 @@
 # Cosmic UI
 
+Cosmic UI is a React component platform with AI-assisted component generation,
+an Express API, and a tree-shakeable browser utility library.
+
+## Packages
+
+- `client/` — Vite React product UI, including the Power Kit utility catalog.
+- `server/` — Express API for authentication, generation, components, and payments.
+- `library/` — published component and utility package.
+
+### Browser utilities
+
+The library now exports browser, performance, and general utilities:
+
+```js
+import { copyToClipboard, debounce, generateOTP } from "cosmic-ui-library";
+import { getCurrentLocation } from "cosmic-ui-library/utils/browser";
+```
+
+Run `npm run build` inside `library` to build the package and inside `client`
+to build the Vite application.
+
+## Attribution
+
+The merged browser utility catalog and visual design language incorporate
+WebDev Power Kit, created by Aditya Kumar Gupta and licensed under MIT. See
+`NOTICE.md` for the notice retained with this repository.
+
 Cosmic UI is a React app for generating, previewing, saving, and publishing UI components, with an Express API and a separate npm component library package.
 
 ## Project Structure
