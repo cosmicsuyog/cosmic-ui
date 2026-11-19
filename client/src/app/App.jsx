@@ -73,61 +73,65 @@ const App = () => {
       <CustomCursor />
       <AppShell>
         <Routes>
-        <Route path="/" element={<PowerKitLanding />} />
-        <Route
-          path="/login"
-          element={
-            isAuthenticated ? <Navigate to={isAdmin ? "/admin" : "/home"} replace /> : <LoginPage />
-          }
-        />
-        <Route path="/docs/utilities" element={<UtilityDocsPage />} />
-        <Route path="/utility-docs" element={<Navigate to="/docs/utilities" replace />} />
-        <Route path="/home" element={<HomePage />} />
-        <Route
-          path="/admin"
-          element={
-            isAdmin ? <AdminPage /> : <Navigate to={isAuthenticated ? "/home" : "/"} replace />
-          }
-        />
-        <Route
-          path="/generate"
-          element={isAuthenticated ? <GeneratePage /> : <Navigate to="/" replace />}
-        />
-        <Route
-          path="/components"
-          element={
-            isAuthenticated ? (
-              <PublicComponentsPage key="my-components" initialSource="mine" />
-            ) : (
-              <Navigate to="/" replace />
-            )
-          }
-        />
-        <Route
-          path="/coming-soon/components"
-          element={
-            isAuthenticated ? (
-              <PublicComponentsPage key="my-components-alias" initialSource="mine" />
-            ) : (
-              <Navigate to="/" replace />
-            )
-          }
-        />
-        <Route
-          path="/docs"
-          element={<PublicComponentsPage key="public-components" initialSource="public" />}
-        />
-        <Route
-          path="/docs/components"
-          element={<PublicComponentsPage key="public-components-docs" initialSource="public" />}
-        />
-        <Route path="/pricing" element={<PricingPage />} />
-        <Route
-          path="/coming-soon/docs"
-          element={<PublicComponentsPage key="public-components-alias" initialSource="public" />}
-        />
-        <Route path="/coming-soon/:page" element={<ComingSoonPage />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="/" element={<PowerKitLanding />} />
+          <Route
+            path="/login"
+            element={
+              isAuthenticated ? (
+                <Navigate to={isAdmin ? "/admin" : "/home"} replace />
+              ) : (
+                <LoginPage />
+              )
+            }
+          />
+          <Route path="/docs/utilities" element={<UtilityDocsPage />} />
+          <Route path="/utility-docs" element={<Navigate to="/docs/utilities" replace />} />
+          <Route path="/home" element={<HomePage />} />
+          <Route
+            path="/admin"
+            element={
+              isAdmin ? <AdminPage /> : <Navigate to={isAuthenticated ? "/home" : "/"} replace />
+            }
+          />
+          <Route
+            path="/generate"
+            element={isAuthenticated ? <GeneratePage /> : <Navigate to="/" replace />}
+          />
+          <Route
+            path="/components"
+            element={
+              isAuthenticated ? (
+                <PublicComponentsPage key="my-components" initialSource="mine" />
+              ) : (
+                <Navigate to="/" replace />
+              )
+            }
+          />
+          <Route
+            path="/coming-soon/components"
+            element={
+              isAuthenticated ? (
+                <PublicComponentsPage key="my-components-alias" initialSource="mine" />
+              ) : (
+                <Navigate to="/" replace />
+              )
+            }
+          />
+          <Route
+            path="/docs"
+            element={<PublicComponentsPage key="public-components" initialSource="public" />}
+          />
+          <Route
+            path="/docs/components"
+            element={<PublicComponentsPage key="public-components-docs" initialSource="public" />}
+          />
+          <Route path="/pricing" element={<PricingPage />} />
+          <Route
+            path="/coming-soon/docs"
+            element={<PublicComponentsPage key="public-components-alias" initialSource="public" />}
+          />
+          <Route path="/coming-soon/:page" element={<ComingSoonPage />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </AppShell>
     </>

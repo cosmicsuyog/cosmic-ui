@@ -1,1 +1,155 @@
-.cosmic-shell{--shell-bg:#080808;--shell-text:#f8f8f8;--shell-muted:#858585;--shell-line:rgba(255,255,255,.1);min-height:100vh;background:var(--shell-bg);color:var(--shell-text);font-family:Inter,system-ui,sans-serif}.cosmic-shell[data-theme=light]{--shell-bg:#fafafa;--shell-text:#111;--shell-muted:#6b6b6b;--shell-line:rgba(0,0,0,.12)}.shell-header{height:68px;padding:0 clamp(18px,4vw,64px);display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--shell-line);background:color-mix(in srgb,var(--shell-bg) 88%,transparent);backdrop-filter:blur(18px);position:sticky;top:0;z-index:100}.shell-brand{display:flex;align-items:center;gap:9px;color:var(--shell-text);font:700 18px "Space Grotesk",sans-serif;letter-spacing:-.05em;text-decoration:none}.shell-brand span{display:grid;place-items:center;width:27px;height:27px;border:1px solid currentColor;border-radius:8px;font-size:14px}.shell-nav{display:flex;gap:25px}.shell-nav a,.shell-footer a{color:var(--shell-muted);font-size:13px;text-decoration:none}.shell-nav a:hover,.shell-nav .active,.shell-footer a:hover{color:var(--shell-text)}.shell-actions{display:flex;align-items:center;gap:10px}.shell-icon,.shell-menu{display:grid;place-items:center;width:38px;height:38px;border:1px solid var(--shell-line);border-radius:8px;background:transparent;color:var(--shell-text);cursor:pointer}.shell-login,.shell-mobile-login{border:1px solid var(--shell-text);border-radius:8px;color:var(--shell-bg)!important;background:var(--shell-text);padding:10px 14px;font-weight:700;text-decoration:none}.shell-menu,.shell-mobile-login{display:none}.shell-main{min-height:calc(100vh - 68px)}.shell-footer{display:flex;align-items:center;justify-content:space-between;gap:25px;border-top:1px solid var(--shell-line);padding:28px clamp(18px,4vw,64px);background:var(--shell-bg);color:var(--shell-muted);font-size:12px}.shell-footer>div{display:flex;gap:18px}.shell-skip{position:absolute;left:-999px;top:8px;z-index:200;background:var(--shell-text);color:var(--shell-bg);padding:9px}.shell-skip:focus{left:8px}@media(max-width:760px){.shell-menu{display:grid}.shell-login{display:none}.shell-nav{display:none}.shell-nav.open{display:flex;position:absolute;top:68px;left:0;right:0;background:var(--shell-bg);padding:18px;flex-direction:column;border-bottom:1px solid var(--shell-line)}.shell-mobile-login{display:block;width:max-content}.shell-footer{flex-direction:column;align-items:flex-start}}
+.cosmic-shell {
+  --shell-bg: #080808;
+  --shell-text: #f8f8f8;
+  --shell-muted: #858585;
+  --shell-line: rgba(255, 255, 255, 0.1);
+  min-height: 100vh;
+  background: var(--shell-bg);
+  color: var(--shell-text);
+  font-family: Inter, system-ui, sans-serif;
+}
+.cosmic-shell[data-theme="light"] {
+  --shell-bg: #fafafa;
+  --shell-text: #111;
+  --shell-muted: #6b6b6b;
+  --shell-line: rgba(0, 0, 0, 0.12);
+}
+.shell-header {
+  height: 68px;
+  padding: 0 clamp(18px, 4vw, 64px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--shell-line);
+  background: color-mix(in srgb, var(--shell-bg) 88%, transparent);
+  backdrop-filter: blur(18px);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.shell-brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--shell-text);
+  font:
+    700 18px "Space Grotesk",
+    sans-serif;
+  letter-spacing: -0.05em;
+  text-decoration: none;
+}
+.shell-brand span {
+  display: grid;
+  place-items: center;
+  width: 27px;
+  height: 27px;
+  border: 1px solid currentColor;
+  border-radius: 8px;
+  font-size: 14px;
+}
+.shell-nav {
+  display: flex;
+  gap: 25px;
+}
+.shell-nav a,
+.shell-footer a {
+  color: var(--shell-muted);
+  font-size: 13px;
+  text-decoration: none;
+}
+.shell-nav a:hover,
+.shell-nav .active,
+.shell-footer a:hover {
+  color: var(--shell-text);
+}
+.shell-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.shell-icon,
+.shell-menu {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--shell-line);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--shell-text);
+  cursor: pointer;
+}
+.shell-login,
+.shell-mobile-login {
+  border: 1px solid var(--shell-text);
+  border-radius: 8px;
+  color: var(--shell-bg) !important;
+  background: var(--shell-text);
+  padding: 10px 14px;
+  font-weight: 700;
+  text-decoration: none;
+}
+.shell-menu,
+.shell-mobile-login {
+  display: none;
+}
+.shell-main {
+  min-height: calc(100vh - 68px);
+}
+.shell-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 25px;
+  border-top: 1px solid var(--shell-line);
+  padding: 28px clamp(18px, 4vw, 64px);
+  background: var(--shell-bg);
+  color: var(--shell-muted);
+  font-size: 12px;
+}
+.shell-footer > div {
+  display: flex;
+  gap: 18px;
+}
+.shell-skip {
+  position: absolute;
+  left: -999px;
+  top: 8px;
+  z-index: 200;
+  background: var(--shell-text);
+  color: var(--shell-bg);
+  padding: 9px;
+}
+.shell-skip:focus {
+  left: 8px;
+}
+@media (max-width: 760px) {
+  .shell-menu {
+    display: grid;
+  }
+  .shell-login {
+    display: none;
+  }
+  .shell-nav {
+    display: none;
+  }
+  .shell-nav.open {
+    display: flex;
+    position: absolute;
+    top: 68px;
+    left: 0;
+    right: 0;
+    background: var(--shell-bg);
+    padding: 18px;
+    flex-direction: column;
+    border-bottom: 1px solid var(--shell-line);
+  }
+  .shell-mobile-login {
+    display: block;
+    width: max-content;
+  }
+  .shell-footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

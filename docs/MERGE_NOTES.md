@@ -37,12 +37,12 @@ library documentation.
 
 ## Final route map
 
-| Before | After |
-| --- | --- |
-| `/` redirected to login or dashboard | `/` is the single Cosmic UI product landing page |
-| `/utility-docs` | `/docs/utilities` (`/utility-docs` redirects) |
-| `/docs` | Components catalog, reachable from the common navigation |
-| `/generate`, `/components`, `/admin`, `/pricing`, `/login` | Retained with a shared Cosmic UI shell |
+| Before                                                     | After                                                    |
+| ---------------------------------------------------------- | -------------------------------------------------------- |
+| `/` redirected to login or dashboard                       | `/` is the single Cosmic UI product landing page         |
+| `/utility-docs`                                            | `/docs/utilities` (`/utility-docs` redirects)            |
+| `/docs`                                                    | Components catalog, reachable from the common navigation |
+| `/generate`, `/components`, `/admin`, `/pricing`, `/login` | Retained with a shared Cosmic UI shell                   |
 
 ## Consolidation decisions
 
