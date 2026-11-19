@@ -1,7 +1,8 @@
-
-
-export { Button } from "./components/Button/Button.jsx"
-export { Card } from "./components/Card/Card.jsx"
+export { Button } from "./components/Button/Button.jsx";
+export * from "./utils/browser/index.ts";
+export * from "./utils/performance/index.ts";
+export * from "./utils/general/index.ts";
+export { Card } from "./components/Card/Card.jsx";
 export { ProfileCard } from "./components/ProfileCard/ProfileCard.jsx";
 
 export { Accordion } from "./components/Accordion/Accordion.jsx";

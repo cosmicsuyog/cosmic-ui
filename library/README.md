@@ -324,3 +324,24 @@ The build outputs:
 ## License
 
 ISC
+
+# Cosmic UI Library
+
+## Browser utilities
+
+The package includes zero-dependency browser, performance, and general utility
+exports adapted from WebDev Power Kit:
+
+```js
+import { copyToClipboard, debounce, generateOTP } from "cosmic-ui-library";
+import { getCurrentLocation } from "cosmic-ui-library/utils/browser";
+```
+
+`browser`, `performance`, and `general` are also explicit package subpaths for
+tree-shakeable imports. Subscription utilities return cleanup functions; timing
+utilities include `cancel()` and `flush()`.
+
+## Attribution
+
+WebDev Power Kit utilities are MIT licensed and created by Aditya Kumar Gupta.
+See the repository-level `NOTICE.md` for the retained attribution.
