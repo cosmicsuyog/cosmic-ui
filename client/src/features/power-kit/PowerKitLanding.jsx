@@ -160,6 +160,21 @@ export default function PowerKitLanding() {
             ))}
           </div>
         </section>
+        <section className="pk-section pk-product-section">
+          <div className="pk-section-heading">
+            <p className="pk-eyebrow"><Sparkles size={15} /> Build without context switching</p>
+            <h2>One workflow from prompt to publish.</h2>
+          </div>
+          <div className="pk-workflow-grid">
+            <article><span>01</span><h3>Generate</h3><p>Describe a component and use the existing OpenRouter workflow to create it.</p></article>
+            <article><span>02</span><h3>Preview</h3><p>Inspect generated code and live output before it becomes part of your library.</p></article>
+            <article><span>03</span><h3>Publish</h3><p>Save components, share public work, and use the same utilities across every build.</p></article>
+          </div>
+        </section>
+        <section className="pk-pricing-teaser">
+          <div><p className="pk-eyebrow"><Zap size={15} /> Plans that scale with ideas</p><h2>Start with the toolkit.<br />Scale with the generator.</h2></div>
+          <div><p>Use the component library and browser utilities as a single package, then choose a Cosmic UI plan when your team needs more generation credits.</p><Link to="/pricing" className="pk-button pk-button-solid">See pricing <ArrowRight size={16} /></Link></div>
+        </section>
         <section className="pk-product-callout">
           <div>
             <p className="pk-eyebrow">

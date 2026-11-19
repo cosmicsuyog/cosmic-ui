@@ -34,3 +34,24 @@ modified nor committed from this worktree.
 WebDev Power Kit is MIT licensed and credited to Aditya Kumar Gupta. The
 merged repository retains this attribution in `NOTICE.md`, the README, and
 library documentation.
+
+## Final route map
+
+| Before | After |
+| --- | --- |
+| `/` redirected to login or dashboard | `/` is the single Cosmic UI product landing page |
+| `/utility-docs` | `/docs/utilities` (`/utility-docs` redirects) |
+| `/docs` | Components catalog, reachable from the common navigation |
+| `/generate`, `/components`, `/admin`, `/pricing`, `/login` | Retained with a shared Cosmic UI shell |
+
+## Consolidation decisions
+
+- Kept Cosmic UI’s Express, Firebase, OpenRouter, Razorpay, and MongoDB paths: the source project does not implement equivalents.
+- Kept the existing application storage adapter because it owns app-specific keys; exported a general safe storage API from the published package.
+- Kept and hardened source-inspired utility APIs. Subscription APIs now return cleanup functions; debounce and throttle expose cancel/flush controls.
+- Removed the Power Kit identity from the primary navigation and landing language. Its MIT credit remains in `NOTICE.md` and the credits destination.
+- Removed the duplicate utility-docs destination by replacing it with a route redirect. No source repository files were modified or committed.
+
+## Deliberate UI differences
+
+The Power Kit visual system was translated to Cosmic UI’s Vite router and existing authenticated workflows. The common shell uses its monochrome tokens, Space Grotesk/Inter typography, compact navigation, cards, and responsive menu; product pages retain their existing functional markup while being progressively re-skinned rather than losing behavior.

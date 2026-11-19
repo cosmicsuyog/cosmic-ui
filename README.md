@@ -1,113 +1,59 @@
 # Cosmic UI
 
-Cosmic UI is a React component platform with AI-assisted component generation,
-an Express API, and a tree-shakeable browser utility library.
+Cosmic UI is one product for building interfaces: generate React components with AI, preview and publish them, consume a component library, and use typed browser utilities from the same package.
 
-## Packages
+## What is included
 
-- `client/` — Vite React product UI, including the Power Kit utility catalog.
-- `server/` — Express API for authentication, generation, components, and payments.
-- `library/` — published component and utility package.
+- AI component generation, preview, save, publish, Firebase sign-in, and plans.
+- A published React component library in `library/`.
+- Tree-shakeable browser, performance, and general utilities.
+- Express APIs for authentication, components, payments, and generation.
 
-### Browser utilities
-
-The library now exports browser, performance, and general utilities:
-
-```js
-import { copyToClipboard, debounce, generateOTP } from "cosmic-ui-library";
-import { getCurrentLocation } from "cosmic-ui-library/utils/browser";
-```
-
-Run `npm run build` inside `library` to build the package and inside `client`
-to build the Vite application.
-
-## Attribution
-
-The merged browser utility catalog and visual design language incorporate
-WebDev Power Kit, created by Aditya Kumar Gupta and licensed under MIT. See
-`NOTICE.md` for the notice retained with this repository.
-
-Cosmic UI is a React app for generating, previewing, saving, and publishing UI components, with an Express API and a separate npm component library package.
-
-## Project Structure
+## Project structure
 
 ```text
-client/   Vite React frontend
-server/   Express API, auth, payments, component routes
-library/  Published React component package
-docs/     Project design notes
+client/   Vite + React product interface
+server/   Express, MongoDB, Razorpay, and OpenRouter APIs
+library/  Published components and browser utilities
+docs/     Architecture and development notes
 ```
 
-## Local Development
+## Local development
 
-Install dependencies in each workspace:
+Install each workspace, then run the client and server in separate terminals.
 
 ```bash
 npm install
-cd client && npm install
-cd ../server && npm install
-cd ../library && npm install
+cd client && npm install && npm run dev
+cd ../server && npm install && npm run dev
+cd ../library && npm install && npm run build
 ```
 
-Create local env files:
+The client expects `VITE_API_URL`, Firebase configuration, and Google client configuration. The server requires `MONGO_URI`, `JWT_SECRET`, `OPENROUTER_API_KEY`, Razorpay credentials, and its allowed `CLIENT_URL`. Never commit either `.env` file.
 
-```bash
-copy client\.env.example client\.env
-copy server\.env.example server\.env
+## Library usage
+
+```js
+import { Button, copyToClipboard, debounce } from "cosmic-ui-library";
+import { generateOTP } from "cosmic-ui-library/utils/general/otp";
+import { getItem, setItem } from "cosmic-ui-library/utils/browser/storage";
 ```
 
-Run the app:
-
-```bash
-cd server
-npm run dev
-```
-
-```bash
-cd client
-npm run dev
-```
-
-## Production With Docker
-
-Create `server/.env` from `server/.env.example`, then run:
-
-```bash
-docker compose up --build
-```
-
-The frontend runs at `http://localhost:8080`.
-The production API runs at `https://cosmic-ui.onrender.com`.
-The health check endpoint is `https://cosmic-ui.onrender.com/api/health`.
-
-## Required Server Environment
-
-```text
-PORT=3000
-NODE_ENV=production
-CLIENT_URL=https://cosmic-ui-z179.vercel.app
-MONGO_URI=
-JWT_SECRET=
-OPENROUTER_API_KEY=
-NPM_TOKEN=
-RAZORPAY_KEY_ID=
-RAZORPAY_KEY_SECRET=
-```
-
-## Client Build Environment
-
-```text
-VITE_API_URL=https://cosmic-ui.onrender.com/api
-VITE_FIREBASE_API_KEY=
-VITE_GOOGLE_CLIENT_ID=
-```
-
-## npm Library
-
-The package lives in `library/`.
+Build and publish from the library workspace:
 
 ```bash
 cd library
+npm run typecheck
 npm run build
 npm publish
 ```
+
+## Docker
+
+Configure `server/.env`, then run `docker compose up --build`. Review the client URL, server URL, Firebase origins, Razorpay callback configuration, and MongoDB network access before deployment.
+
+## Contributing and credits
+
+Use Conventional Commit messages; formatting, linting, and the root Husky configuration are the project’s single quality-tooling source.
+
+Portions of the utility toolkit and visual design direction are derived from WebDev Power Kit by Aditya Kumar Gupta, licensed MIT. The retained notice is in [NOTICE.md](NOTICE.md).

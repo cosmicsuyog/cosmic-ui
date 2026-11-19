@@ -13,13 +13,33 @@
       "import": "./dist/utils/browser/index.mjs",
       "require": "./dist/utils/browser/index.js"
     },
+    "./utils/browser/clipboard": {
+      "import": "./dist/utils/browser/clipboard.mjs",
+      "require": "./dist/utils/browser/clipboard.js"
+    },
+    "./utils/browser/storage": {
+      "import": "./dist/utils/browser/storage.mjs",
+      "require": "./dist/utils/browser/storage.js"
+    },
     "./utils/performance": {
       "import": "./dist/utils/performance/index.mjs",
       "require": "./dist/utils/performance/index.js"
     },
+    "./utils/performance/debounce": {
+      "import": "./dist/utils/performance/debounce.mjs",
+      "require": "./dist/utils/performance/debounce.js"
+    },
+    "./utils/performance/throttle": {
+      "import": "./dist/utils/performance/throttle.mjs",
+      "require": "./dist/utils/performance/throttle.js"
+    },
     "./utils/general": {
       "import": "./dist/utils/general/index.mjs",
       "require": "./dist/utils/general/index.js"
+    },
+    "./utils/general/otp": {
+      "import": "./dist/utils/general/otp.mjs",
+      "require": "./dist/utils/general/otp.js"
     }
   },
   "files": [

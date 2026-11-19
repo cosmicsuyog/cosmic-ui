@@ -12,6 +12,7 @@ import HomePage from "../features/home/pages/HomePage";
 import PricingPage from "../features/pricing/pages/PricingPage";
 import PowerKitLanding from "../features/power-kit/PowerKitLanding";
 import UtilityDocsPage from "../features/power-kit/UtilityDocsPage";
+import AppShell from "../components/app/AppShell";
 import CustomCursor from "./CustomCursor";
 import "./index.css";
 
@@ -70,7 +71,8 @@ const App = () => {
     <>
       {(showInitialLoader || routeTransitioning) && <TopLoadingBar />}
       <CustomCursor />
-      <Routes>
+      <AppShell>
+        <Routes>
         <Route path="/" element={<PowerKitLanding />} />
         <Route
           path="/login"
@@ -78,7 +80,8 @@ const App = () => {
             isAuthenticated ? <Navigate to={isAdmin ? "/admin" : "/home"} replace /> : <LoginPage />
           }
         />
-        <Route path="/utility-docs" element={<UtilityDocsPage />} />
+        <Route path="/docs/utilities" element={<UtilityDocsPage />} />
+        <Route path="/utility-docs" element={<Navigate to="/docs/utilities" replace />} />
         <Route path="/home" element={<HomePage />} />
         <Route
           path="/admin"
@@ -125,7 +128,8 @@ const App = () => {
         />
         <Route path="/coming-soon/:page" element={<ComingSoonPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+        </Routes>
+      </AppShell>
     </>
   );
 };
