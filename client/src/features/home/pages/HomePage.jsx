@@ -51,7 +51,7 @@ const HomePage = () => {
 
   return (
     <div className="bg-soft-cream-bg text-text-primary flex min-h-screen flex-col overflow-x-hidden">
-      {/* ── TOP NAVIGATION ──────────────────────────────── */}
+      {/* â”€â”€ TOP NAVIGATION â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <nav className="bg-soft-cream-bg/90 border-outline-variant/40 sticky top-0 z-50 border-b backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 md:px-16">
           {/* Logo */}
@@ -177,7 +177,7 @@ const HomePage = () => {
         </div>
       </nav>
 
-      {/* ── MAIN ─────────────────────────────────────────── */}
+      {/* â”€â”€ MAIN â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <main className="mx-auto w-full max-w-7xl flex-grow px-4 pt-16 pb-24 md:px-16">
         {/* HERO */}
         <section className="mb-32 flex flex-col items-center text-center">
@@ -251,7 +251,7 @@ const HomePage = () => {
               <div className="h-3 w-3 rounded-full bg-[#FFBD2E]" />
               <div className="h-3 w-3 rounded-full bg-[#27C93F]" />
               <div className="flex-1 text-center font-mono text-xs text-gray-400">
-                cosmic-ui — Code Editor
+                cosmic-ui â€” Code Editor
               </div>
             </div>
 
@@ -421,7 +421,7 @@ const HomePage = () => {
               {
                 icon: "code",
                 title: "Clean JSX Code",
-                desc: "Copy production-ready JSX directly into your project — zero boilerplate.",
+                desc: "Copy production-ready JSX directly into your project â€” zero boilerplate.",
               },
               {
                 icon: "inventory_2",
@@ -580,7 +580,7 @@ const HomePage = () => {
         </section>
       </main>
 
-      {/* ── GIANT FOOTER WORDMARK ──────────────────────── */}
+      {/* â”€â”€ GIANT FOOTER WORDMARK â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <div className="border-outline-variant/30 bg-soft-cream-bg w-full overflow-hidden border-t py-10 text-center">
         <span
           className="text-charcoal-text block leading-none font-extrabold tracking-tighter select-none"
@@ -595,7 +595,7 @@ const HomePage = () => {
         </span>
       </div>
 
-      {/* ── FOOTER ──────────────────────────────────────── */}
+      {/* â”€â”€ FOOTER â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <footer className="bg-surface-container-low border-outline-variant/30 border-t">
         <div className="mx-auto flex max-w-7xl flex-col gap-8 px-4 pt-12 pb-8 md:px-16">
           <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
@@ -619,7 +619,7 @@ const HomePage = () => {
           </div>
           <div className="border-outline-variant/20 flex flex-col items-center justify-between gap-3 border-t pt-6 md:flex-row">
             <p className="type-body-sm text-on-surface-variant">
-              © 2026 Cosmic UI. Built with precision and warmth.
+              Â© 2026 Cosmic UI. Built with precision and warmth.
             </p>
             <a
               href="mailto:suyogmarkad292@gmail.com"

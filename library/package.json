@@ -8,6 +8,18 @@
     ".": {
       "import": "./dist/index.mjs",
       "require": "./dist/index.js"
+    },
+    "./utils/browser": {
+      "import": "./dist/utils/browser/index.mjs",
+      "require": "./dist/utils/browser/index.js"
+    },
+    "./utils/performance": {
+      "import": "./dist/utils/performance/index.mjs",
+      "require": "./dist/utils/performance/index.js"
+    },
+    "./utils/general": {
+      "import": "./dist/utils/general/index.mjs",
+      "require": "./dist/utils/general/index.js"
     }
   },
   "files": [
@@ -16,7 +28,8 @@
     "docs/assets"
   ],
   "scripts": {
-    "build": "tsup"
+    "build": "tsup",
+    "typecheck": "tsc --noEmit"
   },
   "author": "Suyog",
   "license": "ISC",
